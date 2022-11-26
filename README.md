@@ -9,6 +9,7 @@ This app is intended for developers who want to work with the BCH blockchain. It
 ## How-To Videos
 - [Part 1: How to Install and Use](https://www.youtube.com/watch?v=nsExL0Hb7bQ)
 - [Part 2: Configuration](https://www.youtube.com/watch?v=Bu8KqUJSvvc)
+- [Creating NFTs and tokens](https://youtu.be/KWgGS5zN0Ys)
 
 ## Install
 
