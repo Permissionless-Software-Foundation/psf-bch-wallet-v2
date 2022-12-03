@@ -138,6 +138,10 @@ class BchWallet {
   async burnTokens () {
     return true
   }
+
+  async optimize () {
+    return true
+  }
 }
 
 module.exports = BchWallet
