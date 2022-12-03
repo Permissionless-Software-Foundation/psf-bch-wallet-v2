@@ -101,6 +101,7 @@ In the commands below, replace `psf-bch-wallet` with `./bin/run`.
 * [`psf-bch-wallet wallet-balances`](#psf-bch-wallet-wallet-balances)
 * [`psf-bch-wallet wallet-create`](#psf-bch-wallet-wallet-create)
 * [`psf-bch-wallet wallet-list`](#psf-bch-wallet-wallet-list)
+* [`psf-bch-wallet wallet-optimize`](#psf-bch-wallet-wallet-optimize)
 * [`psf-bch-wallet wallet-remove`](#psf-bch-wallet-wallet-remove)
 * [`psf-bch-wallet wallet-scan`](#psf-bch-wallet-wallet-scan)
 * [`psf-bch-wallet wallet-service`](#psf-bch-wallet-wallet-service)
@@ -401,7 +402,7 @@ USAGE
   $ psf-bch-wallet token-create-fungible
 
 OPTIONS
-  -b, --baton                  (optional) create a minting baton
+  -b, --baton                  (optional Boolean) create a minting baton
   -d, --decimals=decimals      Decimals used by the token
   -h, --hash=hash              (optional) Document hash of the group
   -m, --tokenName=tokenName    Name of token
@@ -641,6 +642,25 @@ USAGE
 ```
 
 _See code: [src/commands/wallet-list.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/wallet-list.js)_
+
+## `psf-bch-wallet wallet-optimize`
+
+Optimize a wallet
+
+```
+USAGE
+  $ psf-bch-wallet wallet-optimize
+
+OPTIONS
+  -n, --name=name  Name of wallet
+
+DESCRIPTION
+  This command 'optimizes' a wallet by consolidating the UTXOs with in it. This
+  consolidation can significantly reduce the number of API calls, which speeds
+  up the the network calls and results in an improved user experience (UX).
+```
+
+_See code: [src/commands/wallet-optimize.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/wallet-optimize.js)_
 
 ## `psf-bch-wallet wallet-remove`
 
