@@ -127,17 +127,17 @@ USAGE
   $ psf-bch-wallet conf [KEY] [VALUE] [-h] [-k <value>] [-v <value>] [-d] [-p <value>] [-n <value>] [-d <value>]
 
 ARGUMENTS
-  KEY    [2mkey of the config
-  VALUE  [2mvalue of the config
+  KEY    key of the config
+  VALUE  value of the config
 
 FLAGS
-  -d, --cwd=[4m<value>[24m      [2mconfig file location
-  -d, --delete           [2mdelete?
-  -h, --help             [2mshow CLI help
-  -k, --key=[4m<value>[24m      [2mkey of the config
-  -n, --name=[4m<value>[24m     [2mconfig file name
-  -p, --project=[4m<value>[24m  [2mproject name
-  -v, --value=[4m<value>[24m    [2mvalue of the config
+  -d, --cwd      config file location
+  -d, --delete           delete?
+  -h, --help             show CLI help
+  -k, --key      key of the config
+  -n, --name     config file name
+  -p, --project  project name
+  -v, --value    value of the config
 
 DESCRIPTION
   manage configuration
@@ -154,10 +154,10 @@ USAGE
   $ psf-bch-wallet help [COMMAND] [--all]
 
 ARGUMENTS
-  COMMAND  [2mcommand to show help for
+  COMMAND  command to show help for
 
 FLAGS
-  --all  [2msee all commands in CLI
+  --all  see all commands in CLI
 
 DESCRIPTION
   display help for psf-bch-wallet
@@ -174,7 +174,7 @@ USAGE
   $ psf-bch-wallet ipfs-peers [-a]
 
 FLAGS
-  -a, --all  [2mDisplay all data about peers
+  -a, --all  Display all data about peers
 
 DESCRIPTION
   Query the state of subnet peers
@@ -219,7 +219,7 @@ USAGE
   $ psf-bch-wallet msg-check [-n <value>]
 
 FLAGS
-  -n, --name=[4m<value>[24m  [2mName of wallet
+  -n, --name  Name of wallet
 
 DESCRIPTION
   Check signed messages
@@ -236,8 +236,8 @@ USAGE
   $ psf-bch-wallet msg-read [-n <value>] [-t <value>]
 
 FLAGS
-  -n, --name=[4m<value>[24m  [2mName of wallet
-  -t, --txid=[4m<value>[24m  [2mTransaction ID
+  -n, --name  Name of wallet
+  -t, --txid  Transaction ID
 
 DESCRIPTION
   Read signed messages
@@ -254,10 +254,10 @@ USAGE
   $ psf-bch-wallet msg-send [-b <value>] [-m <value>] [-s <value>] [-n <value>]
 
 FLAGS
-  -b, --bchAddress=[4m<value>[24m  [2mBCH Address
-  -m, --message=[4m<value>[24m     [2mMessage to send
-  -n, --name=[4m<value>[24m        [2mName of wallet
-  -s, --subject=[4m<value>[24m     [2mMessage Subject
+  -b, --bchAddress  BCH Address
+  -m, --message     Message to send
+  -n, --name        Name of wallet
+  -s, --subject     Message Subject
 
 DESCRIPTION
   Send encrypted messages
@@ -274,8 +274,8 @@ USAGE
   $ psf-bch-wallet msg-sign [-n <value>] [-m <value>]
 
 FLAGS
-  -m, --msg=[4m<value>[24m   [2mCleartext message to sign
-  -n, --name=[4m<value>[24m  [2mName of wallet
+  -m, --msg   Cleartext message to sign
+  -n, --name  Name of wallet
 
 DESCRIPTION
   Cryptographically sign a message.
@@ -295,9 +295,9 @@ USAGE
   $ psf-bch-wallet msg-verify [-b <value>] [-m <value>] [-s <value>]
 
 FLAGS
-  -b, --bchAddr=[4m<value>[24m  [2mBCH address of signer.
-  -m, --msg=[4m<value>[24m      [2mCleartext message used to generate the signature.
-  -s, --sig=[4m<value>[24m      [2mSignature to verify.
+  -b, --bchAddr  BCH address of signer.
+  -m, --msg      Cleartext message used to generate the signature.
+  -s, --sig      Signature to verify.
 
 DESCRIPTION
   Verify a signed message
@@ -316,8 +316,8 @@ USAGE
   $ psf-bch-wallet p2wdb-json [-n <value>] [-j <value>]
 
 FLAGS
-  -j, --json=[4m<value>[24m  [2mA JSON string. Encase this argument in single quotes.
-  -n, --name=[4m<value>[24m  [2mName of wallet
+  -j, --json  A JSON string. Encase this argument in single quotes.
+  -n, --name  Name of wallet
 
 DESCRIPTION
   Upload JSON to IPFS
@@ -338,8 +338,8 @@ USAGE
   $ psf-bch-wallet p2wdb-pin [-n <value>] [-c <value>]
 
 FLAGS
-  -c, --cid=[4m<value>[24m   [2mIPFS CID to pin
-  -n, --name=[4m<value>[24m  [2mName of wallet
+  -c, --cid   IPFS CID to pin
+  -n, --name  Name of wallet
 
 DESCRIPTION
   Pin an IPFS CID using the P2WDB pinning service
@@ -361,7 +361,7 @@ USAGE
   $ psf-bch-wallet p2wdb-read [-h <value>]
 
 FLAGS
-  -h, --hash=[4m<value>[24m  [2mHash CID representing P2WDB entry
+  -h, --hash  Hash CID representing P2WDB entry
 
 DESCRIPTION
   Read an entry from the P2WDB
@@ -378,9 +378,9 @@ USAGE
   $ psf-bch-wallet p2wdb-write [-n <value>] [-d <value>] [-a <value>]
 
 FLAGS
-  -a, --appId=[4m<value>[24m  [2mappId string to categorize data
-  -d, --data=[4m<value>[24m   [2mString of data to write to the P2WDB
-  -n, --name=[4m<value>[24m   [2mName of wallet
+  -a, --appId  appId string to categorize data
+  -d, --data   String of data to write to the P2WDB
+  -n, --name   Name of wallet
 
 DESCRIPTION
   Write an entry to the pay-to-write database (P2WDB)
@@ -400,9 +400,9 @@ USAGE
   $ psf-bch-wallet send-bch [-n <value>] [-q <value>] [-a <value>]
 
 FLAGS
-  -a, --sendAddr=[4m<value>[24m  [2mCash address to send to
-  -n, --name=[4m<value>[24m      [2mName of wallet
-  -q, --qty=[4m<value>[24m       [2mQuantity in BCH
+  -a, --sendAddr  Cash address to send to
+  -n, --name      Name of wallet
+  -q, --qty       Quantity in BCH
 
 DESCRIPTION
   Send BCH
@@ -419,10 +419,10 @@ USAGE
   $ psf-bch-wallet send-tokens [-n <value>] [-t <value>] [-a <value>] [-q <value>]
 
 FLAGS
-  -a, --sendAddr=[4m<value>[24m  [2mCash or SimpleLedger address to send to
-  -n, --name=[4m<value>[24m      [2mName of wallet
-  -q, --qty=[4m<value>[24m
-  -t, --tokenId=[4m<value>[24m   [2mToken ID
+  -a, --sendAddr  Cash or SimpleLedger address to send to
+  -n, --name      Name of wallet
+  -q, --qty
+  -t, --tokenId   Token ID
 
 DESCRIPTION
   Send Tokens
@@ -439,9 +439,9 @@ USAGE
   $ psf-bch-wallet token-burn [-n <value>] [-q <value>] [-t <value>]
 
 FLAGS
-  -n, --name=[4m<value>[24m     [2mName of wallet
-  -q, --qty=[4m<value>[24m      [2mQuantity of tokens to burn. If quantity is 0, all tokens will be burned.
-  -t, --tokenId=[4m<value>[24m  [2mtokenId of token to burn
+  -n, --name     Name of wallet
+  -q, --qty      Quantity of tokens to burn. If quantity is 0, all tokens will be burned.
+  -t, --tokenId  tokenId of token to burn
 
 DESCRIPTION
   Burn a specific quantity of SLP tokens.
@@ -458,14 +458,14 @@ USAGE
   $ psf-bch-wallet token-create-fungible [-n <value>] [-t <value>] [-m <value>] [-d <value>] [-q <value>] [-u <value>] [-h <value>] [-b]
 
 FLAGS
-  -b, --baton               [2m(optional Boolean) create a minting baton
-  -d, --decimals=[4m<value>[24m    [2mDecimals used by the token
-  -h, --hash=[4m<value>[24m        [2m(optional) Document hash of the group
-  -m, --tokenName=[4m<value>[24m   [2mName of token
-  -n, --walletName=[4m<value>[24m  [2mName of wallet to pay for transaction
-  -q, --qty=[4m<value>[24m         [2mQuantity of tokens to create
-  -t, --ticker=[4m<value>[24m      [2mTicker of the group
-  -u, --url=[4m<value>[24m         [2m(optional) Document URL of the group
+  -b, --baton               (optional Boolean) create a minting baton
+  -d, --decimals    Decimals used by the token
+  -h, --hash        (optional) Document hash of the group
+  -m, --tokenName   Name of token
+  -n, --walletName  Name of wallet to pay for transaction
+  -q, --qty         Quantity of tokens to create
+  -t, --ticker      Ticker of the group
+  -u, --url         (optional) Document URL of the group
 
 DESCRIPTION
   Create a new SLP Type1 fugible token.
@@ -485,12 +485,12 @@ USAGE
   $ psf-bch-wallet token-create-group [-n <value>] [-m <value>] [-t <value>] [-q <value>] [-u <value>] [-h <value>]
 
 FLAGS
-  -h, --hash=[4m<value>[24m        [2m(optional) Document hash of the group
-  -m, --tokenName=[4m<value>[24m   [2mName of token
-  -n, --walletName=[4m<value>[24m  [2mName of wallet to pay for transaction
-  -q, --qty=[4m<value>[24m         [2m(optional) Quantity of tokens to create. Defaults to 1
-  -t, --ticker=[4m<value>[24m      [2mTicker of the group
-  -u, --url=[4m<value>[24m         [2m(optional) Document URL of the group
+  -h, --hash        (optional) Document hash of the group
+  -m, --tokenName   Name of token
+  -n, --walletName  Name of wallet to pay for transaction
+  -q, --qty         (optional) Quantity of tokens to create. Defaults to 1
+  -t, --ticker      Ticker of the group
+  -u, --url         (optional) Document URL of the group
 
 DESCRIPTION
   Create a new SLP Group token.
@@ -510,12 +510,12 @@ USAGE
   $ psf-bch-wallet token-create-nft [-n <value>] [-m <value>] [-t <value>] [-u <value>] [-h <value>] [-i <value>]
 
 FLAGS
-  -h, --hash=[4m<value>[24m        [2m(optional) Document hash of the group
-  -i, --tokenId=[4m<value>[24m     [2mToken ID of Group token to burn, to generate the NFT
-  -m, --tokenName=[4m<value>[24m   [2mName of token
-  -n, --walletName=[4m<value>[24m  [2mName of wallet to pay for transaction
-  -t, --ticker=[4m<value>[24m      [2mTicker of the group
-  -u, --url=[4m<value>[24m         [2m(optional) Document URL of the group
+  -h, --hash        (optional) Document hash of the group
+  -i, --tokenId     Token ID of Group token to burn, to generate the NFT
+  -m, --tokenName   Name of token
+  -n, --walletName  Name of wallet to pay for transaction
+  -t, --ticker      Ticker of the group
+  -u, --url         (optional) Document URL of the group
 
 DESCRIPTION
   Create a new SLP Group token.
@@ -535,7 +535,7 @@ USAGE
   $ psf-bch-wallet token-info [-t <value>]
 
 FLAGS
-  -t, --tokenId=[4m<value>[24m  [2mThe ID of the token to lookup
+  -t, --tokenId  The ID of the token to lookup
 
 DESCRIPTION
   Get information on a token
@@ -555,8 +555,8 @@ USAGE
   $ psf-bch-wallet token-mda-tx [-n <value>] [-a <value>]
 
 FLAGS
-  -a, --mda=[4m<value>[24m         [2mMutable data address
-  -n, --walletName=[4m<value>[24m  [2mName of wallet to pay for transaction
+  -a, --mda         Mutable data address
+  -n, --walletName  Name of wallet to pay for transaction
 
 DESCRIPTION
   Create TXID for token mutable data
@@ -583,10 +583,10 @@ USAGE
   $ psf-bch-wallet token-mint [-n <value>] [-q <value>] [-t <value>] [-r <value>]
 
 FLAGS
-  -n, --name=[4m<value>[24m      [2mName of wallet to pay for transaction
-  -q, --qty=[4m<value>[24m       [2mQuantity of tokens to create
-  -r, --receiver=[4m<value>[24m  [2m(optional) Receiver of new baton. Defaults to same wallet. null burns baton.
-  -t, --tokenId=[4m<value>[24m   [2mToken ID
+  -n, --name      Name of wallet to pay for transaction
+  -q, --qty       Quantity of tokens to create
+  -r, --receiver  (optional) Receiver of new baton. Defaults to same wallet. null burns baton.
+  -t, --tokenId   Token ID
 
 DESCRIPTION
   Mint new Fungible (Type 1) or Group tokens
@@ -611,7 +611,7 @@ USAGE
   $ psf-bch-wallet token-tx-history [-t <value>]
 
 FLAGS
-  -t, --tokenId=[4m<value>[24m  [2mThe ID of the token to lookup
+  -t, --tokenId  The ID of the token to lookup
 
 DESCRIPTION
   Get transaction history for a token
@@ -632,8 +632,8 @@ USAGE
   $ psf-bch-wallet token-update [-n <value>] [-c <value>]
 
 FLAGS
-  -c, --cid=[4m<value>[24m   [2mA CID that resolves to the new mutable data JSON
-  -n, --name=[4m<value>[24m  [2mName of wallet
+  -c, --cid   A CID that resolves to the new mutable data JSON
+  -n, --name  Name of wallet
 
 DESCRIPTION
   Update token mutable data.
@@ -669,7 +669,7 @@ USAGE
   $ psf-bch-wallet wallet-addrs [-n <value>]
 
 FLAGS
-  -n, --name=[4m<value>[24m  [2mName of wallet
+  -n, --name  Name of wallet
 
 DESCRIPTION
   List the different addresses for a wallet.
@@ -686,8 +686,8 @@ USAGE
   $ psf-bch-wallet wallet-balances [-n <value>] [-v]
 
 FLAGS
-  -n, --name=[4m<value>[24m  [2mName of wallet
-  -v, --verbose       [2mShow verbose UTXO information
+  -n, --name  Name of wallet
+  -v, --verbose       Show verbose UTXO information
 
 DESCRIPTION
   Display the balances of the wallet
@@ -704,8 +704,8 @@ USAGE
   $ psf-bch-wallet wallet-create [-n <value>] [-d <value>]
 
 FLAGS
-  -d, --description=[4m<value>[24m  [2mDescription of the wallet
-  -n, --name=[4m<value>[24m         [2mName of wallet
+  -d, --description  Description of the wallet
+  -n, --name         Name of wallet
 
 DESCRIPTION
   Generate a new HD Wallet.
@@ -736,7 +736,7 @@ USAGE
   $ psf-bch-wallet wallet-optimize [-n <value>]
 
 FLAGS
-  -n, --name=[4m<value>[24m  [2mName of wallet
+  -n, --name  Name of wallet
 
 DESCRIPTION
   Optimize a wallet
@@ -757,7 +757,7 @@ USAGE
   $ psf-bch-wallet wallet-remove [-n <value>]
 
 FLAGS
-  -n, --name=[4m<value>[24m  [2mName of wallet
+  -n, --name  Name of wallet
 
 DESCRIPTION
   Remove an existing wallet.
@@ -774,7 +774,7 @@ USAGE
   $ psf-bch-wallet wallet-scan [-m <value>]
 
 FLAGS
-  -m, --mnemonic=[4m<value>[24m  [2mmnemonic phrase to generate addresses, wrapped in quotes
+  -m, --mnemonic  mnemonic phrase to generate addresses, wrapped in quotes
 
 DESCRIPTION
   Scan different derivation paths of a 12 word mnemonic for tx history.
@@ -806,7 +806,7 @@ USAGE
   $ psf-bch-wallet wallet-service [-s <value>]
 
 FLAGS
-  -s, --select=[4m<value>[24m  [2mSwitch to a given IPFS ID for wallet service.
+  -s, --select  Switch to a given IPFS ID for wallet service.
 
 DESCRIPTION
   List and/or select a wallet service provider.
@@ -842,10 +842,10 @@ USAGE
   $ psf-bch-wallet wallet-sweep [-n <value>] [-m <value>] [-w <value>] [-d <value>]
 
 FLAGS
-  -d, --derivation=[4m<value>[24m  [2mDerivation path. Will default to 245 if not specified. Common values are 245, 145, and 0
-  -m, --mnemonic=[4m<value>[24m    [2m12-word mnemonic phrase, wrapped in quotes
-  -n, --name=[4m<value>[24m        [2mname of receiving wallet
-  -w, --wif=[4m<value>[24m         [2mWIF private key controlling funds of a single address
+  -d, --derivation  Derivation path. Will default to 245 if not specified. Common values are 245, 145, and 0
+  -m, --mnemonic    12-word mnemonic phrase, wrapped in quotes
+  -n, --name        name of receiving wallet
+  -w, --wif         WIF private key controlling funds of a single address
 
 DESCRIPTION
   Sweep funds from one wallet into another
