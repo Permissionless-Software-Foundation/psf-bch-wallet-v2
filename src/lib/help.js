@@ -12,11 +12,14 @@ const { toCached } = require('@oclif/core/lib/config/config')
 const { error } = require('@oclif/core/lib/errors')
 const tempRootHelp = require('@oclif/core/lib/help/root.js')
 const RootHelp = tempRootHelp.default
+const Conf = require('conf')
 
 class CustomHelp extends HelpBase {
-  // constructor (argv) {
-  //   super(argv)
-  // }
+  constructor (argv) {
+    super(argv)
+
+    this.conf = new Conf()
+  }
 
   async showHelp (argv) {
     // console.log('This will be displayed in multi-command CLIs')
@@ -93,14 +96,47 @@ class CustomHelp extends HelpBase {
     }
 
     if (rootTopics.length > 0) {
+      // console.log('rootTopics: ', rootTopics)
       this.log(this.formatTopics(rootTopics))
       this.log('')
     }
 
     if (rootCommands.length > 0) {
       rootCommands = rootCommands.filter(c => c.id)
+      // console.log('rootCommands: ', rootCommands)
+
+      // Filter the commands, based on the config settings.
+      rootCommands = this.filterCommands(rootCommands)
+
       this.log(this.formatCommands(rootCommands))
       this.log('')
+    }
+  }
+
+  // This function expects an array of objects as input. Each object is a command.
+  // The array will be filtered in place and returned.
+  // Commands are removed from the array, based on the config settings.
+  // The purpose of this filter is to reduce the number of commands the user sees
+  // unless they want to turn on categories of commands for advanced usage.
+  filterCommands (cmdAry) {
+    try {
+      // console.log('cmdAry: ', cmdAry)
+
+      // Hide or show ipfs-* commands.
+      const showIpfsCmds = this.conf.get('cmdIpfs', false)
+      // console.log('showIpfsCmds: ', showIpfsCmds)
+      if (!showIpfsCmds) {
+        // Ensure the config setting is explicitly defined.
+        this.conf.set('cmdIpfs', false)
+
+        // Filter out the IPFS commands.
+        cmdAry = cmdAry.filter(x => !x.id.includes('ipfs-'))
+      }
+
+      return cmdAry
+    } catch (err) {
+      console.error('Error in help.js/filterCommands(): ', err)
+      throw err
     }
   }
 

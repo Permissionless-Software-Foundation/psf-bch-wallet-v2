@@ -19,8 +19,10 @@ This app is intended for developers who want to work with the BCH blockchain. It
 - `./bin/run wallet-create` to create a wallet. Wallet files are stored in the `.wallets` directory.
 
 ## Configuration
+The `./bin/run conf` command is used to set various configuration settings.
 
-By default, this app uses [free-bch.fullstack.cash](https://free-bch.fullstack.cash) as its back end service for working with the BCH blockchain. That back-end service is simply a copy of [ipfs-bch-wallet-consumer](https://github.com/Permissionless-Software-Foundation/ipfs-bch-wallet-consumer). By running your own copy of ipfs-bch-wallet-consumer, you can have greater reliability and can use this app to switch between different [global back ends](https://bafybeie3w6ykd3ur6b6ytxoopi6p7vipmyvdyq7s2aw5ngsenhtjvyp4d4.ipfs.dweb.link/blog/realizing-the-web-3-cash-stack). If `free-bch.fullstack.cash` goes down for some reason, running your own instance of `ipfs-bch-wallet-consumer` allows you to easily switch to any functional back end on the internet.
+### Blockchain Access
+By default, this app uses [free-bch.fullstack.cash](https://free-bch.fullstack.cash) as its back-end service for working with the BCH blockchain. That back-end service is simply a copy of [ipfs-bch-wallet-consumer](https://github.com/Permissionless-Software-Foundation/ipfs-bch-wallet-consumer). By running your own copy of ipfs-bch-wallet-consumer, you can have greater reliability and can use this app to switch between different [Cash Stack](https://cashstack.info) *global back-ends*. If `free-bch.fullstack.cash` goes down for some reason, running your own instance of `ipfs-bch-wallet-consumer` allows you to easily switch to any functional back end on the internet.
 
 Switch to a local instance of `ipfs-bch-wallet-consumer`:
 
@@ -38,6 +40,14 @@ Switch to using the web2 infrastructure with [FullStack.cash](https://fullstack.
 Explore the other configuration settings:
 
 - `./bin/run conf`
+
+### Advanced Commands
+Because of the wide-range of applications and commands that psf-bch-wallet can interact with, some application-specific commands are hidden by default. This is an attempt to prevent new users from feeling overwhelmed. By default, these commands are not shown when running `./bin/run help`. Setting their config value to `true` will cause them to show up in the help.
+
+#### IPFS Diagnostics
+When running your own instance of `ipfs-bch-wallet-consumer`, you will want to enable the `ipfs-*` commands. They will allow diagnostics and configuration of the IPFS node.
+
+- `./bin/run conf -k cmdIpfs -v true`
 
 ## License
 
