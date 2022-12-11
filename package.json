@@ -8,9 +8,9 @@
   },
   "bugs": "https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/issues",
   "dependencies": {
-    "@oclif/command": "1.8.0",
-    "@oclif/config": "1.17.0",
-    "@oclif/plugin-help": "3.2.3",
+    "@oclif/command": "1.8.20",
+    "@oclif/config": "1.18.6",
+    "@oclif/plugin-help": "5.1.20",
     "@psf/bch-js": "6.5.3",
     "axios": "0.27.2",
     "bch-encrypt-lib": "2.0.0",
@@ -33,8 +33,8 @@
     "uuid": "8.3.2"
   },
   "devDependencies": {
-    "@oclif/dev-cli": "1.26.0",
-    "@oclif/test": "1.2.8",
+    "@oclif/dev-cli": "1.26.10",
+    "@oclif/test": "2.2.15",
     "chai": "4.3.4",
     "husky": "7.0.1",
     "lodash.clonedeep": "4.5.0",
@@ -65,7 +65,8 @@
     "plugins": [
       "@oclif/plugin-help",
       "conf-cli"
-    ]
+    ],
+    "helpClass": "./src/lib/help"
   },
   "repository": "Permissionless-Software-Foundation/psf-bch-wallet",
   "scripts": {

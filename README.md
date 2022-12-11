@@ -19,8 +19,10 @@ This app is intended for developers who want to work with the BCH blockchain. It
 - `./bin/run wallet-create` to create a wallet. Wallet files are stored in the `.wallets` directory.
 
 ## Configuration
+The `./bin/run conf` command is used to set various configuration settings.
 
-By default, this app uses [free-bch.fullstack.cash](https://free-bch.fullstack.cash) as its back end service for working with the BCH blockchain. That back-end service is simply a copy of [ipfs-bch-wallet-consumer](https://github.com/Permissionless-Software-Foundation/ipfs-bch-wallet-consumer). By running your own copy of ipfs-bch-wallet-consumer, you can have greater reliability and can use this app to switch between different [global back ends](https://bafybeie3w6ykd3ur6b6ytxoopi6p7vipmyvdyq7s2aw5ngsenhtjvyp4d4.ipfs.dweb.link/blog/realizing-the-web-3-cash-stack). If `free-bch.fullstack.cash` goes down for some reason, running your own instance of `ipfs-bch-wallet-consumer` allows you to easily switch to any functional back end on the internet.
+### Blockchain Access
+By default, this app uses [free-bch.fullstack.cash](https://free-bch.fullstack.cash) as its back-end service for working with the BCH blockchain. That back-end service is simply a copy of [ipfs-bch-wallet-consumer](https://github.com/Permissionless-Software-Foundation/ipfs-bch-wallet-consumer). By running your own copy of ipfs-bch-wallet-consumer, you can have greater reliability and can use this app to switch between different [Cash Stack](https://cashstack.info) *global back-ends*. If `free-bch.fullstack.cash` goes down for some reason, running your own instance of `ipfs-bch-wallet-consumer` allows you to easily switch to any functional back end on the internet.
 
 Switch to a local instance of `ipfs-bch-wallet-consumer`:
 
@@ -38,6 +40,14 @@ Switch to using the web2 infrastructure with [FullStack.cash](https://fullstack.
 Explore the other configuration settings:
 
 - `./bin/run conf`
+
+### Advanced Commands
+Because of the wide-range of applications and commands that psf-bch-wallet can interact with, some application-specific commands are hidden by default. This is an attempt to prevent new users from feeling overwhelmed. By default, these commands are not shown when running `./bin/run help`. Setting their config value to `true` will cause them to show up in the help.
+
+#### IPFS Diagnostics
+When running your own instance of `ipfs-bch-wallet-consumer`, you will want to enable the `ipfs-*` commands. They will allow diagnostics and configuration of the IPFS node.
+
+- `./bin/run conf -k cmdIpfs -v true`
 
 ## License
 
@@ -114,20 +124,23 @@ manage configuration
 
 ```
 USAGE
-  $ psf-bch-wallet conf [KEY] [VALUE]
+  $ psf-bch-wallet conf [KEY] [VALUE] [-h] [-k <value>] [-v <value>] [-d] [-p <value>] [-n <value>] [-d <value>]
 
 ARGUMENTS
   KEY    key of the config
   VALUE  value of the config
 
-OPTIONS
-  -d, --cwd=cwd          config file location
+FLAGS
+  -d, --cwd      config file location
   -d, --delete           delete?
   -h, --help             show CLI help
-  -k, --key=key          key of the config
-  -n, --name=name        config file name
-  -p, --project=project  project name
-  -v, --value=value      value of the config
+  -k, --key      key of the config
+  -n, --name     config file name
+  -p, --project  project name
+  -v, --value    value of the config
+
+DESCRIPTION
+  manage configuration
 ```
 
 _See code: [conf-cli](https://github.com/natzcam/conf-cli/blob/v0.1.9/src/commands/conf.ts)_
@@ -138,16 +151,19 @@ display help for psf-bch-wallet
 
 ```
 USAGE
-  $ psf-bch-wallet help [COMMAND]
+  $ psf-bch-wallet help [COMMAND] [--all]
 
 ARGUMENTS
   COMMAND  command to show help for
 
-OPTIONS
+FLAGS
   --all  see all commands in CLI
+
+DESCRIPTION
+  display help for psf-bch-wallet
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.3/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.18/src/commands/help.ts)_
 
 ## `psf-bch-wallet ipfs-peers`
 
@@ -155,10 +171,13 @@ Query the state of subnet peers
 
 ```
 USAGE
-  $ psf-bch-wallet ipfs-peers
+  $ psf-bch-wallet ipfs-peers [-a]
 
-OPTIONS
+FLAGS
   -a, --all  Display all data about peers
+
+DESCRIPTION
+  Query the state of subnet peers
 ```
 
 _See code: [src/commands/ipfs-peers.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/ipfs-peers.js)_
@@ -170,6 +189,9 @@ Query the state of circuit relays
 ```
 USAGE
   $ psf-bch-wallet ipfs-relays
+
+DESCRIPTION
+  Query the state of circuit relays
 ```
 
 _See code: [src/commands/ipfs-relays.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/ipfs-relays.js)_
@@ -181,6 +203,9 @@ Query the state of the IPFS node
 ```
 USAGE
   $ psf-bch-wallet ipfs-status
+
+DESCRIPTION
+  Query the state of the IPFS node
 ```
 
 _See code: [src/commands/ipfs-status.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/ipfs-status.js)_
@@ -191,10 +216,13 @@ Check signed messages
 
 ```
 USAGE
-  $ psf-bch-wallet msg-check
+  $ psf-bch-wallet msg-check [-n <value>]
 
-OPTIONS
-  -n, --name=name  Name of wallet
+FLAGS
+  -n, --name  Name of wallet
+
+DESCRIPTION
+  Check signed messages
 ```
 
 _See code: [src/commands/msg-check.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/msg-check.js)_
@@ -205,11 +233,14 @@ Read signed messages
 
 ```
 USAGE
-  $ psf-bch-wallet msg-read
+  $ psf-bch-wallet msg-read [-n <value>] [-t <value>]
 
-OPTIONS
-  -n, --name=name  Name of wallet
-  -t, --txid=txid  Transaction ID
+FLAGS
+  -n, --name  Name of wallet
+  -t, --txid  Transaction ID
+
+DESCRIPTION
+  Read signed messages
 ```
 
 _See code: [src/commands/msg-read.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/msg-read.js)_
@@ -220,13 +251,16 @@ Send encrypted messages
 
 ```
 USAGE
-  $ psf-bch-wallet msg-send
+  $ psf-bch-wallet msg-send [-b <value>] [-m <value>] [-s <value>] [-n <value>]
 
-OPTIONS
-  -b, --bchAddress=bchAddress  BCH Address
-  -m, --message=message        Message to send
-  -n, --name=name              Name of wallet
-  -s, --subject=subject        Message Subject
+FLAGS
+  -b, --bchAddress  BCH Address
+  -m, --message     Message to send
+  -n, --name        Name of wallet
+  -s, --subject     Message Subject
+
+DESCRIPTION
+  Send encrypted messages
 ```
 
 _See code: [src/commands/msg-send.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/msg-send.js)_
@@ -237,13 +271,15 @@ Cryptographically sign a message.
 
 ```
 USAGE
-  $ psf-bch-wallet msg-sign
+  $ psf-bch-wallet msg-sign [-n <value>] [-m <value>]
 
-OPTIONS
-  -m, --msg=msg    Cleartext message to sign
-  -n, --name=name  Name of wallet
+FLAGS
+  -m, --msg   Cleartext message to sign
+  -n, --name  Name of wallet
 
 DESCRIPTION
+  Cryptographically sign a message.
+
   Generate a signature from a clear-text message and the private key of your wallet.
   The system verifying the signature will also need the BCH address of the walllet.
 ```
@@ -256,14 +292,16 @@ Verify a signed message
 
 ```
 USAGE
-  $ psf-bch-wallet msg-verify
+  $ psf-bch-wallet msg-verify [-b <value>] [-m <value>] [-s <value>]
 
-OPTIONS
-  -b, --bchAddr=bchAddr  BCH address of signer.
-  -m, --msg=msg          Cleartext message used to generate the signature.
-  -s, --sig=sig          Signature to verify.
+FLAGS
+  -b, --bchAddr  BCH address of signer.
+  -m, --msg      Cleartext message used to generate the signature.
+  -s, --sig      Signature to verify.
 
 DESCRIPTION
+  Verify a signed message
+
   Verify the authenticity of a signed message.
 ```
 
@@ -275,13 +313,15 @@ Upload JSON to IPFS
 
 ```
 USAGE
-  $ psf-bch-wallet p2wdb-json
+  $ psf-bch-wallet p2wdb-json [-n <value>] [-j <value>]
 
-OPTIONS
-  -j, --json=json  A JSON string. Encase this argument in single quotes.
-  -n, --name=name  Name of wallet
+FLAGS
+  -j, --json  A JSON string. Encase this argument in single quotes.
+  -n, --name  Name of wallet
 
 DESCRIPTION
+  Upload JSON to IPFS
+
   This command uses the p2wdb npm library to upload a JSON object to an IPFS node.
   The node returns a CID representing the JSON. That CID can then be pinned using
   the P2WDB Pinning cluster, using the p2wdb-pin command.
@@ -295,13 +335,15 @@ Pin an IPFS CID using the P2WDB pinning service
 
 ```
 USAGE
-  $ psf-bch-wallet p2wdb-pin
+  $ psf-bch-wallet p2wdb-pin [-n <value>] [-c <value>]
 
-OPTIONS
-  -c, --cid=cid    IPFS CID to pin
-  -n, --name=name  Name of wallet
+FLAGS
+  -c, --cid   IPFS CID to pin
+  -n, --name  Name of wallet
 
 DESCRIPTION
+  Pin an IPFS CID using the P2WDB pinning service
+
   This command uses the p2wdb npm library to pin an IPFS CID using the P2WDB
   pinning service.
 
@@ -316,10 +358,13 @@ Read an entry from the P2WDB
 
 ```
 USAGE
-  $ psf-bch-wallet p2wdb-read
+  $ psf-bch-wallet p2wdb-read [-h <value>]
 
-OPTIONS
-  -h, --hash=hash  Hash CID representing P2WDB entry
+FLAGS
+  -h, --hash  Hash CID representing P2WDB entry
+
+DESCRIPTION
+  Read an entry from the P2WDB
 ```
 
 _See code: [src/commands/p2wdb-read.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/p2wdb-read.js)_
@@ -330,14 +375,16 @@ Write an entry to the pay-to-write database (P2WDB)
 
 ```
 USAGE
-  $ psf-bch-wallet p2wdb-write
+  $ psf-bch-wallet p2wdb-write [-n <value>] [-d <value>] [-a <value>]
 
-OPTIONS
-  -a, --appId=appId  appId string to categorize data
-  -d, --data=data    String of data to write to the P2WDB
-  -n, --name=name    Name of wallet
+FLAGS
+  -a, --appId  appId string to categorize data
+  -d, --data   String of data to write to the P2WDB
+  -n, --name   Name of wallet
 
 DESCRIPTION
+  Write an entry to the pay-to-write database (P2WDB)
+
   In order to execute this command, the wallet must contain some BCH and some PSF
   token, in order to pay for the write to the P2WDB.
 ```
@@ -350,12 +397,15 @@ Send BCH
 
 ```
 USAGE
-  $ psf-bch-wallet send-bch
+  $ psf-bch-wallet send-bch [-n <value>] [-q <value>] [-a <value>]
 
-OPTIONS
-  -a, --sendAddr=sendAddr  Cash address to send to
-  -n, --name=name          Name of wallet
-  -q, --qty=qty            Quantity in BCH
+FLAGS
+  -a, --sendAddr  Cash address to send to
+  -n, --name      Name of wallet
+  -q, --qty       Quantity in BCH
+
+DESCRIPTION
+  Send BCH
 ```
 
 _See code: [src/commands/send-bch.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/send-bch.js)_
@@ -366,13 +416,16 @@ Send Tokens
 
 ```
 USAGE
-  $ psf-bch-wallet send-tokens
+  $ psf-bch-wallet send-tokens [-n <value>] [-t <value>] [-a <value>] [-q <value>]
 
-OPTIONS
-  -a, --sendAddr=sendAddr  Cash or SimpleLedger address to send to
-  -n, --name=name          Name of wallet
-  -q, --qty=qty
-  -t, --tokenId=tokenId    Token ID
+FLAGS
+  -a, --sendAddr  Cash or SimpleLedger address to send to
+  -n, --name      Name of wallet
+  -q, --qty
+  -t, --tokenId   Token ID
+
+DESCRIPTION
+  Send Tokens
 ```
 
 _See code: [src/commands/send-tokens.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/send-tokens.js)_
@@ -383,12 +436,15 @@ Burn a specific quantity of SLP tokens.
 
 ```
 USAGE
-  $ psf-bch-wallet token-burn
+  $ psf-bch-wallet token-burn [-n <value>] [-q <value>] [-t <value>]
 
-OPTIONS
-  -n, --name=name        Name of wallet
-  -q, --qty=qty          Quantity of tokens to burn. If quantity is 0, all tokens will be burned.
-  -t, --tokenId=tokenId  tokenId of token to burn
+FLAGS
+  -n, --name     Name of wallet
+  -q, --qty      Quantity of tokens to burn. If quantity is 0, all tokens will be burned.
+  -t, --tokenId  tokenId of token to burn
+
+DESCRIPTION
+  Burn a specific quantity of SLP tokens.
 ```
 
 _See code: [src/commands/token-burn.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/token-burn.js)_
@@ -399,19 +455,21 @@ Create a new SLP Type1 fugible token.
 
 ```
 USAGE
-  $ psf-bch-wallet token-create-fungible
+  $ psf-bch-wallet token-create-fungible [-n <value>] [-t <value>] [-m <value>] [-d <value>] [-q <value>] [-u <value>] [-h <value>] [-b]
 
-OPTIONS
-  -b, --baton                  (optional Boolean) create a minting baton
-  -d, --decimals=decimals      Decimals used by the token
-  -h, --hash=hash              (optional) Document hash of the group
-  -m, --tokenName=tokenName    Name of token
-  -n, --walletName=walletName  Name of wallet to pay for transaction
-  -q, --qty=qty                Quantity of tokens to create
-  -t, --ticker=ticker          Ticker of the group
-  -u, --url=url                (optional) Document URL of the group
+FLAGS
+  -b, --baton               (optional Boolean) create a minting baton
+  -d, --decimals    Decimals used by the token
+  -h, --hash        (optional) Document hash of the group
+  -m, --tokenName   Name of token
+  -n, --walletName  Name of wallet to pay for transaction
+  -q, --qty         Quantity of tokens to create
+  -t, --ticker      Ticker of the group
+  -u, --url         (optional) Document URL of the group
 
 DESCRIPTION
+  Create a new SLP Type1 fugible token.
+
   Creating a minting baton is optional. If a baton address is not specified, then the
   baton is burned and makes the it a 'fixed supply' token.
 ```
@@ -424,17 +482,19 @@ Create a new SLP Group token.
 
 ```
 USAGE
-  $ psf-bch-wallet token-create-group
+  $ psf-bch-wallet token-create-group [-n <value>] [-m <value>] [-t <value>] [-q <value>] [-u <value>] [-h <value>]
 
-OPTIONS
-  -h, --hash=hash              (optional) Document hash of the group
-  -m, --tokenName=tokenName    Name of token
-  -n, --walletName=walletName  Name of wallet to pay for transaction
-  -q, --qty=qty                (optional) Quantity of tokens to create. Defaults to 1
-  -t, --ticker=ticker          Ticker of the group
-  -u, --url=url                (optional) Document URL of the group
+FLAGS
+  -h, --hash        (optional) Document hash of the group
+  -m, --tokenName   Name of token
+  -n, --walletName  Name of wallet to pay for transaction
+  -q, --qty         (optional) Quantity of tokens to create. Defaults to 1
+  -t, --ticker      Ticker of the group
+  -u, --url         (optional) Document URL of the group
 
 DESCRIPTION
+  Create a new SLP Group token.
+
   Group tokens are used to generate NFTs. Read more about the relationship:
   https://github.com/Permissionless-Software-Foundation/bch-js-examples/tree/master/bch/applications/slp/nft
 ```
@@ -447,17 +507,19 @@ Create a new SLP Group token.
 
 ```
 USAGE
-  $ psf-bch-wallet token-create-nft
+  $ psf-bch-wallet token-create-nft [-n <value>] [-m <value>] [-t <value>] [-u <value>] [-h <value>] [-i <value>]
 
-OPTIONS
-  -h, --hash=hash              (optional) Document hash of the group
-  -i, --tokenId=tokenId        Token ID of Group token to burn, to generate the NFT
-  -m, --tokenName=tokenName    Name of token
-  -n, --walletName=walletName  Name of wallet to pay for transaction
-  -t, --ticker=ticker          Ticker of the group
-  -u, --url=url                (optional) Document URL of the group
+FLAGS
+  -h, --hash        (optional) Document hash of the group
+  -i, --tokenId     Token ID of Group token to burn, to generate the NFT
+  -m, --tokenName   Name of token
+  -n, --walletName  Name of wallet to pay for transaction
+  -t, --ticker      Ticker of the group
+  -u, --url         (optional) Document URL of the group
 
 DESCRIPTION
+  Create a new SLP Group token.
+
   Group tokens are used to generate NFTs. Read more about the relationship:
   https://github.com/Permissionless-Software-Foundation/bch-js-examples/tree/master/bch/applications/slp/nft
 ```
@@ -470,12 +532,14 @@ Get information on a token
 
 ```
 USAGE
-  $ psf-bch-wallet token-info
+  $ psf-bch-wallet token-info [-t <value>]
 
-OPTIONS
-  -t, --tokenId=tokenId  The ID of the token to lookup
+FLAGS
+  -t, --tokenId  The ID of the token to lookup
 
 DESCRIPTION
+  Get information on a token
+
   Retrieves the Genesis data for a token. If PS002 mutable and immutable data is
   attached to the token, it is retrieved from IPFS.
 ```
@@ -488,13 +552,15 @@ Create TXID for token mutable data
 
 ```
 USAGE
-  $ psf-bch-wallet token-mda-tx
+  $ psf-bch-wallet token-mda-tx [-n <value>] [-a <value>]
 
-OPTIONS
-  -a, --mda=mda                Mutable data address
-  -n, --walletName=walletName  Name of wallet to pay for transaction
+FLAGS
+  -a, --mda         Mutable data address
+  -n, --walletName  Name of wallet to pay for transaction
 
 DESCRIPTION
+  Create TXID for token mutable data
+
   MDA is an acrynym for 'Mutable Data Address'
 
   This command is used to generate a TXID for attaching mutable data to a token.
@@ -514,15 +580,17 @@ Mint new Fungible (Type 1) or Group tokens
 
 ```
 USAGE
-  $ psf-bch-wallet token-mint
+  $ psf-bch-wallet token-mint [-n <value>] [-q <value>] [-t <value>] [-r <value>]
 
-OPTIONS
-  -n, --name=name          Name of wallet to pay for transaction
-  -q, --qty=qty            Quantity of tokens to create
-  -r, --receiver=receiver  (optional) Receiver of new baton. Defaults to same wallet. null burns baton.
-  -t, --tokenId=tokenId    Token ID
+FLAGS
+  -n, --name      Name of wallet to pay for transaction
+  -q, --qty       Quantity of tokens to create
+  -r, --receiver  (optional) Receiver of new baton. Defaults to same wallet. null burns baton.
+  -t, --tokenId   Token ID
 
 DESCRIPTION
+  Mint new Fungible (Type 1) or Group tokens
+
   If the wallet contains a minting baton from creating a Fungible or Group token,
   this command can be used to mint new tokens into existence.
 
@@ -540,12 +608,14 @@ Get transaction history for a token
 
 ```
 USAGE
-  $ psf-bch-wallet token-tx-history
+  $ psf-bch-wallet token-tx-history [-t <value>]
 
-OPTIONS
-  -t, --tokenId=tokenId  The ID of the token to lookup
+FLAGS
+  -t, --tokenId  The ID of the token to lookup
 
 DESCRIPTION
+  Get transaction history for a token
+
   Retrieves the transaction history for a token. This is every transaction that
   has involved the token. The data is more informative for an NFT than it is for
   a fungible token.
@@ -559,13 +629,15 @@ Update token mutable data.
 
 ```
 USAGE
-  $ psf-bch-wallet token-update
+  $ psf-bch-wallet token-update [-n <value>] [-c <value>]
 
-OPTIONS
-  -c, --cid=cid    A CID that resolves to the new mutable data JSON
-  -n, --name=name  Name of wallet
+FLAGS
+  -c, --cid   A CID that resolves to the new mutable data JSON
+  -n, --name  Name of wallet
 
 DESCRIPTION
+  Update token mutable data.
+
   This command is used to update the mutable data for a token.
 
   Data updates are effected by writing a new
@@ -594,10 +666,13 @@ List the different addresses for a wallet.
 
 ```
 USAGE
-  $ psf-bch-wallet wallet-addrs
+  $ psf-bch-wallet wallet-addrs [-n <value>]
 
-OPTIONS
-  -n, --name=name  Name of wallet
+FLAGS
+  -n, --name  Name of wallet
+
+DESCRIPTION
+  List the different addresses for a wallet.
 ```
 
 _See code: [src/commands/wallet-addrs.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/wallet-addrs.js)_
@@ -608,11 +683,14 @@ Display the balances of the wallet
 
 ```
 USAGE
-  $ psf-bch-wallet wallet-balances
+  $ psf-bch-wallet wallet-balances [-n <value>] [-v]
 
-OPTIONS
-  -n, --name=name  Name of wallet
-  -v, --verbose    Show verbose UTXO information
+FLAGS
+  -n, --name  Name of wallet
+  -v, --verbose       Show verbose UTXO information
+
+DESCRIPTION
+  Display the balances of the wallet
 ```
 
 _See code: [src/commands/wallet-balances.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/wallet-balances.js)_
@@ -623,11 +701,14 @@ Generate a new HD Wallet.
 
 ```
 USAGE
-  $ psf-bch-wallet wallet-create
+  $ psf-bch-wallet wallet-create [-n <value>] [-d <value>]
 
-OPTIONS
-  -d, --description=description  Description of the wallet
-  -n, --name=name                Name of wallet
+FLAGS
+  -d, --description  Description of the wallet
+  -n, --name         Name of wallet
+
+DESCRIPTION
+  Generate a new HD Wallet.
 ```
 
 _See code: [src/commands/wallet-create.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/wallet-create.js)_
@@ -639,6 +720,9 @@ List existing wallets.
 ```
 USAGE
   $ psf-bch-wallet wallet-list
+
+DESCRIPTION
+  List existing wallets.
 ```
 
 _See code: [src/commands/wallet-list.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/wallet-list.js)_
@@ -649,12 +733,14 @@ Optimize a wallet
 
 ```
 USAGE
-  $ psf-bch-wallet wallet-optimize
+  $ psf-bch-wallet wallet-optimize [-n <value>]
 
-OPTIONS
-  -n, --name=name  Name of wallet
+FLAGS
+  -n, --name  Name of wallet
 
 DESCRIPTION
+  Optimize a wallet
+
   This command 'optimizes' a wallet by consolidating the UTXOs with in it. This
   consolidation can significantly reduce the number of API calls, which speeds
   up the the network calls and results in an improved user experience (UX).
@@ -668,10 +754,13 @@ Remove an existing wallet.
 
 ```
 USAGE
-  $ psf-bch-wallet wallet-remove
+  $ psf-bch-wallet wallet-remove [-n <value>]
 
-OPTIONS
-  -n, --name=name  Name of wallet
+FLAGS
+  -n, --name  Name of wallet
+
+DESCRIPTION
+  Remove an existing wallet.
 ```
 
 _See code: [src/commands/wallet-remove.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/wallet-remove.js)_
@@ -682,12 +771,14 @@ Scan different derivation paths of a 12 word mnemonic for tx history.
 
 ```
 USAGE
-  $ psf-bch-wallet wallet-scan
+  $ psf-bch-wallet wallet-scan [-m <value>]
 
-OPTIONS
-  -m, --mnemonic=mnemonic  mnemonic phrase to generate addresses, wrapped in quotes
+FLAGS
+  -m, --mnemonic  mnemonic phrase to generate addresses, wrapped in quotes
 
 DESCRIPTION
+  Scan different derivation paths of a 12 word mnemonic for tx history.
+
   Scans the first 20 addresses of each derivation path for
   history and balance of the given mnemonic. If any of them had a history, scans
   the next 20, until it reaches a batch of 20 addresses with no history. The -m
@@ -712,10 +803,13 @@ List and/or select a wallet service provider.
 
 ```
 USAGE
-  $ psf-bch-wallet wallet-service
+  $ psf-bch-wallet wallet-service [-s <value>]
 
-OPTIONS
-  -s, --select=select  Switch to a given IPFS ID for wallet service.
+FLAGS
+  -s, --select  Switch to a given IPFS ID for wallet service.
+
+DESCRIPTION
+  List and/or select a wallet service provider.
 ```
 
 _See code: [src/commands/wallet-service.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/wallet-service.js)_
@@ -729,6 +823,8 @@ USAGE
   $ psf-bch-wallet wallet-service-test
 
 DESCRIPTION
+  Run end-to-end tests on the selected wallet service.
+
   This command will run a series of end-to-end (e2e) tests on a current global
   back end selected with the 'wallet-service' command. It will test that the
   selected service if fully function, and this app can adaquately communicate
@@ -743,15 +839,17 @@ Sweep funds from one wallet into another
 
 ```
 USAGE
-  $ psf-bch-wallet wallet-sweep
+  $ psf-bch-wallet wallet-sweep [-n <value>] [-m <value>] [-w <value>] [-d <value>]
 
-OPTIONS
-  -d, --derivation=derivation  Derivation path. Will default to 245 if not specified. Common values are 245, 145, and 0
-  -m, --mnemonic=mnemonic      12-word mnemonic phrase, wrapped in quotes
-  -n, --name=name              name of receiving wallet
-  -w, --wif=wif                WIF private key controlling funds of a single address
+FLAGS
+  -d, --derivation  Derivation path. Will default to 245 if not specified. Common values are 245, 145, and 0
+  -m, --mnemonic    12-word mnemonic phrase, wrapped in quotes
+  -n, --name        name of receiving wallet
+  -w, --wif         WIF private key controlling funds of a single address
 
 DESCRIPTION
+  Sweep funds from one wallet into another
+
   Sweep funds from a single private key (WIF) or a whole HD wallet (mnemonic)
   into another wallet. Works for both BCH and tokens.
 
