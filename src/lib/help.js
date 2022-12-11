@@ -208,7 +208,10 @@ class CustomHelp extends HelpBase {
     }
 
     const help = this.getCommandHelpClass(command)
-    return help.generate()
+    const generatedHelp = help.generate()
+    console.log('generatedHelp: ', generatedHelp)
+
+    return generatedHelp
   }
 
   getCommandHelpClass (command) {
