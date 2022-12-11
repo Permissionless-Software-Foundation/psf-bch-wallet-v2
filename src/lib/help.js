@@ -13,6 +13,7 @@ const { error } = require('@oclif/core/lib/errors')
 const tempRootHelp = require('@oclif/core/lib/help/root.js')
 const RootHelp = tempRootHelp.default
 const Conf = require('conf')
+const { CommandHelp } = require('@oclif/core/lib/help/command.js')
 
 class CustomHelp extends HelpBase {
   constructor (argv) {
@@ -198,6 +199,25 @@ class CustomHelp extends HelpBase {
 
     return c.description && this.render(c.description).split('\n')[0]
   }
+
+  // Used by the prepack script.
+  formatCommand (command) {
+    if (this.config.topicSeparator !== ':') {
+      command.id = command.id.replace(/:/g, this.config.topicSeparator)
+      command.aliases = command.aliases && command.aliases.map(a => a.replace(/:/g, this.config.topicSeparator))
+    }
+
+    const help = this.getCommandHelpClass(command)
+    return help.generate()
+  }
+
+  getCommandHelpClass (command) {
+    return new CommandHelp(command, this.config, this.opts)
+  }
+
+  // CommandHelpClass {
+  //   return typeof CommandHelp = CommandHelp
+  // }
 }
 
 function getHelpSubject (args, config) {
