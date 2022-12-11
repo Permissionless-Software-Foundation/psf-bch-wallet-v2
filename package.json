@@ -65,7 +65,8 @@
     "plugins": [
       "@oclif/plugin-help",
       "conf-cli"
-    ]
+    ],
+    "helpClass": "./src/lib/help"
   },
   "repository": "Permissionless-Software-Foundation/psf-bch-wallet",
   "scripts": {
