@@ -124,10 +124,9 @@ class CustomHelp extends HelpBase {
 
       // Hide or show ipfs-* commands.
       const showIpfsCmds = this.conf.get('cmdIpfs', false)
-      // console.log('showIpfsCmds: ', showIpfsCmds)
-      if (!showIpfsCmds) {
+      if (!showIpfsCmds || showIpfsCmds === 'false') {
         // Ensure the config setting is explicitly defined.
-        this.conf.set('cmdIpfs', false)
+        this.conf.set('cmdIpfs', 'false')
 
         // Filter out the IPFS commands.
         cmdAry = cmdAry.filter(x => !x.id.includes('ipfs-'))
