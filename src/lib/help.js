@@ -13,7 +13,7 @@ const { error } = require('@oclif/core/lib/errors')
 const tempRootHelp = require('@oclif/core/lib/help/root.js')
 const RootHelp = tempRootHelp.default
 const Conf = require('conf')
-const { CommandHelp } = require('@oclif/core/lib/help/command.js')
+const CommandHelp = require('@oclif/core/lib/help/command.js')
 
 class CustomHelp extends HelpBase {
   constructor (argv) {
@@ -212,7 +212,8 @@ class CustomHelp extends HelpBase {
   }
 
   getCommandHelpClass (command) {
-    return new CommandHelp(command, this.config, this.opts)
+    const CommandHelp2 = CommandHelp.default
+    return new CommandHelp2(command, this.config, this.opts)
   }
 
   // CommandHelpClass {
