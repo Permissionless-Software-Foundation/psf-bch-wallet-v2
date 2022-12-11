@@ -6,7 +6,7 @@
 
 // const { Command, HelpBase } = require('@oclif/core')
 const { HelpBase } = require('@oclif/core')
-const { getHelpFlagAdditions, standardizeIDFromArgv } = require('@oclif/core/lib/help/util.js')
+const { formatCommandDeprecationWarning, getHelpFlagAdditions, standardizeIDFromArgv, toConfiguredId } = require('@oclif/core/lib/help/util.js')
 const { sortBy, uniqBy } = require('@oclif/core/lib/util')
 const { toCached } = require('@oclif/core/lib/config/config')
 const { error } = require('@oclif/core/lib/errors')
@@ -219,6 +219,48 @@ class CustomHelp extends HelpBase {
   // CommandHelpClass {
   //   return typeof CommandHelp = CommandHelp
   // }
+
+  async showCommandHelp (command) {
+    const name = command.id
+    const depth = name.split(':').length
+
+    const subTopics = this.sortedTopics().filter(t => t.name.startsWith(name + ':') && t.name.split(':').length === depth + 1)
+    const subCommands = this.sortedCommands().filter(c => c.id.startsWith(name + ':') && c.id.split(':').length === depth + 1)
+    const plugin = this.config.plugins.find(p => p.name === command.pluginName)
+
+    const state = this.config.pjson?.oclif?.state || plugin?.pjson?.oclif?.state || command.state
+
+    if (state) {
+      this.log(
+        state === 'deprecated'
+          ? `${formatCommandDeprecationWarning(toConfiguredId(name, this.config), command.deprecationOptions)}`
+          : `This command is in ${state}.\n`
+      )
+    }
+
+    const summary = this.summary(command)
+    if (summary) {
+      this.log(summary + '\n')
+    }
+
+    this.log(this.formatCommand(command))
+    this.log('')
+
+    if (subTopics.length > 0) {
+      this.log(this.formatTopics(subTopics))
+      this.log('')
+    }
+
+    if (subCommands.length > 0) {
+      const aliases = []
+      const uniqueSubCommands = subCommands.filter(p => {
+        aliases.push(...p.aliases)
+        return !aliases.includes(p.id)
+      })
+      this.log(this.formatCommands(uniqueSubCommands))
+      this.log('')
+    }
+  }
 }
 
 function getHelpSubject (args, config) {
