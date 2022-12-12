@@ -14,6 +14,7 @@ const SlpWallet = require('minimal-slp-wallet')
 
 // Constants
 const GROUP_ID = 'd89386b31c46ef977e6bae8e5a8b5770d02e9c3ee50fea5d4805490a5f17c5f3'
+// const GROUP_ID = '5c8cb997cce61426b7149a74a3997443ec7eb738c5c246d9cfe70185a6911476'
 
 const { Command } = require('@oclif/command')
 
@@ -59,35 +60,8 @@ class VoteAddrs extends Command {
 
         const nftData = await this.wallet.getTokenData(thisNft, true)
         // console.log('nftData: ', nftData)
-        const nftTxs = nftData.genesisData.txs
-        // console.log('nftTxs: ', nftTxs)
 
-        let mostRecentTx = ''
-
-        // Loop through each of the transactions. Assuming that these txs
-        // are arranged in descending order, with oldest first.
-        for (let j = 0; j < nftTxs.length; j++) {
-          const thisTx = nftTxs[j]
-          // console.log('thisTx: ', thisTx)
-
-          // Skip if this was a genesis transaction.
-          if (thisTx.type.includes('GENESIS')) continue
-
-          if (thisTx.type.includes('SEND')) {
-            mostRecentTx = thisTx.txid
-            break
-          }
-        }
-
-        // console.log('mostRecentTx: ', mostRecentTx)
-
-        const txDetails = await this.wallet.getTxData([mostRecentTx])
-        // console.log(`txDetails: ${JSON.stringify(txDetails, null, 2)}`)
-
-        const nftOwner = txDetails[0].vout[1].scriptPubKey.addresses[0]
-        console.log(`NFT Owner address ${nftOwner} found for NFT ${thisNft}`)
-
-        addrs.push(nftOwner)
+        addrs.push(nftData.genesisData.nftHolder)
       }
 
       return addrs
