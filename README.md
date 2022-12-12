@@ -108,6 +108,7 @@ In the commands below, replace `psf-bch-wallet` with `./bin/run`.
 * [`psf-bch-wallet token-tx-history`](#psf-bch-wallet-token-tx-history)
 * [`psf-bch-wallet token-update`](#psf-bch-wallet-token-update)
 * [`psf-bch-wallet vote-addrs`](#psf-bch-wallet-vote-addrs)
+* [`psf-bch-wallet vote-airdrop`](#psf-bch-wallet-vote-airdrop)
 * [`psf-bch-wallet wallet-addrs`](#psf-bch-wallet-wallet-addrs)
 * [`psf-bch-wallet wallet-balances`](#psf-bch-wallet-wallet-balances)
 * [`psf-bch-wallet wallet-create`](#psf-bch-wallet-wallet-create)
@@ -678,6 +679,29 @@ Collect Voting Addresses
 ```
 
 _See code: [src/commands/vote-addrs.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/vote-addrs.js)_
+
+## `psf-bch-wallet vote-airdrop`
+
+Airdrop Voting Tokens
+
+```
+[1mUSAGE[22m
+  $ psf-bch-wallet vote-airdrop [-n <value>] [-a <value>] [-t <value>]
+
+[1mFLAGS[22m
+  -a, --addrs=[4m<value>[24m    [2mJSON string containing array of addresses[22m
+  -n, --name=[4m<value>[24m     [2mName of wallet holding voting tokens[22m
+  -t, --tokenId=[4m<value>[24m  [2mToken ID to air-drop to each address[22m
+
+[1mDESCRIPTION[22m
+  Airdrop Voting Tokens
+
+  This command is used to air-drop voting tokens to an array of addresses. It
+  is expected the array of addresses is generated from the vote-addrs command.
+  One token will be send to each address in the list.
+```
+
+_See code: [src/commands/vote-airdrop.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/vote-airdrop.js)_
 
 ## `psf-bch-wallet wallet-addrs`
 
