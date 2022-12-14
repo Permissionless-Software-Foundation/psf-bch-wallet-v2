@@ -4,7 +4,7 @@
   "version": "v2.14.2",
   "author": "Chris Troutner <chris.troutner@gmail.com>",
   "bin": {
-    "bin-cli-boilerplate": "./bin/run"
+    "psf-bch-wallet": "./bin/run"
   },
   "bugs": "https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/issues",
   "dependencies": {
@@ -25,7 +25,7 @@
     "koa": "2.13.4",
     "koa-bodyparser": "4.3.0",
     "koa-router": "10.1.1",
-    "minimal-slp-wallet": "5.5.4",
+    "minimal-slp-wallet": "5.6.0",
     "p2wdb": "2.2.10",
     "semver": "7.3.5",
     "shelljs": "0.8.4",
