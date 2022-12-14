@@ -22,6 +22,43 @@ class CustomHelp extends HelpBase {
     this.conf = new Conf()
   }
 
+  // THIS IS THE CUSTOM FUNCTION ADDED BY PSF TO SELECTIVELY SHOW HELP.
+  // This function expects an array of objects as input. Each object is a command.
+  // The array will be filtered in place and returned.
+  // Commands are removed from the array, based on the config settings.
+  // The purpose of this filter is to reduce the number of commands the user sees
+  // unless they want to turn on categories of commands for advanced usage.
+  filterCommands (cmdAry) {
+    try {
+      // console.log('cmdAry: ', cmdAry)
+
+      // Hide or show ipfs-* commands.
+      const showIpfsCmds = this.conf.get('cmdIpfs', false)
+      if (!showIpfsCmds || showIpfsCmds === 'false') {
+        // Ensure the config setting is explicitly defined.
+        this.conf.set('cmdIpfs', 'false')
+
+        // Filter out the IPFS commands.
+        cmdAry = cmdAry.filter(x => !x.id.includes('ipfs-'))
+      }
+
+      // Hide or show vote-* commands.
+      const showVoteCmds = this.conf.get('cmdVote', false)
+      if (!showVoteCmds || showVoteCmds === 'false') {
+        // Ensure the config setting is explicitly defined.
+        this.conf.set('cmdVote', 'false')
+
+        // Filter out the vote commands.
+        cmdAry = cmdAry.filter(x => !x.id.includes('vote-'))
+      }
+
+      return cmdAry
+    } catch (err) {
+      console.error('Error in help.js/filterCommands(): ', err)
+      throw err
+    }
+  }
+
   async showHelp (argv) {
     // console.log('This will be displayed in multi-command CLIs')
 
@@ -111,32 +148,6 @@ class CustomHelp extends HelpBase {
 
       this.log(this.formatCommands(rootCommands))
       this.log('')
-    }
-  }
-
-  // This function expects an array of objects as input. Each object is a command.
-  // The array will be filtered in place and returned.
-  // Commands are removed from the array, based on the config settings.
-  // The purpose of this filter is to reduce the number of commands the user sees
-  // unless they want to turn on categories of commands for advanced usage.
-  filterCommands (cmdAry) {
-    try {
-      // console.log('cmdAry: ', cmdAry)
-
-      // Hide or show ipfs-* commands.
-      const showIpfsCmds = this.conf.get('cmdIpfs', false)
-      if (!showIpfsCmds || showIpfsCmds === 'false') {
-        // Ensure the config setting is explicitly defined.
-        this.conf.set('cmdIpfs', 'false')
-
-        // Filter out the IPFS commands.
-        cmdAry = cmdAry.filter(x => !x.id.includes('ipfs-'))
-      }
-
-      return cmdAry
-    } catch (err) {
-      console.error('Error in help.js/filterCommands(): ', err)
-      throw err
     }
   }
 
