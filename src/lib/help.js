@@ -209,7 +209,7 @@ class CustomHelp extends HelpBase {
 
     const help = this.getCommandHelpClass(command)
     const generatedHelp = help.generate()
-    console.log('generatedHelp: ', generatedHelp)
+    // console.log('generatedHelp: ', generatedHelp)
 
     return generatedHelp
   }
@@ -224,6 +224,8 @@ class CustomHelp extends HelpBase {
   // }
 
   async showCommandHelp (command) {
+    // console.log('command: ', command)
+
     const name = command.id
     const depth = name.split(':').length
 
@@ -246,14 +248,17 @@ class CustomHelp extends HelpBase {
       this.log(summary + '\n')
     }
 
+    // console.log('command: ', command)
     this.log(this.formatCommand(command))
     this.log('')
 
+    // console.log('subTopics: ', subTopics)
     if (subTopics.length > 0) {
       this.log(this.formatTopics(subTopics))
       this.log('')
     }
 
+    // console.log('subCommands: ', subCommands)
     if (subCommands.length > 0) {
       const aliases = []
       const uniqueSubCommands = subCommands.filter(p => {
