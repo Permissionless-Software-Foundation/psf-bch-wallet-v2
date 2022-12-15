@@ -146,6 +146,10 @@ class BchWallet {
   async getPubKey () {
     return true
   }
+
+  async sendTokens () {
+    return true
+  }
 }
 
 module.exports = BchWallet
