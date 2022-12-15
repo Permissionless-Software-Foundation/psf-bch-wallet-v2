@@ -163,6 +163,16 @@ describe('#Wallet-Util', () => {
         assert.include(err.message, 'test error')
       }
     })
+
+    it('should throw error if wallet name is not specified', async () => {
+      try {
+        await uut.instanceWallet()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'walletName is required.')
+      }
+    })
   })
 
   describe('#getRestServer', () => {
@@ -217,6 +227,52 @@ describe('#Wallet-Util', () => {
       const result = await uut.broadcastTx(wallet, 'fake-hex')
 
       assert.equal(result, 'fake-txid')
+    })
+  })
+
+  describe('#getP2wdbServer', () => {
+    it('should return default values', () => {
+      // Force conf.get to return false.
+      sandbox.stub(uut.conf, 'get').returns(false)
+
+      const result = uut.getP2wdbServer()
+
+      assert.equal(result, 'https://p2wdb.fullstack.cash')
+    })
+
+    it('should return saved values', () => {
+      // Force desired code paths
+      sandbox.stub(uut.conf, 'get')
+        .onCall(0).returns('test-restURL')
+
+      const result = uut.getP2wdbServer()
+
+      assert.equal(result, 'test-restURL')
+    })
+
+    it('should catch and throw an error', () => {
+      // Force an error
+      sandbox.stub(uut.conf, 'get').throws(new Error('test error'))
+
+      try {
+        uut.getP2wdbServer()
+
+        assert.fail('Unexpected result')
+      } catch (err) {
+        assert.include(err.message, 'test error')
+      }
+    })
+  })
+
+  describe('#instanceMsgLib', () => {
+    it('should throw an error if wallet is not specified', () => {
+      try {
+        uut.instanceMsgLib()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'Must pass instance of minimal-slp-wallet.')
+      }
     })
   })
 })
