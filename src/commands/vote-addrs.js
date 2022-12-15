@@ -5,12 +5,9 @@
 */
 
 // Public NPM libraries
-// const Conf = require('conf')
-// const { Pin, Write } = require('p2wdb')
 const SlpWallet = require('minimal-slp-wallet')
 
 // Local libraries
-// const WalletUtil = require('../lib/wallet-util')
 
 // Constants
 const GROUP_ID = 'd89386b31c46ef977e6bae8e5a8b5770d02e9c3ee50fea5d4805490a5f17c5f3'
@@ -49,7 +46,7 @@ class VoteAddrs extends Command {
 
   // This function expects an array of strings as input. Each element is expected
   // to be the Token ID of the an NFT. The address holding each NFT is looked up.
-  // The array of addresses are filtered for duplicates, before being returned.
+  // TODO: The array of addresses are filtered for duplicates, before being returned.
   async getAddrs (nfts) {
     try {
       const addrs = []
@@ -66,7 +63,7 @@ class VoteAddrs extends Command {
 
       return addrs
     } catch (err) {
-      console.error('Error in getAddrs(): ', err)
+      console.error('Error in getAddrs(): ', err.message)
       throw err
     }
   }
@@ -81,7 +78,7 @@ class VoteAddrs extends Command {
 
       return nfts
     } catch (err) {
-      console.error('Error in getNftsFromGroup()')
+      console.error('Error in getNftsFromGroup(): ', err.message)
       throw err
     }
   }
@@ -92,6 +89,8 @@ class VoteAddrs extends Command {
     const wallet = new SlpWallet(undefined, { interface: 'consumer-api' })
 
     await wallet.walletInfoPromise
+
+    this.wallet = wallet
 
     return wallet
   }
