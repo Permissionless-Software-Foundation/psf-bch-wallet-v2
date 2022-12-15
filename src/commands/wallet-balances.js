@@ -10,7 +10,6 @@ const fs = require('fs')
 
 // Local libraries
 const WalletUtil = require('../lib/wallet-util')
-const WalletConsumer = require('../lib/adapters/wallet-consumer')
 
 const { Command, flags } = require('@oclif/command')
 
@@ -21,7 +20,6 @@ class WalletBalances extends Command {
     // Encapsulate dependencies.
     this.fs = fs
     this.walletUtil = new WalletUtil()
-    this.walletService = new WalletConsumer()
     this.BchWallet = BchWallet
     this.conf = new Conf()
   }

@@ -3,6 +3,8 @@
 // Global npm libraries
 const assert = require('chai').assert
 const sinon = require('sinon')
+const fs = require('fs').promises
+const EncryptLib = require('bch-encrypt-lib/index')
 
 // Local libraries
 const MsgSend = require('../../../src/commands/msg-send')
@@ -25,12 +27,20 @@ describe('msg-send', () => {
     sandbox = sinon.createSandbox()
 
     uut = new MsgSend()
-    uut.Write = MsgSendMock.Write
+    // uut.Write = MsgSendMock.Write
     mockWallet = new MockWallet()
+
+    // await uut.instanceLibs({
+    //   name: filename
+    // })
   })
 
   afterEach(() => {
     sandbox.restore()
+  })
+
+  after(async () => {
+    await fs.rm(filename)
   })
 
   describe('#validateFlags()', () => {
@@ -51,7 +61,7 @@ describe('msg-send', () => {
       } catch (err) {
         assert.include(
           err.message,
-          'You must specify a bch address with the -b flag.',
+          'You must specify a bch address with the -a flag.',
           'Expected error message.'
         )
       }
@@ -106,11 +116,36 @@ describe('msg-send', () => {
     })
   })
 
+  describe('#instanceLibs', () => {
+    it('should instantiate the different libraries', async () => {
+      // Mock dependencies and force desired code path
+      sandbox.stub(uut.walletUtil, 'instanceWallet').resolves(mockWallet)
+
+      const flags = {
+        bchAddress: 'bitcoincash:qpufm97hppty67chexq4p53vc29mzg437vwp7huaa3',
+        message: 'test message',
+        subject: 'Test',
+        name: 'test123'
+      }
+
+      const result = await uut.instanceLibs(flags)
+
+      assert.equal(result, true)
+    })
+  })
+
   describe('#encryptMsg()', () => {
     it('should return the encrypted message.', async () => {
+      const bchjs = mockWallet.bchjs
+      uut.encryptLib = new EncryptLib({ bchjs })
+
+      // Mock dependencies and force desired code path.
+      sandbox.stub(uut.encryptLib.encryption, 'encryptFile').resolves('encrypted-message')
+
       const pubKey = MsgSendMock.getPubkeyResult.pubkey.publicKey
       const msg = 'message'
       const result = await uut.encryptMsg(pubKey, msg)
+
       assert.isString(result)
     })
 
@@ -225,24 +260,6 @@ describe('msg-send', () => {
     })
   })
 
-  describe('#instanceLibs', () => {
-    it('should instantiate the different libraries', async () => {
-      // Mock dependencies and force desired code path
-      sandbox.stub(uut.walletUtil, 'instanceWallet').resolves(mockWallet)
-
-      const flags = {
-        bchAddress: 'bitcoincash:qpufm97hppty67chexq4p53vc29mzg437vwp7huaa3',
-        message: 'test message',
-        subject: 'Test',
-        name: 'test123'
-      }
-
-      const result = await uut.instanceLibs(flags)
-
-      assert.equal(result, true)
-    })
-  })
-
   describe('#encryptAndUpload', () => {
     it('should encrypt the message and upload it to the P2WDB', async () => {
       // Mock dependencies and force desired code path
@@ -258,8 +275,8 @@ describe('msg-send', () => {
       await uut.instanceLibs(flags)
 
       sandbox
-        .stub(uut.walletService, 'getPubKey')
-        .resolves(MsgSendMock.getPubkeyResult)
+        .stub(uut, 'encryptMsg')
+        .resolves('encrypted-message')
 
       sandbox.stub(uut.write, 'postEntry').resolves({ hash: 'fake-hash' })
       // uut.write.postEntry = () => {

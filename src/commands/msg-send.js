@@ -9,7 +9,6 @@ const eccrypto = require('eccrypto-js')
 const Write = require('p2wdb').Write
 
 // Local libraries
-const WalletService = require('../lib/adapters/wallet-consumer')
 const WalletUtil = require('../lib/wallet-util')
 
 class MsgSend extends Command {
@@ -17,10 +16,7 @@ class MsgSend extends Command {
     super(argv, config)
 
     // Encapsulate dependencies.
-    this.walletService = new WalletService()
-    this.encryptLib = new EncryptLib({
-      bchjs: this.walletService.walletUtil.bchjs
-    })
+    this.encryptLib = null // placeholder
     this.eccrypto = eccrypto
     this.Write = Write
     this.walletUtil = new WalletUtil()
@@ -40,7 +36,7 @@ class MsgSend extends Command {
 
       return result
     } catch (error) {
-      console.log('Error in msg-send.js/run(): ', error.message)
+      console.log('Error in msg-send.js/run(): ', error)
 
       return 0
     }
@@ -74,16 +70,25 @@ class MsgSend extends Command {
 
     // Instantiate minimal-slp-wallet.
     this.bchWallet = await this.walletUtil.instanceWallet(name)
-    const walletData = this.bchWallet.walletInfo
+    // const walletData = this.bchWallet.walletInfo
 
     // Instantiate the bch-message-lib library.
     this.msgLib = this.walletUtil.instanceMsgLib(this.bchWallet)
 
+    // Get the selected P2WDB server URL
+    const serverURL = this.walletUtil.getP2wdbServer()
+
     // Instatiate the P2WDB Write library.
     const p2wdbConfig = {
-      wif: walletData.privateKey
+      bchWallet: this.bchWallet,
+      serverURL
     }
     this.write = new this.Write(p2wdbConfig)
+
+    // Instantiate the encryption library.
+    this.encryptLib = new EncryptLib({
+      bchjs: this.bchWallet.bchjs
+    })
 
     return true
   }
@@ -93,8 +98,9 @@ class MsgSend extends Command {
     const { bchAddress, message } = flags
 
     // Get public Key for reciever from the blockchain.
-    const pubKey = await this.walletService.getPubKey(bchAddress)
-    const publicKey = pubKey.pubkey.publicKey
+    // const pubKey = await this.walletService.getPubKey(bchAddress)
+    const publicKey = await this.bchWallet.getPubKey(bchAddress)
+    // const publicKey = pubKey.pubkey.publicKey
     console.log(`publicKey: ${JSON.stringify(publicKey, null, 2)}`)
 
     // Encrypt the message using the recievers public key.
@@ -140,12 +146,14 @@ class MsgSend extends Command {
   // Encrypt a message using encryptLib
   async encryptMsg (pubKey, msg) {
     try {
+      // Input validation
       if (!pubKey || typeof pubKey !== 'string') {
         throw new Error('pubKey must be a string')
       }
       if (!msg || typeof msg !== 'string') {
         throw new Error('msg must be a string')
       }
+
       const buff = Buffer.from(msg)
       const hex = buff.toString('hex')
 
@@ -154,6 +162,7 @@ class MsgSend extends Command {
         hex
       )
       // console.log(`encryptedStr: ${JSON.stringify(encryptedStr, null, 2)}`)
+
       return encryptedStr
     } catch (error) {
       console.log('Error in encryptMsg()')
@@ -202,7 +211,7 @@ class MsgSend extends Command {
     const subject = flags.subject
 
     if (!addr || addr === '') {
-      throw new Error('You must specify a bch address with the -b flag.')
+      throw new Error('You must specify a bch address with the -a flag.')
     }
     if (!message || message === '') {
       throw new Error('You must specify the message to send with the -m flag.')
@@ -220,7 +229,7 @@ class MsgSend extends Command {
 MsgSend.description = 'Send encrypted messages'
 
 MsgSend.flags = {
-  bchAddress: flags.string({ char: 'b', description: 'BCH Address' }),
+  bchAddress: flags.string({ char: 'a', description: 'BCH Address' }),
   message: flags.string({ char: 'm', description: 'Message to send' }),
   subject: flags.string({ char: 's', description: 'Message Subject' }),
   name: flags.string({ char: 'n', description: 'Name of wallet' })

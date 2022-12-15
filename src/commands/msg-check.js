@@ -8,9 +8,10 @@ const EncryptLib = require('bch-encrypt-lib/index')
 const MsgLib = require('bch-message-lib/index')
 const Write = require('p2wdb').Write
 const Table = require('cli-table')
+const BchWallet = require('minimal-slp-wallet')
 
 // Local npm libraries
-const WalletService = require('../lib/adapters/wallet-consumer')
+// const WalletService = require('../lib/adapters/wallet-consumer')
 const WalletUtil = require('../lib/wallet-util')
 
 class MsgCheck extends Command {
@@ -18,10 +19,12 @@ class MsgCheck extends Command {
     super(argv, config)
 
     // Encapsulate dependencies
-    this.walletService = new WalletService()
+    this.wallet = new BchWallet()
+    // this.walletService = new WalletService()
     this.walletUtil = new WalletUtil()
     this.encryptLib = new EncryptLib({
-      bchjs: this.walletService.walletUtil.bchjs
+      // bchjs: this.walletService.walletUtil.bchjs
+      bchjs: this.wallet.bchjs
     })
     this.MsgLib = MsgLib
     // this.messagesLib = new MessagesLib({
@@ -66,7 +69,7 @@ class MsgCheck extends Command {
       // Get message signals from the blockchain.
       console.log(`cashAddress ${cashAddress}`)
       const messages = await this.msgLib.memo.readMsgSignal(cashAddress)
-      // console.log('message: ', messages)
+      console.log('message: ', messages)
 
       // Filter out sent messages, so user only sees recieved messages.
       const receiveMessages = this.filterMessages(cashAddress, messages)

@@ -107,6 +107,8 @@ In the commands below, replace `psf-bch-wallet` with `./bin/run`.
 * [`psf-bch-wallet token-mint`](#psf-bch-wallet-token-mint)
 * [`psf-bch-wallet token-tx-history`](#psf-bch-wallet-token-tx-history)
 * [`psf-bch-wallet token-update`](#psf-bch-wallet-token-update)
+* [`psf-bch-wallet vote-addrs`](#psf-bch-wallet-vote-addrs)
+* [`psf-bch-wallet vote-airdrop`](#psf-bch-wallet-vote-airdrop)
 * [`psf-bch-wallet wallet-addrs`](#psf-bch-wallet-wallet-addrs)
 * [`psf-bch-wallet wallet-balances`](#psf-bch-wallet-wallet-balances)
 * [`psf-bch-wallet wallet-create`](#psf-bch-wallet-wallet-create)
@@ -251,10 +253,10 @@ Send encrypted messages
 
 ```
 USAGE
-  $ psf-bch-wallet msg-send [-b <value>] [-m <value>] [-s <value>] [-n <value>]
+  $ psf-bch-wallet msg-send [-a <value>] [-m <value>] [-s <value>] [-n <value>]
 
 FLAGS
-  -b, --bchAddress=<value>  BCH Address
+  -a, --bchAddress=<value>  BCH Address
   -m, --message=<value>     Message to send
   -n, --name=<value>        Name of wallet
   -s, --subject=<value>     Message Subject
@@ -659,6 +661,47 @@ DESCRIPTION
 ```
 
 _See code: [src/commands/token-update.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/token-update.js)_
+
+## `psf-bch-wallet vote-addrs`
+
+Collect Voting Addresses
+
+```
+USAGE
+  $ psf-bch-wallet vote-addrs
+
+DESCRIPTION
+  Collect Voting Addresses
+
+  This command is run to prepare for a governance vote. It looks up the addresses
+  holding all NFTs tied to a common group token. This list of addresses can
+  then be used to air-drop voting tokens.
+```
+
+_See code: [src/commands/vote-addrs.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/vote-addrs.js)_
+
+## `psf-bch-wallet vote-airdrop`
+
+Airdrop Voting Tokens
+
+```
+USAGE
+  $ psf-bch-wallet vote-airdrop [-n <value>] [-a <value>] [-t <value>]
+
+FLAGS
+  -a, --addrs=<value>    JSON string containing array of addresses
+  -n, --name=<value>     Name of wallet holding voting tokens
+  -t, --tokenId=<value>  Token ID to air-drop to each address
+
+DESCRIPTION
+  Airdrop Voting Tokens
+
+  This command is used to air-drop voting tokens to an array of addresses. It
+  is expected the array of addresses is generated from the vote-addrs command.
+  One token will be send to each address in the list.
+```
+
+_See code: [src/commands/vote-airdrop.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/vote-airdrop.js)_
 
 ## `psf-bch-wallet wallet-addrs`
 

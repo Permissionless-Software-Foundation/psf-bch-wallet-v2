@@ -8,7 +8,7 @@ const EncryptLib = require('bch-encrypt-lib/index')
 const Read = require('p2wdb').Read
 
 // Local libraries
-const WalletService = require('../lib/adapters/wallet-consumer')
+// const WalletService = require('../lib/adapters/wallet-consumer')
 const WalletUtil = require('../lib/wallet-util')
 
 class MsgRead extends Command {
@@ -16,12 +16,8 @@ class MsgRead extends Command {
     super(argv, config)
 
     // Encapsulate dependencies
-    this.walletService = new WalletService()
-    this.encryptLib = new EncryptLib({
-      bchjs: this.walletService.walletUtil.bchjs
-    })
+    this.encryptLib = null // placeholder
     this.Read = Read
-    this.bchjs = this.walletService.walletUtil.bchjs
     this.walletUtil = new WalletUtil()
   }
 
@@ -44,7 +40,7 @@ class MsgRead extends Command {
 
       return result
     } catch (error) {
-      console.log('Error in msg-read.js/run(): ', error.message)
+      console.log('Error in msg-read.js/run(): ', error)
 
       return 0
     }
@@ -119,6 +115,10 @@ class MsgRead extends Command {
       wif: walletData.privateKey
     }
     this.read = new this.Read(p2wdbConfig)
+
+    this.encryptLib = new EncryptLib({
+      bchjs: this.bchWallet.bchjs
+    })
 
     return true
   }
