@@ -1,7 +1,8 @@
 /*
-  This command is run to prepare for a governance vote. It looks up the addresses
-  holding all NFTs tied to a common group token. This list of addresses can
-  then be used to air-drop voting tokens.
+  This command uses the Minting Council NFTs as a homing beacon to retrieve the
+  addresses for each holder an a Minting Council NFTs. It then tries to retrieve
+  the public keys from the blockchain for each address. Those public keys are
+  needed to construct a multisig wallet.
 */
 
 // Public NPM libraries
@@ -15,7 +16,7 @@ const GROUP_ID = 'd89386b31c46ef977e6bae8e5a8b5770d02e9c3ee50fea5d4805490a5f17c5
 
 const { Command } = require('@oclif/command')
 
-class VoteAddrs extends Command {
+class MultisigCollectKeys extends Command {
   constructor (argv, config) {
     super(argv, config)
 
@@ -27,14 +28,20 @@ class VoteAddrs extends Command {
     try {
       this.wallet = await this.instanceWallet()
 
+      console.log('Searching for public keys belonging to holders of Minting Council NFTs...')
+
       const nfts = await this.getNftsFromGroup()
       console.log('nfts: ', nfts)
 
       const addrs = await this.getAddrs(nfts)
       console.log('addrs: ', addrs)
 
-      console.log('Stringified addresses:')
-      console.log(`${JSON.stringify(addrs)}`)
+      const { keys, keysNotFound } = await this.findKeys(addrs)
+      console.log('keys: ', keys)
+      console.log('keysNotFound: ', keysNotFound)
+
+      console.log('Stringified address-key pairs:')
+      console.log(`${JSON.stringify(keys)}`)
 
       return true
     } catch (err) {
@@ -44,9 +51,43 @@ class VoteAddrs extends Command {
     }
   }
 
+  // This function expects an array of strings, representing BCH addresses as input.
+  // For each address, it attempts to lookup the public key for that address.
+  // It returns an object with a keys and keysNotFound property:
+  // keys - Object containing address and public key
+  // keysNotFound - Array of addresses whos public keys could not be found.
+  async findKeys (addrs) {
+    try {
+      const keys = []
+      const keysNotFound = []
+
+      for (let i = 0; i < addrs.length; i++) {
+        const thisAddr = addrs[i]
+
+        // Get public Key for reciever from the blockchain.
+        const publicKey = await this.wallet.getPubKey(thisAddr)
+        // console.log(`publicKey: ${JSON.stringify(publicKey, null, 2)}`)
+
+        if (publicKey.includes('not found')) {
+          keysNotFound.push(thisAddr)
+        } else {
+          keys.push({
+            addr: thisAddr,
+            pubKey: publicKey
+          })
+        }
+      }
+
+      return { keys, keysNotFound }
+    } catch (err) {
+      console.error('Error in findKeys(): ', err.message)
+      throw err
+    }
+  }
+
   // This function expects an array of strings as input. Each element is expected
   // to be the Token ID of the an NFT. The address holding each NFT is looked up.
-  // TODO: The array of addresses are filtered for duplicates, before being returned.
+  // The array of addresses are filtered for duplicates, before being returned.
   async getAddrs (nfts) {
     try {
       let addrs = []
@@ -99,7 +140,7 @@ class VoteAddrs extends Command {
   }
 }
 
-VoteAddrs.description = `Collect Voting Addresses
+MultisigCollectKeys.description = `Collect Voting Addresses
 
 This command is run to prepare for a governance vote. It looks up the addresses
 holding all NFTs tied to a common group token. This list of addresses can
@@ -110,4 +151,4 @@ then be used to air-drop voting tokens.
 //   name: flags.string({ char: 'n', description: 'Name of wallet' })
 // }
 
-module.exports = VoteAddrs
+module.exports = MultisigCollectKeys
