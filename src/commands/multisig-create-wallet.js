@@ -43,6 +43,9 @@ class MultisigCreateWallet extends Command {
       const walletObj = await this.createMultisigWallet(flags)
       console.log(`wallet object: ${JSON.stringify(walletObj, null, 2)}`)
 
+      console.log('Stringified wallet object:')
+      console.log(JSON.stringify(walletObj))
+
       return true
     } catch (err) {
       console.log('Error in p2wdb-pin.js/run(): ', err.message)
@@ -83,19 +86,6 @@ class MultisigCreateWallet extends Command {
       return walletObj
     } catch (err) {
       console.error('Error in createMultisigWallet()')
-      throw err
-    }
-  }
-
-  // Optimize the wallet by consolidating the UTXOs.
-  async optimizeWallet (flags) {
-    try {
-      const result = await this.wallet.optimize()
-      console.log('Wallet has been optimized. Output object: ', result)
-
-      return result
-    } catch (err) {
-      console.error('Error in optimizeWallet()')
       throw err
     }
   }
