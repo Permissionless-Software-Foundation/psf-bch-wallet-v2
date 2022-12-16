@@ -6,29 +6,31 @@
 */
 
 // Public NPM libraries
-const Conf = require('conf')
-const { Pin, Write } = require('p2wdb')
+// const Conf = require('conf')
+// const { Pin, Write } = require('p2wdb')
+const SlpWallet = require('minimal-slp-wallet')
+const bitcore = require('bitcore-lib-cash')
 
 // Local libraries
 const WalletUtil = require('../lib/wallet-util')
 
 const { Command, flags } = require('@oclif/command')
 
-class WalletOptimize extends Command {
+class MultisigCreateWallet extends Command {
   constructor (argv, config) {
     super(argv, config)
 
     // Encapsulate dependencies.
     this.walletUtil = new WalletUtil()
-    this.conf = new Conf()
-    this.Pin = Pin
-    this.Write = Write
+    // this.conf = new Conf()
+    // this.Pin = Pin
+    // this.Write = Write
     this.wallet = null // placeholder
   }
 
   async run () {
     try {
-      const { flags } = this.parse(WalletOptimize)
+      const { flags } = this.parse(MultisigCreateWallet)
 
       // Validate input flags
       this.validateFlags(flags)
@@ -37,13 +39,51 @@ class WalletOptimize extends Command {
       await this.instantiateWallet(flags)
 
       // Optimize the wallet
-      await this.optimizeWallet(flags)
+      // await this.optimizeWallet(flags)
+      const walletObj = await this.createMultisigWallet(flags)
+      console.log(`wallet object: ${JSON.stringify(walletObj, null, 2)}`)
 
       return true
     } catch (err) {
       console.log('Error in p2wdb-pin.js/run(): ', err.message)
 
       return 0
+    }
+  }
+
+  // Generate a P2SH multisignature wallet from the public keys of the NFT holders.
+  async createMultisigWallet (flags) {
+    try {
+      const pubKeyPairs = JSON.parse(flags.pairs)
+      const pubKeys = []
+
+      // Isolate just an array of public keys.
+      for (let i = 0; i < pubKeyPairs.length; i++) {
+        const thisPair = pubKeyPairs[i]
+
+        pubKeys.push(thisPair.pubKey)
+      }
+
+      // Determine the number of signers. It's 50% + 1
+      const requiredSigners = Math.floor(pubKeys.length / 2) + 1
+
+      // Multisig Address
+      const msAddr = new bitcore.Address(pubKeys, requiredSigners)
+
+      // Locking Script in hex representation.
+      const scriptHex = new bitcore.Script(msAddr).toHex()
+
+      const walletObj = {
+        address: msAddr.toString(),
+        scriptHex,
+        publicKeys: pubKeys,
+        requiredSigners
+      }
+
+      return walletObj
+    } catch (err) {
+      console.error('Error in createMultisigWallet()')
+      throw err
     }
   }
 
@@ -63,11 +103,19 @@ class WalletOptimize extends Command {
   // Instatiate the wallet library.
   async instantiateWallet (flags) {
     try {
-      // Instantiate the wallet.
-      this.wallet = await this.walletUtil.instanceWallet(flags.name)
-      // console.log(`wallet.walletInfo: ${JSON.stringify(wallet.walletInfo, null, 2)}`)
+      // // Instantiate the wallet.
+      // this.wallet = await this.walletUtil.instanceWallet(flags.name)
+      // // console.log(`wallet.walletInfo: ${JSON.stringify(wallet.walletInfo, null, 2)}`)
+      //
+      // return true
 
-      return true
+      const wallet = new SlpWallet(undefined, { interface: 'consumer-api' })
+
+      await wallet.walletInfoPromise
+
+      this.wallet = wallet
+
+      return wallet
     } catch (err) {
       console.error('Error in instantiateWrite()')
       throw err
@@ -77,24 +125,25 @@ class WalletOptimize extends Command {
   // Validate the proper flags are passed in.
   validateFlags (flags) {
     // Exit if wallet not specified.
-    const name = flags.name
-    if (!name || name === '') {
-      throw new Error('You must specify a wallet with the -n flag.')
+    const pairs = flags.pairs
+    if (!pairs || pairs === '') {
+      throw new Error('You must specify a JSON string of key pairs with the -p flag.')
     }
 
     return true
   }
 }
 
-WalletOptimize.description = `Optimize a wallet
+MultisigCreateWallet.description = `Create a multisig wallet
 
-This command 'optimizes' a wallet by consolidating the UTXOs with in it. This
-consolidation can significantly reduce the number of API calls, which speeds
-up the the network calls and results in an improved user experience (UX).
+This command creates a multisig wallet. As input, it takes address-public-key
+pairs generated from the multisig-collect-keys command. It uses that
+data to construct a P2SH multisig wallet. The wallet object is displayed
+on the command line as the output.
 `
 
-WalletOptimize.flags = {
-  name: flags.string({ char: 'n', description: 'Name of wallet' })
+MultisigCreateWallet.flags = {
+  pairs: flags.string({ char: 'p', description: 'JSON string of address-key pairs' })
 }
 
-module.exports = WalletOptimize
+module.exports = MultisigCreateWallet
