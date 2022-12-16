@@ -30,7 +30,7 @@ class WalletAddrs extends Command {
 
       return this.getAddrs(filename)
     } catch (err) {
-      console.log(err)
+      console.log('Error in wallet-addrs.js: ', err.message)
       return 0
     }
   }
