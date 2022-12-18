@@ -14,6 +14,7 @@ This branch contains several `multisig-*` commands, which are used to experiment
 - `multisig-create-tx` will create a TX for spending from the multisig wallet.
 - `multisig-send-tx` will send the unsigned TX to each member holding the NFT.
 - `multisig-sign` is used by each member to sign the transaction and send the signature back to TX creator.
+- `multisig-finish` collect signatures, sign transaction, and broadcast.
 
 
 ## How-To Videos
@@ -105,7 +106,9 @@ In the commands below, replace `psf-bch-wallet` with `./bin/run`.
 * [`psf-bch-wallet multisig-collect-keys`](#psf-bch-wallet-multisig-collect-keys)
 * [`psf-bch-wallet multisig-create-tx`](#psf-bch-wallet-multisig-create-tx)
 * [`psf-bch-wallet multisig-create-wallet`](#psf-bch-wallet-multisig-create-wallet)
+* [`psf-bch-wallet multisig-finish`](#psf-bch-wallet-multisig-finish)
 * [`psf-bch-wallet multisig-send-tx`](#psf-bch-wallet-multisig-send-tx)
+* [`psf-bch-wallet multisig-sign`](#psf-bch-wallet-multisig-sign)
 * [`psf-bch-wallet p2wdb-json`](#psf-bch-wallet-p2wdb-json)
 * [`psf-bch-wallet p2wdb-pin`](#psf-bch-wallet-p2wdb-pin)
 * [`psf-bch-wallet p2wdb-read`](#psf-bch-wallet-p2wdb-read)
@@ -390,6 +393,29 @@ Create a multisig wallet
 
 _See code: [src/commands/multisig-create-wallet.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/multisig-create-wallet.js)_
 
+## `psf-bch-wallet multisig-finish`
+
+Retrieve signatures, sign multisig TX, and broadcast
+
+```
+[1mUSAGE[22m
+  $ psf-bch-wallet multisig-finish [-n <value>] [-t <value>] [-a <value>]
+
+[1mFLAGS[22m
+  -a, --txids=[4m<value>[24m  [2mArray of TXIDs of messages containing signatures[22m
+  -n, --name=[4m<value>[24m   [2mName of wallet[22m
+  -t, --tx=[4m<value>[24m     [2mUnsigned transaction in JSON format[22m
+
+[1mDESCRIPTION[22m
+  Retrieve signatures, sign multisig TX, and broadcast
+
+  This command expects a JSON string containing an array of transaction IDs (TXIDs)
+  that contain e2ee messages containing signatures for the transaction generated
+  by the multisig-create-tx command.
+```
+
+_See code: [src/commands/multisig-finish.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/multisig-finish.js)_
+
 ## `psf-bch-wallet multisig-send-tx`
 
 Send unsigned multisig transaction to NFT holders
@@ -408,6 +434,24 @@ Send unsigned multisig transaction to NFT holders
 ```
 
 _See code: [src/commands/multisig-send-tx.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/multisig-send-tx.js)_
+
+## `psf-bch-wallet multisig-sign`
+
+Read signed messages
+
+```
+[1mUSAGE[22m
+  $ psf-bch-wallet multisig-sign [-n <value>] [-t <value>]
+
+[1mFLAGS[22m
+  -n, --name=[4m<value>[24m  [2mName of wallet[22m
+  -t, --txid=[4m<value>[24m  [2mTransaction ID[22m
+
+[1mDESCRIPTION[22m
+  Read signed messages
+```
+
+_See code: [src/commands/multisig-sign.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/multisig-sign.js)_
 
 ## `psf-bch-wallet p2wdb-json`
 

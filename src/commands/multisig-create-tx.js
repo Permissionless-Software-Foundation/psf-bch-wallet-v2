@@ -85,7 +85,7 @@ class MultisigCreateTx extends Command {
         .from(utxo, walletObj.publicKeys, walletObj.requiredSigners)
         // Send 1000 sats back to the chosen address.
         .to(chosenAddr, 1000)
-        .feePerByte(1)
+        .feePerByte(3)
         // Send change back to the multisig address
         .change(walletObj.address)
 

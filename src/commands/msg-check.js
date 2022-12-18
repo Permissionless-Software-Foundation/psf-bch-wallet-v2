@@ -69,7 +69,7 @@ class MsgCheck extends Command {
       // Get message signals from the blockchain.
       console.log(`cashAddress ${cashAddress}`)
       const messages = await this.msgLib.memo.readMsgSignal(cashAddress)
-      console.log('message: ', messages)
+      // console.log('message: ', messages)
 
       // Filter out sent messages, so user only sees recieved messages.
       const receiveMessages = this.filterMessages(cashAddress, messages)
