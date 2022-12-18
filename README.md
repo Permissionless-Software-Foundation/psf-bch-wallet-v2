@@ -6,6 +6,16 @@ This app connects to a [ipfs-bch-wallet-service](https://github.com/Permissionle
 
 This app is intended for developers who want to work with the BCH blockchain. It's an integral part of the [Cash Stack](https://cashstack.info).
 
+## Multisig
+This branch contains several `multisig-*` commands, which are used to experiment with multisignature transaction, primarily for the minting council. The commands are expected to executed in this order:
+
+- `multisig-collect-keys` will get the addresses for every holder of an NFT.
+- `multisig-create-wallet` will generate a P2SH multisig wallet that requires 50% + 1 to spend.
+- `multisig-create-tx` will create a TX for spending from the multisig wallet.
+- `multisig-send-tx` will send the unsigned TX to each member holding the NFT.
+- `multisig-sign` is used by each member to sign the transaction and send the signature back to TX creator.
+
+
 ## How-To Videos
 - [Part 1: How to Install and Use](https://www.youtube.com/watch?v=nsExL0Hb7bQ)
 - [Part 2: Configuration](https://www.youtube.com/watch?v=Bu8KqUJSvvc)
