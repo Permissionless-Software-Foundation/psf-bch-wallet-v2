@@ -6,7 +6,6 @@
 
 // Public NPM libraries
 const Conf = require('conf')
-const { Pin, Write } = require('p2wdb')
 
 // Local libraries
 const WalletUtil = require('../lib/wallet-util')
@@ -20,8 +19,6 @@ class WalletOptimize extends Command {
     // Encapsulate dependencies.
     this.walletUtil = new WalletUtil()
     this.conf = new Conf()
-    this.Pin = Pin
-    this.Write = Write
     this.wallet = null // placeholder
   }
 
@@ -40,7 +37,7 @@ class WalletOptimize extends Command {
 
       return true
     } catch (err) {
-      console.log('Error in p2wdb-pin.js/run(): ', err.message)
+      console.log('Error in wallet-optimize.js/run(): ', err.message)
 
       return 0
     }
