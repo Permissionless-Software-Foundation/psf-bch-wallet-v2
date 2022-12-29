@@ -146,6 +146,36 @@ describe('#Wallet-Util', () => {
       await walletRemove.removeWallet(filepath)
     })
 
+    it('should read the config data', async () => {
+      // Force desired code paths
+      sandbox.stub(uut, 'getRestServer').returns({
+        interface: 'rest-api',
+        restURL: 'http://example.com'
+      })
+      // Mock minimal-slp-wallet
+      uut.BchWallet = class BchWallet {
+        async walletInfoPromise () {
+          return true
+        }
+
+        async initialize () {
+          return true
+        }
+      }
+      // Create a wallet
+      const filepath = walletRemove.getFilePath(walletName)
+      await walletCreate.createWallet(filepath)
+
+      const wallet = await uut.instanceWallet(walletName)
+
+      assert.isOk(wallet)
+      assert.equal(uut.advancedConfig.interface, 'rest-api')
+      assert.equal(uut.advancedConfig.restURL, 'http://example.com')
+
+      // Delete the wallet
+      await walletRemove.removeWallet(filepath)
+    })
+
     it('should catch, log, and throw errors', async () => {
       try {
         // Mock minimal-slp-wallet
