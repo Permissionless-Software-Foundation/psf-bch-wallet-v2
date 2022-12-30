@@ -98,6 +98,8 @@ In the commands below, replace `psf-bch-wallet` with `./bin/run`.
 * [`psf-bch-wallet ipfs-peers`](#psf-bch-wallet-ipfs-peers)
 * [`psf-bch-wallet ipfs-relays`](#psf-bch-wallet-ipfs-relays)
 * [`psf-bch-wallet ipfs-status`](#psf-bch-wallet-ipfs-status)
+* [`psf-bch-wallet mc-collect-keys`](#psf-bch-wallet-mc-collect-keys)
+* [`psf-bch-wallet mc-update-p2wdb-price`](#psf-bch-wallet-mc-update-p2wdb-price)
 * [`psf-bch-wallet msg-check`](#psf-bch-wallet-msg-check)
 * [`psf-bch-wallet msg-read`](#psf-bch-wallet-msg-read)
 * [`psf-bch-wallet msg-send`](#psf-bch-wallet-msg-send)
@@ -229,6 +231,52 @@ Query the state of the IPFS node
 ```
 
 _See code: [src/commands/ipfs-status.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/ipfs-status.js)_
+
+## `psf-bch-wallet mc-collect-keys`
+
+Collect Voting Addresses
+
+```
+[1mUSAGE[22m
+  $ psf-bch-wallet mc-collect-keys
+
+[1mDESCRIPTION[22m
+  Collect Voting Addresses
+
+  This command is run to prepare for a governance vote. It looks up the addresses
+  holding all NFTs tied to a common group token. This list of addresses can
+  then be used to air-drop voting tokens.
+```
+
+_See code: [src/commands/mc-collect-keys.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/mc-collect-keys.js)_
+
+## `psf-bch-wallet mc-update-p2wdb-price`
+
+Generate a multsig TX for the Minting Council to update the price of P2WDB writes.
+
+```
+[1mUSAGE[22m
+  $ psf-bch-wallet mc-update-p2wdb-price [-n <value>]
+
+[1mFLAGS[22m
+  -n, --name=[4m<value>[24m  [2mName of wallet paying to send messages to NFT holders[22m
+
+[1mDESCRIPTION[22m
+  Generate a multsig TX for the Minting Council to update the price of P2WDB writes.
+
+  This command creates a multisig wallet. As input, it takes address-public-key
+  pairs generated from the multisig-collect-keys command. It uses that
+  data to construct a P2SH multisig wallet. The wallet object is displayed
+  on the command line as the output.
+
+  This is a long-running command. It does the following:
+  - It calls the mc-collect-keys commands to get the public keys for each holder of the Minting Council NFT.
+  - It generates a multisignature wallet from those keys requiring 50% + 1 signers.
+  - It generates a transaction for spending from the wallet, attaching an OP_RETURN to update the P2WDB write price.
+  - It sends the unsigned transaction to each member of the Minting Council.
+```
+
+_See code: [src/commands/mc-update-p2wdb-price.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/mc-update-p2wdb-price.js)_
 
 ## `psf-bch-wallet msg-check`
 

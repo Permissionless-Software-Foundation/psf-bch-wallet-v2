@@ -1,5 +1,5 @@
 /*
-  Unit tests for the p2wdb-json command.
+  Unit tests for the mc-collect-keys command.
 */
 
 // Global npm libraries
