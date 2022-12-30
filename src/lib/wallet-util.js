@@ -170,7 +170,12 @@ class WalletUtil {
       }
 
       // Configure the minimal-slp-wallet library.
-      this.advancedConfig.restURL = server.restURL
+      if (server.restURL) {
+        this.advancedConfig.restURL = server.restURL
+      }
+      if (this.advancedConfig.interface !== server.interface) {
+        this.advancedConfig.interface = server.interface
+      }
       const bchWallet = new this.BchWallet(
         walletData.mnemonic,
         this.advancedConfig
