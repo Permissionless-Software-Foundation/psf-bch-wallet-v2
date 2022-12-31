@@ -165,7 +165,10 @@ class MultisigSignTx extends Command {
   // sign it and return the signature.
   async signTx (message) {
     try {
-      const txObj = JSON.parse(message)
+      // Convert from JSON string to an Object
+      const msg = JSON.parse(message)
+
+      const txObj = msg.txObj
       // console.log(`txObj: ${JSON.stringify(txObj, null, 2)}`)
 
       // Bob converts the object into a Transaction class.

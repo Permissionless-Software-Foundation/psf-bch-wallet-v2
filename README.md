@@ -99,6 +99,7 @@ In the commands below, replace `psf-bch-wallet` with `./bin/run`.
 * [`psf-bch-wallet ipfs-relays`](#psf-bch-wallet-ipfs-relays)
 * [`psf-bch-wallet ipfs-status`](#psf-bch-wallet-ipfs-status)
 * [`psf-bch-wallet mc-collect-keys`](#psf-bch-wallet-mc-collect-keys)
+* [`psf-bch-wallet mc-read-tx`](#psf-bch-wallet-mc-read-tx)
 * [`psf-bch-wallet mc-update-p2wdb-price`](#psf-bch-wallet-mc-update-p2wdb-price)
 * [`psf-bch-wallet msg-check`](#psf-bch-wallet-msg-check)
 * [`psf-bch-wallet msg-read`](#psf-bch-wallet-msg-read)
@@ -249,6 +250,28 @@ Collect Voting Addresses
 ```
 
 _See code: [src/commands/mc-collect-keys.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/mc-collect-keys.js)_
+
+## `psf-bch-wallet mc-read-tx`
+
+Read multisig TX proposal
+
+```
+[1mUSAGE[22m
+  $ psf-bch-wallet mc-read-tx [-n <value>] [-t <value>]
+
+[1mFLAGS[22m
+  -n, --name=[4m<value>[24m  [2mName of wallet[22m
+  -t, --txid=[4m<value>[24m  [2mTransaction ID[22m
+
+[1mDESCRIPTION[22m
+  Read multisig TX proposal
+
+  This command reads the 'message' section of a proposed multisig transaction for
+  Minting Council members. This command should be run *before* the mc-sign-tx
+  command.
+```
+
+_See code: [src/commands/mc-read-tx.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/mc-read-tx.js)_
 
 ## `psf-bch-wallet mc-update-p2wdb-price`
 
