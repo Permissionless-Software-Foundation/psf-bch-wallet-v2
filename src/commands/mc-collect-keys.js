@@ -10,13 +10,14 @@ const SlpWallet = require('minimal-slp-wallet')
 
 // Local libraries
 
-// Constants
+// Update this constant to reflect the Group token uses to generate the Minting
+// Council NFTs.
 const GROUP_ID = 'd89386b31c46ef977e6bae8e5a8b5770d02e9c3ee50fea5d4805490a5f17c5f3'
 // const GROUP_ID = '5c8cb997cce61426b7149a74a3997443ec7eb738c5c246d9cfe70185a6911476'
 
 const { Command } = require('@oclif/command')
 
-class MultisigCollectKeys extends Command {
+class MCCollectKeys extends Command {
   constructor (argv, config) {
     super(argv, config)
 
@@ -45,7 +46,7 @@ class MultisigCollectKeys extends Command {
 
       return true
     } catch (err) {
-      console.log('Error in vote-addrs.js/run(): ', err.message)
+      console.log('Error in mc-collect-keys.js/run(): ', err.message)
 
       return 0
     }
@@ -140,7 +141,7 @@ class MultisigCollectKeys extends Command {
   }
 }
 
-MultisigCollectKeys.description = `Collect Voting Addresses
+MCCollectKeys.description = `Collect Voting Addresses
 
 This command is run to prepare for a governance vote. It looks up the addresses
 holding all NFTs tied to a common group token. This list of addresses can
@@ -151,4 +152,4 @@ then be used to air-drop voting tokens.
 //   name: flags.string({ char: 'n', description: 'Name of wallet' })
 // }
 
-module.exports = MultisigCollectKeys
+module.exports = MCCollectKeys

@@ -52,6 +52,16 @@ class CustomHelp extends HelpBase {
         cmdAry = cmdAry.filter(x => !x.id.includes('vote-'))
       }
 
+      // Hide or show mc-* commands for the Minting Council
+      const showMcCmds = this.conf.get('cmdMc', false)
+      if (!showMcCmds || showMcCmds === 'false') {
+        // Ensure the config setting is explicitly defined.
+        this.conf.set('cmdMc', 'false')
+
+        // Filter out the vote commands.
+        cmdAry = cmdAry.filter(x => !x.id.includes('mc-'))
+      }
+
       return cmdAry
     } catch (err) {
       console.error('Error in help.js/filterCommands(): ', err)

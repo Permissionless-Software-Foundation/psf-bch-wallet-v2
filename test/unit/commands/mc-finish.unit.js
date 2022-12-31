@@ -1,18 +1,19 @@
-/* Unit tests for the msg-read command. */
+/* Unit tests for the mc-finish command. */
 
 // Global npm libraries
 const assert = require('chai').assert
 const sinon = require('sinon')
 
 // Local libraries
-const MsgRead = require('../../../src/commands/msg-read')
+const MCFinish = require('../../../src/commands/mc-finish')
 const msgReadMock = require('../../mocks/msg-read-mock')
 const filename = `${__dirname.toString()}/../../../.wallets/test123.json`
 const WalletCreate = require('../../../src/commands/wallet-create')
 const walletCreate = new WalletCreate()
 const MockWallet = require('../../mocks/msw-mock')
+const mcFinishMocks = require('../../mocks/mc-finish-mocks')
 
-describe('msg-read', () => {
+describe('mc-finish', () => {
   let uut
   let sandbox
   let mockWallet
@@ -24,7 +25,7 @@ describe('msg-read', () => {
   beforeEach(async () => {
     sandbox = sinon.createSandbox()
 
-    uut = new MsgRead()
+    uut = new MCFinish()
     uut.Read = msgReadMock.Read
     mockWallet = new MockWallet()
   })
@@ -36,14 +37,14 @@ describe('msg-read', () => {
   describe('#validateFlags()', () => {
     it('validateFlags() should return true .', () => {
       const flags = {
-        txid:
-          '36639f7c52ad385a2feeeed08240d92ebb05d7f8aa8a1e8531857bf7a9dc5948',
+        txids:
+          '["36639f7c52ad385a2feeeed08240d92ebb05d7f8aa8a1e8531857bf7a9dc5948"]',
         name: 'my wallet'
       }
       assert.equal(uut.validateFlags(flags), true, 'return true')
     })
 
-    it('validateFlags() should throw error if txid is not supplied.', () => {
+    it('validateFlags() should throw error if wallet name is not supplied.', () => {
       try {
         const flags = {}
         uut.validateFlags(flags)
@@ -52,17 +53,16 @@ describe('msg-read', () => {
       } catch (err) {
         assert.include(
           err.message,
-          'You must specify a txid with the -t flag.',
+          'You must specify a wallet with the -n flag.',
           'Expected error message.'
         )
       }
     })
 
-    it('validateFlags() should throw error if wallet name is not supplied.', () => {
+    it('validateFlags() should throw error if txid is not supplied.', () => {
       try {
         const flags = {
-          txid:
-            '36639f7c52ad385a2feeeed08240d92ebb05d7f8aa8a1e8531857bf7a9dc5948'
+          name: 'test-name'
         }
         uut.validateFlags(flags)
 
@@ -70,7 +70,7 @@ describe('msg-read', () => {
       } catch (err) {
         assert.include(
           err.message,
-          'You must specify a wallet with the -n flag.',
+          'You must specify an array of TXIDs contains signatures with the -a flag.',
           'Expected error message.'
         )
       }
@@ -83,9 +83,6 @@ describe('msg-read', () => {
       sandbox.stub(uut.walletUtil, 'instanceWallet').resolves(mockWallet)
 
       const flags = {
-        bchAddress: 'bitcoincash:qpufm97hppty67chexq4p53vc29mzg437vwp7huaa3',
-        message: 'test message',
-        subject: 'Test',
         name: 'test123'
       }
 
@@ -179,7 +176,7 @@ describe('msg-read', () => {
     })
   })
 
-  describe('#MsgRead()', () => {
+  describe('#msgRead()', () => {
     it('should exit with error status if called without flags', async () => {
       try {
         await uut.msgRead({})
@@ -194,7 +191,7 @@ describe('msg-read', () => {
       }
     })
 
-    it('should read message.', async () => {
+    it('should read read message.', async () => {
       // Mock dependencies and force desired code path
       sandbox.stub(uut.walletUtil, 'instanceWallet').resolves(mockWallet)
 
@@ -207,13 +204,110 @@ describe('msg-read', () => {
       await uut.instanceLibs(flags)
 
       // Mock methods that will be tested elsewhere.
-      sandbox.stub(uut.bchWallet, 'getTxData').resolves([{ key: 'value' }])
+      sandbox.stub(uut.bchWallet, 'getTxData').resolves([{
+        vin: [{
+          address: 'test-address'
+        }]
+      }])
       sandbox.stub(uut, 'getHashFromTx').returns({})
-      sandbox.stub(uut, 'getAndDecrypt').resolves('test message')
+      sandbox.stub(uut, 'getAndDecrypt').resolves('{"message": "test message", "txObj": {}}')
 
       const result = await uut.msgRead(flags)
 
-      assert.equal(result, 'test message')
+      assert.include(result.message, 'test message')
+    })
+  })
+
+  describe('#collectSignatures', () => {
+    it('should collect signatures from messages', async () => {
+      // Mock dependencies and force desired code path
+      sandbox.stub(uut.walletUtil, 'instanceWallet').resolves(mockWallet)
+
+      const flags = {
+        txids:
+          '["36639f7c52ad385a2feeeed08240d92ebb05d7f8aa8a1e8531857bf7a9dc5948"]',
+        name: 'test123'
+      }
+
+      await uut.instanceLibs(flags)
+
+      // Mock dependencies and force desired code path
+      sandbox.stub(uut, 'msgRead').resolves({ message: '{"publicKey": "fake-pubkey"}' })
+
+      const result = await uut.collectSignatures(flags)
+      // console.log('result: ', result)
+
+      // Output should be an array of signatures.
+      assert.isArray(result)
+    })
+
+    it('should catch and throw errors', async () => {
+      try {
+        await uut.collectSignatures()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        // console.log('err: ', err.message)
+        assert.include(err.message, 'Cannot destructure')
+      }
+    })
+  })
+
+  describe('#finishTx', () => {
+    it('should sign and broadcast the TX', async () => {
+      // Instantiate the wallet
+      sandbox.stub(uut.walletUtil, 'instanceWallet').resolves(mockWallet)
+      const flags = {
+        name: 'test123'
+      }
+      await uut.instanceLibs(flags)
+
+      // Mock dependencies and force desired code path
+      sandbox.stub(uut.conf, 'get').returns(mcFinishMocks.txObj1)
+      sandbox.stub(uut.bchWallet, 'broadcast').resolves('fake-txid')
+
+      const sigs = mcFinishMocks.sigs1
+
+      const result = await uut.finishTx(flags, sigs)
+      // console.log('result: ', result)
+
+      assert.equal(result, 'fake-txid')
+    })
+
+    it('should throw error if there are not enough signatures', async () => {
+      try {
+        // Instantiate the wallet
+        sandbox.stub(uut.walletUtil, 'instanceWallet').resolves(mockWallet)
+        const flags = {
+          name: 'test123'
+        }
+        await uut.instanceLibs(flags)
+
+        // Mock dependencies and force desired code path
+        sandbox.stub(uut.conf, 'get').returns(mcFinishMocks.txObj1)
+        sandbox.stub(uut.bchWallet, 'broadcast').resolves('fake-txid')
+
+        // Force error by only including one signature.
+        const sigs = [mcFinishMocks.sigs1[0]]
+
+        await uut.finishTx(flags, sigs)
+
+        assert.fail('Unexpected code path.')
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.include(err.message, 'TX requires')
+      }
+    })
+
+    it('should catch and throw errors', async () => {
+      try {
+        await uut.finishTx()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        // console.log('err: ', err.message)
+        assert.include(err.message, 'Cannot read')
+      }
     })
   })
 
@@ -237,19 +331,20 @@ describe('msg-read', () => {
     it('should run the run() function', async () => {
       // Mock dependencies
       const flags = {
-        txid:
-          '36639f7c52ad385a2feeeed08240d92ebb05d7f8aa8a1e8531857bf7a9dc5948',
+        txids:
+          '["36639f7c52ad385a2feeeed08240d92ebb05d7f8aa8a1e8531857bf7a9dc5948"]',
         name: 'test123'
       }
 
       // Mock methods that will be tested elsewhere.
       sandbox.stub(uut, 'parse').returns({ flags })
       sandbox.stub(uut, 'instanceLibs').resolves()
-      sandbox.stub(uut, 'msgRead').resolves('test message')
+      sandbox.stub(uut, 'collectSignatures').resolves(['sig1'])
+      sandbox.stub(uut, 'finishTx').resolves('fake-txid')
 
       const result = await uut.run()
 
-      assert.equal(result, 'test message')
+      assert.equal(result, true)
     })
   })
 })
