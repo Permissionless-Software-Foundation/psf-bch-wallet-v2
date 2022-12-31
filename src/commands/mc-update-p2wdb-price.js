@@ -17,6 +17,7 @@
 const bitcore = require('bitcore-lib-cash')
 const EncryptLib = require('bch-encrypt-lib/index')
 const Write = require('p2wdb').Write
+const Conf = require('conf')
 
 // Local libraries
 const WalletUtil = require('../lib/wallet-util')
@@ -45,6 +46,7 @@ class MCUpdateP2wdbPrice extends Command {
     this.write = null // placeholder
     this.encryptLib = null // placeholder
     this.bitcore = bitcore
+    this.conf = new Conf()
   }
 
   async run () {
@@ -283,6 +285,9 @@ class MCUpdateP2wdbPrice extends Command {
 
       // This unsigned transaction object is sent to all participants.
       const unsignedTxObj = multisigTx.toObject()
+
+      // Save the unsigned tx object so that it can be used in the mc-finish command.
+      this.conf.set('p2wdb-price-tx', unsignedTxObj)
 
       return unsignedTxObj
     } catch (err) {

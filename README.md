@@ -99,6 +99,7 @@ In the commands below, replace `psf-bch-wallet` with `./bin/run`.
 * [`psf-bch-wallet ipfs-relays`](#psf-bch-wallet-ipfs-relays)
 * [`psf-bch-wallet ipfs-status`](#psf-bch-wallet-ipfs-status)
 * [`psf-bch-wallet mc-collect-keys`](#psf-bch-wallet-mc-collect-keys)
+* [`psf-bch-wallet mc-finish`](#psf-bch-wallet-mc-finish)
 * [`psf-bch-wallet mc-read-tx`](#psf-bch-wallet-mc-read-tx)
 * [`psf-bch-wallet mc-sign-tx`](#psf-bch-wallet-mc-sign-tx)
 * [`psf-bch-wallet mc-update-p2wdb-price`](#psf-bch-wallet-mc-update-p2wdb-price)
@@ -252,6 +253,28 @@ Collect Voting Addresses
 
 _See code: [src/commands/mc-collect-keys.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/mc-collect-keys.js)_
 
+## `psf-bch-wallet mc-finish`
+
+Retrieve signatures, sign multisig TX, and broadcast
+
+```
+[1mUSAGE[22m
+  $ psf-bch-wallet mc-finish [-n <value>] [-a <value>]
+
+[1mFLAGS[22m
+  -a, --txids=[4m<value>[24m  [2mArray of TXIDs of messages containing signatures[22m
+  -n, --name=[4m<value>[24m   [2mName of wallet[22m
+
+[1mDESCRIPTION[22m
+  Retrieve signatures, sign multisig TX, and broadcast
+
+  This command expects a JSON string containing an array of transaction IDs (TXIDs)
+  that contain e2ee messages containing signatures for the transaction generated
+  by the mc-update-p2wdb-price command.
+```
+
+_See code: [src/commands/mc-finish.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/mc-finish.js)_
+
 ## `psf-bch-wallet mc-read-tx`
 
 Read multisig TX proposal
@@ -288,6 +311,13 @@ Read signed messages
 
 [1mDESCRIPTION[22m
   Read signed messages
+
+  This command signs a multisig transaction for Minting Council members. The
+  mc-read-tx command should be run *before* this command, so that you can
+  read the context of the transaction.
+
+  After signing the transaction, it will send the signature back to the message
+  originator.
 ```
 
 _See code: [src/commands/mc-sign-tx.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/mc-sign-tx.js)_

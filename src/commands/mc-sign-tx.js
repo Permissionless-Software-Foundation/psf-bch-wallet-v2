@@ -84,7 +84,7 @@ class MCSignTx extends Command {
     await this.bchWallet.bchjs.Util.sleep(2000)
 
     // Update the UTXO store in the wallet.
-    // await this.bchWallet.getUtxos()
+    await this.bchWallet.getUtxos()
 
     const subject = `signature from ${this.bchWallet.walletInfo.cashAddress}`
 
