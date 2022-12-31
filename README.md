@@ -49,6 +49,16 @@ When running your own instance of `ipfs-bch-wallet-consumer`, you will want to e
 
 - `./bin/run conf -k cmdIpfs -v true`
 
+#### Governance Voting
+The [PSF Governance](https://psfoundation.info/governance) vote can be initiated with the `vote-*` commands. These commands are not needed by normal users, so they are hidden by default.
+
+- `./bin/run conf -k cmdVote -v true`
+
+#### Minting Council
+Members of the [PSF Minting Council](https://psfoundation.info/governance#the-minting-council) hold an NFT which allows them to participate in multisignature wallets. They can use the `mc-*` commands to interact with the multisig wallet. These commands are not needed by normal users, so they are hidden by default.
+
+- `./bin/run conf -k cmdMc -v true`
+
 ## License
 
 [MIT](./LICENSE.md)
