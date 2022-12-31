@@ -100,6 +100,7 @@ In the commands below, replace `psf-bch-wallet` with `./bin/run`.
 * [`psf-bch-wallet ipfs-status`](#psf-bch-wallet-ipfs-status)
 * [`psf-bch-wallet mc-collect-keys`](#psf-bch-wallet-mc-collect-keys)
 * [`psf-bch-wallet mc-read-tx`](#psf-bch-wallet-mc-read-tx)
+* [`psf-bch-wallet mc-sign-tx`](#psf-bch-wallet-mc-sign-tx)
 * [`psf-bch-wallet mc-update-p2wdb-price`](#psf-bch-wallet-mc-update-p2wdb-price)
 * [`psf-bch-wallet msg-check`](#psf-bch-wallet-msg-check)
 * [`psf-bch-wallet msg-read`](#psf-bch-wallet-msg-read)
@@ -272,6 +273,24 @@ Read multisig TX proposal
 ```
 
 _See code: [src/commands/mc-read-tx.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/mc-read-tx.js)_
+
+## `psf-bch-wallet mc-sign-tx`
+
+Read signed messages
+
+```
+[1mUSAGE[22m
+  $ psf-bch-wallet mc-sign-tx [-n <value>] [-t <value>]
+
+[1mFLAGS[22m
+  -n, --name=[4m<value>[24m  [2mName of wallet[22m
+  -t, --txid=[4m<value>[24m  [2mTransaction ID[22m
+
+[1mDESCRIPTION[22m
+  Read signed messages
+```
+
+_See code: [src/commands/mc-sign-tx.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/mc-sign-tx.js)_
 
 ## `psf-bch-wallet mc-update-p2wdb-price`
 

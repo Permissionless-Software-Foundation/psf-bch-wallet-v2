@@ -47,6 +47,8 @@ describe('msg-read', () => {
       try {
         const flags = {}
         uut.validateFlags(flags)
+
+        assert.fail('Unexpected code path')
       } catch (err) {
         assert.include(
           err.message,
@@ -63,6 +65,8 @@ describe('msg-read', () => {
             '36639f7c52ad385a2feeeed08240d92ebb05d7f8aa8a1e8531857bf7a9dc5948'
         }
         uut.validateFlags(flags)
+
+        assert.fail('Unexpected code path')
       } catch (err) {
         assert.include(
           err.message,

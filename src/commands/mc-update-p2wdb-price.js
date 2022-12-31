@@ -44,6 +44,7 @@ class MCUpdateP2wdbPrice extends Command {
     this.msgLib = null // placeholder
     this.write = null // placeholder
     this.encryptLib = null // placeholder
+    this.bitcore = bitcore
   }
 
   async run () {
@@ -272,7 +273,7 @@ class MCUpdateP2wdbPrice extends Command {
       const chosenAddr = WRITE_PRICE_ADDR
 
       // Generate a multisignature transaction.
-      const multisigTx = new bitcore.Transaction(hex)
+      const multisigTx = new this.bitcore.Transaction(hex)
         .from(utxo, walletObj.publicKeys, walletObj.requiredSigners)
         // Send 1000 sats back to the chosen address.
         .to(chosenAddr, 1000)

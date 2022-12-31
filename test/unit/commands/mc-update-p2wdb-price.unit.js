@@ -194,6 +194,15 @@ describe('#mc-update-p2wdb-price', () => {
       await uut.instantiateWallet(flags)
 
       sandbox.stub(uut.wallet, 'getUtxos').resolves(utxos)
+      // class Tx {
+      //   from() {
+      //     return {}
+      //   }
+      //   to() { return {}}
+      //   feePerByte() {return {}}
+      //   change() {return{}}
+      // }
+      // uut.bitcore.Transaction = Tx
 
       const result = await uut.createMultisigTx(walletObj, cid)
       // console.log('result: ', result)

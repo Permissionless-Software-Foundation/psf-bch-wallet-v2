@@ -47,6 +47,8 @@ describe('mc-read-tx', () => {
       try {
         const flags = {}
         uut.validateFlags(flags)
+
+        assert.fail('Unexpected code path')
       } catch (err) {
         assert.include(
           err.message,
@@ -63,6 +65,8 @@ describe('mc-read-tx', () => {
             '36639f7c52ad385a2feeeed08240d92ebb05d7f8aa8a1e8531857bf7a9dc5948'
         }
         uut.validateFlags(flags)
+
+        assert.fail('Unexpected code path')
       } catch (err) {
         assert.include(
           err.message,
@@ -190,7 +194,7 @@ describe('mc-read-tx', () => {
       }
     })
 
-    it('should read message.', async () => {
+    it('should read read message.', async () => {
       // Mock dependencies and force desired code path
       sandbox.stub(uut.walletUtil, 'instanceWallet').resolves(mockWallet)
 
