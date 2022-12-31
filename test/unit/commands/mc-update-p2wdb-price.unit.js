@@ -360,7 +360,7 @@ describe('#mc-update-p2wdb-price', () => {
   })
 
   describe('#encryptAndUpload', () => {
-    it('should encrypt and send messages to each key pair', async () => {
+    it('should encrypt and send messages with default subject and message', async () => {
       const keys = [{
         addr: 'test-addr',
         pubKey: 'test-public-key'
@@ -379,7 +379,36 @@ describe('#mc-update-p2wdb-price', () => {
       sandbox.stub(uut, 'signalMessage').resolves('fake-hex')
       sandbox.stub(uut.wallet, 'broadcast').resolves('fake-txid')
 
-      const result = await uut.encryptAndUpload({}, keys)
+      const result = await uut.encryptAndUpload({}, keys, {})
+
+      assert.equal(result, true)
+    })
+
+    it('should encrypt and send messages with custom subject and message', async () => {
+      const keys = [{
+        addr: 'test-addr',
+        pubKey: 'test-public-key'
+      }]
+
+      const flags = {
+        name: 'test123',
+        subject: 'test subject',
+        message: 'test message'
+      }
+
+      // Initiate libraries
+      sandbox.stub(uut.walletUtil, 'instanceWallet').resolves(mockWallet)
+      await uut.instantiateWallet(flags)
+      await uut.instanceLibs()
+
+      // Mock dependencies and force desired code path.
+      sandbox.stub(uut, 'encryptMsg').resolves('encrypted-message')
+      sandbox.stub(uut.write, 'postEntry').resolves({})
+      sandbox.stub(uut.wallet.bchjs.Util, 'sleep').resolves()
+      sandbox.stub(uut, 'signalMessage').resolves('fake-hex')
+      sandbox.stub(uut.wallet, 'broadcast').resolves('fake-txid')
+
+      const result = await uut.encryptAndUpload({}, keys, flags)
 
       assert.equal(result, true)
     })

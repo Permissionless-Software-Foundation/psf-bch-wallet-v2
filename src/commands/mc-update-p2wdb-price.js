@@ -75,7 +75,7 @@ class MCUpdateP2wdbPrice extends Command {
       await this.instanceLibs()
 
       // Send the encrypted TX to each NFT holder
-      await this.encryptAndUpload(txObj, keys)
+      await this.encryptAndUpload(txObj, keys, flags)
 
       return true
     } catch (err) {
@@ -86,7 +86,7 @@ class MCUpdateP2wdbPrice extends Command {
   }
 
   // Encrypt the message and upload it to the P2WDB.
-  async encryptAndUpload (txObj, keys) {
+  async encryptAndUpload (txObj, keys, flags) {
     console.log('txObj: ', txObj)
     console.log('keys: ', keys)
 
@@ -98,8 +98,11 @@ class MCUpdateP2wdbPrice extends Command {
       const bchAddress = thisPair.addr
       console.log(`Sending multisig TX to ${bchAddress} and encrypting with public key ${publicKey}`)
 
+      let message = ''
+      if (flags.message) message = flags.message
+
       // Encrypt the message using the recievers public key.
-      const encryptedMsg = await this.encryptMsg(publicKey, JSON.stringify(txObj, null, 2))
+      const encryptedMsg = await this.encryptMsg(publicKey, JSON.stringify({ message, txObj }, null, 2))
       // console.log(`encryptedMsg: ${JSON.stringify(encryptedMsg, null, 2)}`)
 
       // Upload the encrypted message to the P2WDB.
@@ -120,7 +123,10 @@ class MCUpdateP2wdbPrice extends Command {
       // Update the UTXO store in the wallet.
       await this.wallet.getUtxos()
 
-      const subject = 'multisig-tx-test'
+      let subject = 'multisig-tx'
+      if (flags.subject) {
+        subject = flags.subject
+      }
 
       // Sign Message
       const txHex = await this.signalMessage(hash, bchAddress, subject)
@@ -391,7 +397,9 @@ This is a long-running command. It does the following:
 `
 
 MCUpdateP2wdbPrice.flags = {
-  name: flags.string({ char: 'n', description: 'Name of wallet paying to send messages to NFT holders' })
+  name: flags.string({ char: 'n', description: 'Name of wallet paying to send messages to NFT holders' }),
+  subject: flags.string({ char: 's', description: 'Subject of e2ee message.' }),
+  message: flags.string({ char: 'm', description: 'Message attached to transaction sent to each NFT holder.' })
 }
 
 module.exports = MCUpdateP2wdbPrice

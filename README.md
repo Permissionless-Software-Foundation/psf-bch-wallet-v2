@@ -256,10 +256,12 @@ Generate a multsig TX for the Minting Council to update the price of P2WDB write
 
 ```
 [1mUSAGE[22m
-  $ psf-bch-wallet mc-update-p2wdb-price [-n <value>]
+  $ psf-bch-wallet mc-update-p2wdb-price [-n <value>] [-s <value>] [-m <value>]
 
 [1mFLAGS[22m
-  -n, --name=[4m<value>[24m  [2mName of wallet paying to send messages to NFT holders[22m
+  -m, --message=[4m<value>[24m  [2mMessage attached to transaction sent to each NFT holder.[22m
+  -n, --name=[4m<value>[24m     [2mName of wallet paying to send messages to NFT holders[22m
+  -s, --subject=[4m<value>[24m  [2mSubject of e2ee message.[22m
 
 [1mDESCRIPTION[22m
   Generate a multsig TX for the Minting Council to update the price of P2WDB writes.
