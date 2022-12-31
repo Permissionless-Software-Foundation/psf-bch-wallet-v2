@@ -43,6 +43,8 @@ describe('msg-check', () => {
     it('validateFlags() should throw error if wallet name is not supplied.', () => {
       try {
         uut.validateFlags({})
+
+        assert.fail('Unexpected code path')
       } catch (err) {
         assert.include(
           err.message,

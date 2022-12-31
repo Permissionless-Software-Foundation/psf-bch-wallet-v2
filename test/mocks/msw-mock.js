@@ -150,6 +150,10 @@ class BchWallet {
   async sendTokens () {
     return true
   }
+
+  async broadcast () {
+    return true
+  }
 }
 
 module.exports = BchWallet

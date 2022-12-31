@@ -49,6 +49,16 @@ When running your own instance of `ipfs-bch-wallet-consumer`, you will want to e
 
 - `./bin/run conf -k cmdIpfs -v true`
 
+#### Governance Voting
+The [PSF Governance](https://psfoundation.info/governance) vote can be initiated with the `vote-*` commands. These commands are not needed by normal users, so they are hidden by default.
+
+- `./bin/run conf -k cmdVote -v true`
+
+#### Minting Council
+Members of the [PSF Minting Council](https://psfoundation.info/governance#the-minting-council) hold an NFT which allows them to participate in multisignature wallets. They can use the `mc-*` commands to interact with the multisig wallet. These commands are not needed by normal users, so they are hidden by default.
+
+- `./bin/run conf -k cmdMc -v true`
+
 ## License
 
 [MIT](./LICENSE.md)
@@ -87,6 +97,11 @@ In the commands below, replace `psf-bch-wallet` with `./bin/run`.
 * [`psf-bch-wallet ipfs-peers`](#psf-bch-wallet-ipfs-peers)
 * [`psf-bch-wallet ipfs-relays`](#psf-bch-wallet-ipfs-relays)
 * [`psf-bch-wallet ipfs-status`](#psf-bch-wallet-ipfs-status)
+* [`psf-bch-wallet mc-collect-keys`](#psf-bch-wallet-mc-collect-keys)
+* [`psf-bch-wallet mc-finish`](#psf-bch-wallet-mc-finish)
+* [`psf-bch-wallet mc-read-tx`](#psf-bch-wallet-mc-read-tx)
+* [`psf-bch-wallet mc-sign-tx`](#psf-bch-wallet-mc-sign-tx)
+* [`psf-bch-wallet mc-update-p2wdb-price`](#psf-bch-wallet-mc-update-p2wdb-price)
 * [`psf-bch-wallet msg-check`](#psf-bch-wallet-msg-check)
 * [`psf-bch-wallet msg-read`](#psf-bch-wallet-msg-read)
 * [`psf-bch-wallet msg-send`](#psf-bch-wallet-msg-send)
@@ -211,6 +226,123 @@ DESCRIPTION
 ```
 
 _See code: [src/commands/ipfs-status.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/ipfs-status.js)_
+
+## `psf-bch-wallet mc-collect-keys`
+
+Collect Voting Addresses
+
+```
+USAGE
+  $ psf-bch-wallet mc-collect-keys
+
+DESCRIPTION
+  Collect Voting Addresses
+
+  This command is run to prepare for a governance vote. It looks up the addresses
+  holding all NFTs tied to a common group token. This list of addresses can
+  then be used to air-drop voting tokens.
+```
+
+_See code: [src/commands/mc-collect-keys.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/mc-collect-keys.js)_
+
+## `psf-bch-wallet mc-finish`
+
+Retrieve signatures, sign multisig TX, and broadcast
+
+```
+USAGE
+  $ psf-bch-wallet mc-finish [-n <value>] [-a <value>]
+
+FLAGS
+  -a, --txids=<value>  Array of TXIDs of messages containing signatures
+  -n, --name=<value>   Name of wallet
+
+DESCRIPTION
+  Retrieve signatures, sign multisig TX, and broadcast
+
+  This command expects a JSON string containing an array of transaction IDs (TXIDs)
+  that contain e2ee messages containing signatures for the transaction generated
+  by the mc-update-p2wdb-price command.
+```
+
+_See code: [src/commands/mc-finish.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/mc-finish.js)_
+
+## `psf-bch-wallet mc-read-tx`
+
+Read multisig TX proposal
+
+```
+USAGE
+  $ psf-bch-wallet mc-read-tx [-n <value>] [-t <value>]
+
+FLAGS
+  -n, --name=<value>  Name of wallet
+  -t, --txid=<value>  Transaction ID
+
+DESCRIPTION
+  Read multisig TX proposal
+
+  This command reads the 'message' section of a proposed multisig transaction for
+  Minting Council members. This command should be run *before* the mc-sign-tx
+  command.
+```
+
+_See code: [src/commands/mc-read-tx.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/mc-read-tx.js)_
+
+## `psf-bch-wallet mc-sign-tx`
+
+Read signed messages
+
+```
+USAGE
+  $ psf-bch-wallet mc-sign-tx [-n <value>] [-t <value>]
+
+FLAGS
+  -n, --name=<value>  Name of wallet
+  -t, --txid=<value>  Transaction ID
+
+DESCRIPTION
+  Read signed messages
+
+  This command signs a multisig transaction for Minting Council members. The
+  mc-read-tx command should be run *before* this command, so that you can
+  read the context of the transaction.
+
+  After signing the transaction, it will send the signature back to the message
+  originator.
+```
+
+_See code: [src/commands/mc-sign-tx.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/mc-sign-tx.js)_
+
+## `psf-bch-wallet mc-update-p2wdb-price`
+
+Generate a multsig TX for the Minting Council to update the price of P2WDB writes.
+
+```
+USAGE
+  $ psf-bch-wallet mc-update-p2wdb-price [-n <value>] [-s <value>] [-m <value>]
+
+FLAGS
+  -m, --message=<value>  Message attached to transaction sent to each NFT holder.
+  -n, --name=<value>     Name of wallet paying to send messages to NFT holders
+  -s, --subject=<value>  Subject of e2ee message.
+
+DESCRIPTION
+  Generate a multsig TX for the Minting Council to update the price of P2WDB writes.
+
+  This command creates a multisig wallet. As input, it takes address-public-key
+  pairs generated from the multisig-collect-keys command. It uses that
+  data to construct a P2SH multisig wallet. The wallet object is displayed
+  on the command line as the output.
+
+  This is a long-running command. It does the following:
+  - It calls the mc-collect-keys commands to get the public keys for each holder of the Minting Council NFT.
+  - It generates a multisignature wallet from those keys requiring 50% + 1 signers.
+  - It generates a transaction for spending from the wallet, attaching an OP_RETURN to update the P2WDB write price.
+  - It sends the unsigned transaction to each member of the Minting Council.
+```
+
+_See code: [src/commands/mc-update-p2wdb-price.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/mc-update-p2wdb-price.js)_
 
 ## `psf-bch-wallet msg-check`
 

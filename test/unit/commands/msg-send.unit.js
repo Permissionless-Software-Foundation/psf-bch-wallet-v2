@@ -58,6 +58,8 @@ describe('msg-send', () => {
       try {
         const flags = {}
         uut.validateFlags(flags)
+
+        assert.fail('Unexpected code path')
       } catch (err) {
         assert.include(
           err.message,
@@ -73,6 +75,8 @@ describe('msg-send', () => {
           bchAddress: 'bitcoincash:qpufm97hppty67chexq4p53vc29mzg437vwp7huaa3'
         }
         uut.validateFlags(flags)
+
+        assert.fail('Unexpected code path')
       } catch (err) {
         assert.include(
           err.message,
@@ -89,6 +93,8 @@ describe('msg-send', () => {
           message: 'test message'
         }
         uut.validateFlags(flags)
+
+        assert.fail('Unexpected code path')
       } catch (err) {
         assert.include(
           err.message,
@@ -106,6 +112,8 @@ describe('msg-send', () => {
           subject: 'Test'
         }
         uut.validateFlags(flags)
+
+        assert.fail('Unexpected code path')
       } catch (err) {
         assert.include(
           err.message,
@@ -152,6 +160,8 @@ describe('msg-send', () => {
     it('should throw an error if pubKey is not provided.', async () => {
       try {
         await uut.encryptMsg()
+
+        assert.fail('Unexpected code path')
       } catch (err) {
         assert.include(
           err.message,
@@ -165,6 +175,8 @@ describe('msg-send', () => {
       try {
         const pubKey = MsgSendMock.getPubkeyResult.pubkey.publicKey
         await uut.encryptMsg(pubKey)
+
+        assert.fail('Unexpected code path')
       } catch (err) {
         assert.include(
           err.message,
@@ -179,6 +191,8 @@ describe('msg-send', () => {
     it('should throw an error if hash is not provided.', async () => {
       try {
         await uut.signalMessage()
+
+        assert.fail('Unexpected code path')
       } catch (err) {
         assert.include(
           err.message,
@@ -193,6 +207,8 @@ describe('msg-send', () => {
         const hash = 'QmYJXDxuNjwFuAYaUdADPnxKZJhQSsx69Ww2rGk6VmAFQu'
 
         await uut.signalMessage(hash)
+
+        assert.fail('Unexpected code path')
       } catch (err) {
         assert.include(
           err.message,
@@ -209,6 +225,8 @@ describe('msg-send', () => {
           'bitcoincash:qpufm97hppty67chexq4p53vc29mzg437vwp7huaa3'
 
         await uut.signalMessage(hash, bchAddress)
+
+        assert.fail('Unexpected code path')
       } catch (err) {
         assert.include(
           err.message,
@@ -250,6 +268,8 @@ describe('msg-send', () => {
         }
 
         await uut.signalMessage(hash, bchAddress, subject)
+
+        assert.fail('Unexpected code path')
       } catch (err) {
         assert.include(
           err.message,

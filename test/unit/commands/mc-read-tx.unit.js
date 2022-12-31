@@ -1,18 +1,18 @@
-/* Unit tests for the msg-read command. */
+/* Unit tests for the mc-read-tx command. */
 
 // Global npm libraries
 const assert = require('chai').assert
 const sinon = require('sinon')
 
 // Local libraries
-const MsgRead = require('../../../src/commands/msg-read')
+const MCReadTx = require('../../../src/commands/mc-read-tx')
 const msgReadMock = require('../../mocks/msg-read-mock')
 const filename = `${__dirname.toString()}/../../../.wallets/test123.json`
 const WalletCreate = require('../../../src/commands/wallet-create')
 const walletCreate = new WalletCreate()
 const MockWallet = require('../../mocks/msw-mock')
 
-describe('msg-read', () => {
+describe('mc-read-tx', () => {
   let uut
   let sandbox
   let mockWallet
@@ -24,7 +24,7 @@ describe('msg-read', () => {
   beforeEach(async () => {
     sandbox = sinon.createSandbox()
 
-    uut = new MsgRead()
+    uut = new MCReadTx()
     uut.Read = msgReadMock.Read
     mockWallet = new MockWallet()
   })
@@ -194,7 +194,7 @@ describe('msg-read', () => {
       }
     })
 
-    it('should read message.', async () => {
+    it('should read read message.', async () => {
       // Mock dependencies and force desired code path
       sandbox.stub(uut.walletUtil, 'instanceWallet').resolves(mockWallet)
 
@@ -209,7 +209,7 @@ describe('msg-read', () => {
       // Mock methods that will be tested elsewhere.
       sandbox.stub(uut.bchWallet, 'getTxData').resolves([{ key: 'value' }])
       sandbox.stub(uut, 'getHashFromTx').returns({})
-      sandbox.stub(uut, 'getAndDecrypt').resolves('test message')
+      sandbox.stub(uut, 'getAndDecrypt').resolves('{"message": "test message", "txObj": {}}')
 
       const result = await uut.msgRead(flags)
 
