@@ -28,17 +28,14 @@ class MsgRead extends Command {
       // Validate input flags
       this.validateFlags(flags)
 
-      // const filename = `${__dirname.toString()}/../../.wallets/${
-      //   flags.name
-      // }.json`
-
       // Instatiate all the libraries orchestrated by this function.
       await this.instanceLibs(flags)
 
-      const result = await this.msgRead(flags)
-      console.log(`Message:\n${result}`)
+      const { sender, message } = await this.msgRead(flags)
+      console.log(`Sender: ${sender}`)
+      console.log(`Message:\n${message}`)
 
-      return result
+      return message
     } catch (error) {
       console.log('Error in msg-read.js/run(): ', error)
 
@@ -61,17 +58,28 @@ class MsgRead extends Command {
       const txData = txDataResult[0]
       // console.log(`txData: ${JSON.stringify(txData, null, 2)}`)
 
+      const sender = this.getSenderFromTx(txData)
+      // console.log('sender: ', sender)
+
       // get ipfs hash from tx OP_RETURN
       const hash = this.getHashFromTx(txData)
 
       // Get the encrypted message from P2WDB and decrypt it.
-      const decryptedMsg = await this.getAndDecrypt(hash)
+      const message = await this.getAndDecrypt(hash)
 
-      return decryptedMsg
+      return { sender, message }
     } catch (error) {
       console.log('Error in msgRead()')
       throw error
     }
+  }
+
+  // Given data on a TX, get the sender. This is assumed to be the address
+  // behind the first input of the transaction.
+  getSenderFromTx (txData) {
+    const sender = txData.vin[0].address
+
+    return sender
   }
 
   // Retrieve the encrypted data from the P2WDB and decrypt it.
@@ -157,6 +165,7 @@ class MsgRead extends Command {
       if (!hash) {
         throw new Error('Message not found!')
       }
+
       return hash
     } catch (error) {
       console.log('Error in getHashFromTx()')
