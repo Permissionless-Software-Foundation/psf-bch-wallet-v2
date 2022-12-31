@@ -179,6 +179,20 @@ describe('mc-read-tx', () => {
     })
   })
 
+  describe('#getSenderFromTx', () => {
+    it('should return the sender of a message', async () => {
+      const txData = {
+        vin: [{
+          address: 'fake-addr'
+        }]
+      }
+
+      const result = uut.getSenderFromTx(txData)
+
+      assert.equal(result, 'fake-addr')
+    })
+  })
+
   describe('#MsgRead()', () => {
     it('should exit with error status if called without flags', async () => {
       try {
@@ -208,12 +222,14 @@ describe('mc-read-tx', () => {
 
       // Mock methods that will be tested elsewhere.
       sandbox.stub(uut.bchWallet, 'getTxData').resolves([{ key: 'value' }])
+      sandbox.stub(uut, 'getSenderFromTx').returns('fake-addr')
       sandbox.stub(uut, 'getHashFromTx').returns({})
       sandbox.stub(uut, 'getAndDecrypt').resolves('{"message": "test message", "txObj": {}}')
 
       const result = await uut.msgRead(flags)
 
-      assert.equal(result, 'test message')
+      assert.equal(result.message, 'test message')
+      assert.equal(result.sender, 'fake-addr')
     })
   })
 
@@ -245,7 +261,7 @@ describe('mc-read-tx', () => {
       // Mock methods that will be tested elsewhere.
       sandbox.stub(uut, 'parse').returns({ flags })
       sandbox.stub(uut, 'instanceLibs').resolves()
-      sandbox.stub(uut, 'msgRead').resolves('test message')
+      sandbox.stub(uut, 'msgRead').resolves({ sender: 'fake-sender', message: 'test message' })
 
       const result = await uut.run()
 
