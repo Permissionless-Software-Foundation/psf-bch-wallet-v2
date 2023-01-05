@@ -10,8 +10,9 @@ const SlpWallet = require('minimal-slp-wallet')
 // Local libraries
 
 // Constants
-const GROUP_ID = 'd89386b31c46ef977e6bae8e5a8b5770d02e9c3ee50fea5d4805490a5f17c5f3'
-// const GROUP_ID = '5c8cb997cce61426b7149a74a3997443ec7eb738c5c246d9cfe70185a6911476'
+// const GROUP_ID = 'd89386b31c46ef977e6bae8e5a8b5770d02e9c3ee50fea5d4805490a5f17c5f3'
+const GROUP_ID = '5c8cb997cce61426b7149a74a3997443ec7eb738c5c246d9cfe70185a6911476'
+const TOKENS_TO_IGNORE = ['f212a3ab2141dcd34f7e800253f1a61344523e6886fdfa2421bbedf3aa52617a']
 
 const { Command } = require('@oclif/command')
 
@@ -21,6 +22,7 @@ class VoteAddrs extends Command {
 
     // Encapsulate dependencies.
     this.wallet = null // placeholder
+    this.TOKENS_TO_IGNORE = TOKENS_TO_IGNORE
   }
 
   async run () {
@@ -79,7 +81,27 @@ class VoteAddrs extends Command {
 
       const nfts = groupData.genesisData.nfts
 
-      return nfts
+      // Filter out any tokens from the ignore list.
+      const filteredNfts = []
+      for (let i = 0; i < nfts.length; i++) {
+        const thisNft = nfts[i]
+
+        let ignoreThisToken = false
+        for (let j = 0; j < this.TOKENS_TO_IGNORE.length; j++) {
+          const tokenToIgnore = this.TOKENS_TO_IGNORE[j]
+
+          if (thisNft.includes(tokenToIgnore)) {
+            ignoreThisToken = true
+            break
+          }
+        }
+
+        if (!ignoreThisToken) {
+          filteredNfts.push(thisNft)
+        }
+      }
+
+      return filteredNfts
     } catch (err) {
       console.error('Error in getNftsFromGroup(): ', err.message)
       throw err
