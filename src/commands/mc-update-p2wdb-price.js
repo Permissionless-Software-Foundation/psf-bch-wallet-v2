@@ -1,5 +1,5 @@
 /*
-  This is pretty complex script. Ultimately what it achieves is that generates
+  This is pretty complex script. Ultimately what it achieves is that it generates
   a multisig transaction for updating the P2WDB write price.
 
   This script looks up the price of BCH and the PSF token, and calculates the
@@ -16,7 +16,7 @@
 // const SlpWallet = require('minimal-slp-wallet')
 const bitcore = require('bitcore-lib-cash')
 const EncryptLib = require('bch-encrypt-lib/index')
-const Write = require('p2wdb').Write
+const { Write, Pin } = require('p2wdb')
 const Conf = require('conf')
 
 // Local libraries
@@ -26,9 +26,14 @@ const MCCollectKeys = require('./mc-collect-keys')
 // CONSTANTS
 // CID should resolve to a JSON document on IPFS that the P2WDB will use to
 // validate the last price.
-const CID = 'bafybeicvlcwv3flrwa4egmroyicvghevi6uzbd56drmoerjeguu4ikpnhe'
+// const CID = 'bafybeicvlcwv3flrwa4egmroyicvghevi6uzbd56drmoerjeguu4ikpnhe'
 // WRITE_PRICE_ADDR is the address that is used by the P2WDB to determine the write price.
-const WRITE_PRICE_ADDR = 'bitcoincash:qqlrzp23w08434twmvr4fxw672whkjy0py26r63g3d'
+// const WRITE_PRICE_ADDR = 'bitcoincash:qqlrzp23w08434twmvr4fxw672whkjy0py26r63g3d'
+const WRITE_PRICE_ADDR = 'bitcoincash:qrwe6kxhvu47ve6jvgrf2d93w0q38av7s5xm9xfehr' // test address
+
+// Update this constant to reflect the Group token uses to generate the Minting
+// Council NFTs.
+const GROUP_ID = 'd89386b31c46ef977e6bae8e5a8b5770d02e9c3ee50fea5d4805490a5f17c5f3'
 
 const { Command, flags } = require('@oclif/command')
 
@@ -42,8 +47,10 @@ class MCUpdateP2wdbPrice extends Command {
     this.bchjs = null // placeholder
     this.mcCollectKeys = new MCCollectKeys()
     this.Write = Write
+    this.Pin = Pin
     this.msgLib = null // placeholder
     this.write = null // placeholder
+    this.pin = null // placeholder
     this.encryptLib = null // placeholder
     this.bitcore = bitcore
     this.conf = new Conf()
@@ -67,15 +74,22 @@ class MCUpdateP2wdbPrice extends Command {
       const walletObj = this.createMultisigWallet(keys)
       console.log(`wallet object: ${JSON.stringify(walletObj)}`)
 
-      // Placeholder for CID to put in OP_RETURN.
-      const cid = CID
-
-      // Generate a transaction for updating the P2WDB write cost.
-      const txObj = await this.createMultisigTx(walletObj, cid)
-      console.log('txObj: ', txObj)
-
       // Instatiate all the libraries orchestrated by this function.
       await this.instanceLibs()
+
+      // Generate update data, upload to IPFS, and get a CID
+      const cid = await this.uploadDataToIpfs({keys, walletObj})
+      // const cid = 'bafybeiea2rb73y6gkiaxaljpv2hj5hfczpibl634kj6flbz575j4t4bswa'
+
+      // Generate an update transaction with the update CID
+      const updateTxid = await this.writeCidToBlockchain(cid)
+
+      // // Placeholder for CID to put in OP_RETURN.
+      // const cid = CID
+
+      // // Generate a transaction for updating the P2WDB write cost.
+      const txObj = await this.createMultisigTx(walletObj, updateTxid)
+      console.log('txObj: ', txObj)
 
       // Send the encrypted TX to each NFT holder
       await this.encryptAndUpload(txObj, keys, flags)
@@ -85,6 +99,69 @@ class MCUpdateP2wdbPrice extends Command {
       console.log('Error in mc-update-p2wdb-price.js/run(): ', err.message)
 
       return 0
+    }
+  }
+
+  // Generate update data, upload to IPFS, and get a CID as per the PS009 spec.
+  async uploadDataToIpfs (inObj = {}) {
+    try {
+      const { keys, walletObj } = inObj
+
+      const updateTxData = {
+        groupId: GROUP_ID,
+        keys,
+        walletObj,
+        multisigAddr: walletObj.address
+      }
+      // console.log('updateTxData: ', updateTxData)
+
+      // Upload the data to the P2WDB.
+      const p2wdbResult = await this.write.postEntry(updateTxData, 'p2wdb-update')
+      // console.log('p2wdbResult: ', p2wdbResult)
+      const zcid = p2wdbResult.hash
+
+      // Get a CID from the P2WDB zCID
+      const cid = await this.pin.json(zcid)
+      console.log('cid: ', cid)
+
+      // Pin the CID with the pinning cluster
+      const pinResult = await this.pin.cid(cid)
+      // console.log('pinResult: ', pinResult)
+
+      return cid
+    } catch (err) {
+      console.error('Error in uploadDataToIpfs(): ', err.message)
+      throw err
+    }
+  }
+
+  // This function expects an IPFS CID as input. This is the output of the
+  // uploadDataToIpfs() function. It writes the update data CID to the BCH
+  // blockchain, and generates the transaction that the Minting Council will
+  // approve.
+  async writeCidToBlockchain (cid) {
+    try {
+      const now = new Date()
+      const opReturnObj = {
+        cid,
+        ts: now.getTime()
+      }
+      const opReturnStr = JSON.stringify(opReturnObj)
+
+      const receivers = [{
+        address: WRITE_PRICE_ADDR,
+        amountSat: 546
+      }]
+
+      await this.wallet.initialize()
+
+      const txid = await this.wallet.sendOpReturn(opReturnStr, '', receivers)
+      console.log('txid: ', txid)
+
+      return txid
+    } catch (err) {
+      console.error('Error in writeCidToBlockchain(): ', err)
+      throw err
     }
   }
 
@@ -211,12 +288,16 @@ class MCUpdateP2wdbPrice extends Command {
     // Get the selected P2WDB server URL
     const serverURL = this.walletUtil.getP2wdbServer()
 
-    // Instatiate the P2WDB Write library.
+    const pinServer = this.walletUtil.getPinServer()
+
+    // Instatiate the P2WDB Write and Pin libraries.
     const p2wdbConfig = {
       bchWallet: this.wallet,
-      serverURL
+      serverURL,
+      pinServer
     }
     this.write = new this.Write(p2wdbConfig)
+    this.pin = new this.Pin(p2wdbConfig)
 
     // Instantiate the encryption library.
     this.encryptLib = new EncryptLib({
@@ -227,7 +308,7 @@ class MCUpdateP2wdbPrice extends Command {
   }
 
   // Create a transaction to spend 1000 sats from the multisig wallet.
-  async createMultisigTx (walletObj, cid) {
+  async createMultisigTx (walletObj, updateTxid) {
     try {
       // Timestamp
       let ts = new Date()
@@ -239,7 +320,8 @@ class MCUpdateP2wdbPrice extends Command {
       // Generate the OP_RETURN data
       const script = [
         this.bchjs.Script.opcodes.OP_RETURN,
-        Buffer.from(JSON.stringify({ cid, ts }))
+        Buffer.from('APPROVE'),
+        Buffer.from(updateTxid)
       ]
 
       // Compile the script array into a bitcoin-compliant hex encoded string.
@@ -343,7 +425,7 @@ class MCUpdateP2wdbPrice extends Command {
       // console.log('addrs: ', addrs)
 
       // Get the public keys for each address holding an NFT.
-      const { keys } = await this.mcCollectKeys.findKeys(addrs)
+      const { keys } = await this.mcCollectKeys.findKeys(addrs, nfts)
 
       return keys
     } catch (err) {

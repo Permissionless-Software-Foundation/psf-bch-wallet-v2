@@ -37,7 +37,7 @@ class MCCollectKeys extends Command {
       const addrs = await this.getAddrs(nfts)
       console.log('addrs: ', addrs)
 
-      const { keys, keysNotFound } = await this.findKeys(addrs)
+      const { keys, keysNotFound } = await this.findKeys(addrs, nfts)
       console.log('keys: ', keys)
       console.log('keysNotFound: ', keysNotFound)
 
@@ -57,13 +57,14 @@ class MCCollectKeys extends Command {
   // It returns an object with a keys and keysNotFound property:
   // keys - Object containing address and public key
   // keysNotFound - Array of addresses whos public keys could not be found.
-  async findKeys (addrs) {
+  async findKeys (addrs, nfts) {
     try {
       const keys = []
       const keysNotFound = []
 
       for (let i = 0; i < addrs.length; i++) {
         const thisAddr = addrs[i]
+        const thisNft = nfts[i]
 
         // Get public Key for reciever from the blockchain.
         const publicKey = await this.wallet.getPubKey(thisAddr)
@@ -74,14 +75,15 @@ class MCCollectKeys extends Command {
         } else {
           keys.push({
             addr: thisAddr,
-            pubKey: publicKey
+            pubKey: publicKey,
+            nft: thisNft
           })
         }
       }
 
       return { keys, keysNotFound }
     } catch (err) {
-      console.error('Error in findKeys(): ', err.message)
+      console.error('Error in findKeys(): ', err)
       throw err
     }
   }
