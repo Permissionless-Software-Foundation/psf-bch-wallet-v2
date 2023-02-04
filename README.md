@@ -99,10 +99,10 @@ In the commands below, replace `psf-bch-wallet` with `./bin/run`.
 * [`psf-bch-wallet ipfs-status`](#psf-bch-wallet-ipfs-status)
 * [`psf-bch-wallet mc-collect-keys`](#psf-bch-wallet-mc-collect-keys)
 * [`psf-bch-wallet mc-finish`](#psf-bch-wallet-mc-finish)
+* [`psf-bch-wallet mc-p2wdb-approval-tx`](#psf-bch-wallet-mc-p2wdb-approval-tx)
+* [`psf-bch-wallet mc-p2wdb-update-tx`](#psf-bch-wallet-mc-p2wdb-update-tx)
 * [`psf-bch-wallet mc-read-tx`](#psf-bch-wallet-mc-read-tx)
 * [`psf-bch-wallet mc-sign-tx`](#psf-bch-wallet-mc-sign-tx)
-* [`psf-bch-wallet mc-update-p2wdb-price`](#psf-bch-wallet-mc-update-p2wdb-price)
-* [`psf-bch-wallet mc-update-tx`](#psf-bch-wallet-mc-update-tx)
 * [`psf-bch-wallet msg-check`](#psf-bch-wallet-msg-check)
 * [`psf-bch-wallet msg-read`](#psf-bch-wallet-msg-read)
 * [`psf-bch-wallet msg-send`](#psf-bch-wallet-msg-send)
@@ -141,23 +141,23 @@ In the commands below, replace `psf-bch-wallet` with `./bin/run`.
 manage configuration
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet conf [KEY] [VALUE] [-h] [-k <value>] [-v <value>] [-d] [-p <value>] [-n <value>] [-d <value>]
 
-[1mARGUMENTS[22m
-  KEY    [2mkey of the config[22m
-  VALUE  [2mvalue of the config[22m
+ARGUMENTS
+  KEY    key of the config
+  VALUE  value of the config
 
-[1mFLAGS[22m
-  -d, --cwd=[4m<value>[24m      [2mconfig file location[22m
-  -d, --delete           [2mdelete?[22m
-  -h, --help             [2mshow CLI help[22m
-  -k, --key=[4m<value>[24m      [2mkey of the config[22m
-  -n, --name=[4m<value>[24m     [2mconfig file name[22m
-  -p, --project=[4m<value>[24m  [2mproject name[22m
-  -v, --value=[4m<value>[24m    [2mvalue of the config[22m
+FLAGS
+  -d, --cwd=<value>      config file location
+  -d, --delete           delete?
+  -h, --help             show CLI help
+  -k, --key=<value>      key of the config
+  -n, --name=<value>     config file name
+  -p, --project=<value>  project name
+  -v, --value=<value>    value of the config
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   manage configuration
 ```
 
@@ -168,16 +168,16 @@ _See code: [conf-cli](https://github.com/natzcam/conf-cli/blob/v0.1.9/src/comman
 display help for psf-bch-wallet
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet help [COMMAND] [--all]
 
-[1mARGUMENTS[22m
-  COMMAND  [2mcommand to show help for[22m
+ARGUMENTS
+  COMMAND  command to show help for
 
-[1mFLAGS[22m
-  --all  [2msee all commands in CLI[22m
+FLAGS
+  --all  see all commands in CLI
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   display help for psf-bch-wallet
 ```
 
@@ -188,13 +188,13 @@ _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.1
 Query the state of subnet peers
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet ipfs-peers [-a]
 
-[1mFLAGS[22m
-  -a, --all  [2mDisplay all data about peers[22m
+FLAGS
+  -a, --all  Display all data about peers
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Query the state of subnet peers
 ```
 
@@ -205,10 +205,10 @@ _See code: [src/commands/ipfs-peers.js](https://github.com/Permissionless-Softwa
 Query the state of circuit relays
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet ipfs-relays
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Query the state of circuit relays
 ```
 
@@ -219,10 +219,10 @@ _See code: [src/commands/ipfs-relays.js](https://github.com/Permissionless-Softw
 Query the state of the IPFS node
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet ipfs-status
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Query the state of the IPFS node
 ```
 
@@ -233,10 +233,10 @@ _See code: [src/commands/ipfs-status.js](https://github.com/Permissionless-Softw
 Collect Voting Addresses
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet mc-collect-keys
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Collect Voting Addresses
 
   This command is run to prepare for a governance vote. It looks up the addresses
@@ -251,14 +251,14 @@ _See code: [src/commands/mc-collect-keys.js](https://github.com/Permissionless-S
 Retrieve signatures, sign multisig TX, and broadcast
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet mc-finish [-n <value>] [-a <value>]
 
-[1mFLAGS[22m
-  -a, --txids=[4m<value>[24m  [2mArray of TXIDs of messages containing signatures[22m
-  -n, --name=[4m<value>[24m   [2mName of wallet[22m
+FLAGS
+  -a, --txids=<value>  Array of TXIDs of messages containing signatures
+  -n, --name=<value>   Name of wallet
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Retrieve signatures, sign multisig TX, and broadcast
 
   This command expects a JSON string containing an array of transaction IDs (TXIDs)
@@ -268,19 +268,90 @@ Retrieve signatures, sign multisig TX, and broadcast
 
 _See code: [src/commands/mc-finish.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/mc-finish.js)_
 
+## `psf-bch-wallet mc-p2wdb-approval-tx`
+
+Generate a multsig TX for the Minting Council to update the price of P2WDB writes.
+
+```
+USAGE
+  $ psf-bch-wallet mc-p2wdb-approval-tx [-n <value>] [-s <value>] [-m <value>] [-t <value>]
+
+FLAGS
+  -m, --message=<value>  Message attached to transaction sent to each NFT holder.
+  -n, --name=<value>     Name of wallet paying to send messages to NFT holders
+  -s, --subject=<value>  Subject of e2ee message.
+  -t, --txid=<value>     TXID of the update transaction generated from the mc-update-tx command.
+
+DESCRIPTION
+  Generate a multsig TX for the Minting Council to update the price of P2WDB writes.
+
+  This command creates a multisig wallet. As input, it takes address-public-key
+  pairs generated from the multisig-collect-keys command. It uses that
+  data to construct a P2SH multisig wallet. The wallet object is displayed
+  on the command line as the output.
+
+  This is a long-running command. It does the following:
+  - It calls the mc-collect-keys commands to get the public keys for each holder of the Minting Council NFT.
+  - It generates a multisignature wallet from those keys requiring 50% + 1 signers.
+  - It generates a transaction for spending from the wallet, attaching an OP_RETURN to approve an update to the P2WDB write price.
+  - It sends the unsigned transaction to each member of the Minting Council.
+```
+
+_See code: [src/commands/mc-p2wdb-approval-tx.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/mc-p2wdb-approval-tx.js)_
+
+## `psf-bch-wallet mc-p2wdb-update-tx`
+
+Generate a PS009 Update Transaction to update the P2WDB write price
+
+```
+USAGE
+  $ psf-bch-wallet mc-p2wdb-update-tx [-n <value>]
+
+FLAGS
+  -n, --name=<value>  Name of wallet paying to send messages to NFT holders
+
+DESCRIPTION
+  Generate a PS009 Update Transaction to update the P2WDB write price
+
+  This command generates an 'Update Transaction' as per PS009 specification:
+  https://github.com/Permissionless-Software-Foundation/specifications/blob/master/ps009-multisig-approval.md
+
+  This command creates a multisig wallet. As input, it takes address-public-key
+  pairs generated from the multisig-collect-keys command. It uses that
+  data to construct a P2SH multisig wallet. The wallet object is displayed
+  on the command line as the output.
+
+  This is a long-running command. It does the following:
+  - It calls the mc-collect-keys commands to get the public keys for each holder
+  of the Minting Council NFT.
+  - It generates a multisignature wallet from those keys requiring 50% + 1 signers.
+  - It retrieves the current PSF token price and calculates the price of $0.01 USD
+  in PSF tokens.
+  - It writes all the data to the P2WDB, pins the data with the P2WDB Pinning
+  Cluster, and gets an IPFS CID for the data.
+  - It then writes a PS009 Update Transaction to the BCH blockchain, containing
+  the CID, returning a TXID.
+
+  That BCH TXID is then used as input to the mc-update-p2wdb-price command, to
+  generate a PS009 Approval Transaction, so that the price update can be approved
+  by the Minting Council via the multisignature wallet.
+```
+
+_See code: [src/commands/mc-p2wdb-update-tx.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/mc-p2wdb-update-tx.js)_
+
 ## `psf-bch-wallet mc-read-tx`
 
 Read multisig TX proposal
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet mc-read-tx [-n <value>] [-t <value>]
 
-[1mFLAGS[22m
-  -n, --name=[4m<value>[24m  [2mName of wallet[22m
-  -t, --txid=[4m<value>[24m  [2mTransaction ID[22m
+FLAGS
+  -n, --name=<value>  Name of wallet
+  -t, --txid=<value>  Transaction ID
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Read multisig TX proposal
 
   This command reads the 'message' section of a proposed multisig transaction for
@@ -295,14 +366,14 @@ _See code: [src/commands/mc-read-tx.js](https://github.com/Permissionless-Softwa
 Read signed messages
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet mc-sign-tx [-n <value>] [-t <value>]
 
-[1mFLAGS[22m
-  -n, --name=[4m<value>[24m  [2mName of wallet[22m
-  -t, --txid=[4m<value>[24m  [2mTransaction ID[22m
+FLAGS
+  -n, --name=<value>  Name of wallet
+  -t, --txid=<value>  Transaction ID
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Read signed messages
 
   This command signs a multisig transaction for Minting Council members. The
@@ -315,79 +386,18 @@ Read signed messages
 
 _See code: [src/commands/mc-sign-tx.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/mc-sign-tx.js)_
 
-## `psf-bch-wallet mc-update-p2wdb-price`
-
-Generate a multsig TX for the Minting Council to update the price of P2WDB writes.
-
-```
-[1mUSAGE[22m
-  $ psf-bch-wallet mc-update-p2wdb-price [-n <value>] [-s <value>] [-m <value>]
-
-[1mFLAGS[22m
-  -m, --message=[4m<value>[24m  [2mMessage attached to transaction sent to each NFT holder.[22m
-  -n, --name=[4m<value>[24m     [2mName of wallet paying to send messages to NFT holders[22m
-  -s, --subject=[4m<value>[24m  [2mSubject of e2ee message.[22m
-
-[1mDESCRIPTION[22m
-  Generate a multsig TX for the Minting Council to update the price of P2WDB writes.
-
-  This command creates a multisig wallet. As input, it takes address-public-key
-  pairs generated from the multisig-collect-keys command. It uses that
-  data to construct a P2SH multisig wallet. The wallet object is displayed
-  on the command line as the output.
-
-  This is a long-running command. It does the following:
-  - It calls the mc-collect-keys commands to get the public keys for each holder of the Minting Council NFT.
-  - It generates a multisignature wallet from those keys requiring 50% + 1 signers.
-  - It generates a transaction for spending from the wallet, attaching an OP_RETURN to update the P2WDB write price.
-  - It sends the unsigned transaction to each member of the Minting Council.
-```
-
-_See code: [src/commands/mc-update-p2wdb-price.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/mc-update-p2wdb-price.js)_
-
-## `psf-bch-wallet mc-update-tx`
-
-Generate a PS009 Update Transaction to update the P2WDB write price
-
-```
-[1mUSAGE[22m
-  $ psf-bch-wallet mc-update-tx [-n <value>]
-
-[1mFLAGS[22m
-  -n, --name=[4m<value>[24m  [2mName of wallet paying to send messages to NFT holders[22m
-
-[1mDESCRIPTION[22m
-  Generate a PS009 Update Transaction to update the P2WDB write price
-
-  This command generates an 'Update Transaction' as per PS009 specification:
-
-
-  This command creates a multisig wallet. As input, it takes address-public-key
-  pairs generated from the multisig-collect-keys command. It uses that
-  data to construct a P2SH multisig wallet. The wallet object is displayed
-  on the command line as the output.
-
-  This is a long-running command. It does the following:
-  - It calls the mc-collect-keys commands to get the public keys for each holder of the Minting Council NFT.
-  - It generates a multisignature wallet from those keys requiring 50% + 1 signers.
-  - It generates a transaction for spending from the wallet, attaching an OP_RETURN to update the P2WDB write price.
-  - It sends the unsigned transaction to each member of the Minting Council.
-```
-
-_See code: [src/commands/mc-update-tx.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/mc-update-tx.js)_
-
 ## `psf-bch-wallet msg-check`
 
 Check signed messages
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet msg-check [-n <value>]
 
-[1mFLAGS[22m
-  -n, --name=[4m<value>[24m  [2mName of wallet[22m
+FLAGS
+  -n, --name=<value>  Name of wallet
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Check signed messages
 ```
 
@@ -398,14 +408,14 @@ _See code: [src/commands/msg-check.js](https://github.com/Permissionless-Softwar
 Read signed messages
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet msg-read [-n <value>] [-t <value>]
 
-[1mFLAGS[22m
-  -n, --name=[4m<value>[24m  [2mName of wallet[22m
-  -t, --txid=[4m<value>[24m  [2mTransaction ID[22m
+FLAGS
+  -n, --name=<value>  Name of wallet
+  -t, --txid=<value>  Transaction ID
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Read signed messages
 ```
 
@@ -416,16 +426,16 @@ _See code: [src/commands/msg-read.js](https://github.com/Permissionless-Software
 Send encrypted messages
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet msg-send [-a <value>] [-m <value>] [-s <value>] [-n <value>]
 
-[1mFLAGS[22m
-  -a, --bchAddress=[4m<value>[24m  [2mBCH Address[22m
-  -m, --message=[4m<value>[24m     [2mMessage to send[22m
-  -n, --name=[4m<value>[24m        [2mName of wallet[22m
-  -s, --subject=[4m<value>[24m     [2mMessage Subject[22m
+FLAGS
+  -a, --bchAddress=<value>  BCH Address
+  -m, --message=<value>     Message to send
+  -n, --name=<value>        Name of wallet
+  -s, --subject=<value>     Message Subject
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Send encrypted messages
 ```
 
@@ -436,14 +446,14 @@ _See code: [src/commands/msg-send.js](https://github.com/Permissionless-Software
 Cryptographically sign a message.
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet msg-sign [-n <value>] [-m <value>]
 
-[1mFLAGS[22m
-  -m, --msg=[4m<value>[24m   [2mCleartext message to sign[22m
-  -n, --name=[4m<value>[24m  [2mName of wallet[22m
+FLAGS
+  -m, --msg=<value>   Cleartext message to sign
+  -n, --name=<value>  Name of wallet
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Cryptographically sign a message.
 
   Generate a signature from a clear-text message and the private key of your wallet.
@@ -457,15 +467,15 @@ _See code: [src/commands/msg-sign.js](https://github.com/Permissionless-Software
 Verify a signed message
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet msg-verify [-b <value>] [-m <value>] [-s <value>]
 
-[1mFLAGS[22m
-  -b, --bchAddr=[4m<value>[24m  [2mBCH address of signer.[22m
-  -m, --msg=[4m<value>[24m      [2mCleartext message used to generate the signature.[22m
-  -s, --sig=[4m<value>[24m      [2mSignature to verify.[22m
+FLAGS
+  -b, --bchAddr=<value>  BCH address of signer.
+  -m, --msg=<value>      Cleartext message used to generate the signature.
+  -s, --sig=<value>      Signature to verify.
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Verify a signed message
 
   Verify the authenticity of a signed message.
@@ -478,14 +488,14 @@ _See code: [src/commands/msg-verify.js](https://github.com/Permissionless-Softwa
 Upload JSON to IPFS
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet p2wdb-json [-n <value>] [-j <value>]
 
-[1mFLAGS[22m
-  -j, --json=[4m<value>[24m  [2mA JSON string. Encase this argument in single quotes.[22m
-  -n, --name=[4m<value>[24m  [2mName of wallet[22m
+FLAGS
+  -j, --json=<value>  A JSON string. Encase this argument in single quotes.
+  -n, --name=<value>  Name of wallet
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Upload JSON to IPFS
 
   This command uses the p2wdb npm library to upload a JSON object to an IPFS node.
@@ -500,14 +510,14 @@ _See code: [src/commands/p2wdb-json.js](https://github.com/Permissionless-Softwa
 Pin an IPFS CID using the P2WDB pinning service
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet p2wdb-pin [-n <value>] [-c <value>]
 
-[1mFLAGS[22m
-  -c, --cid=[4m<value>[24m   [2mIPFS CID to pin[22m
-  -n, --name=[4m<value>[24m  [2mName of wallet[22m
+FLAGS
+  -c, --cid=<value>   IPFS CID to pin
+  -n, --name=<value>  Name of wallet
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Pin an IPFS CID using the P2WDB pinning service
 
   This command uses the p2wdb npm library to pin an IPFS CID using the P2WDB
@@ -523,13 +533,13 @@ _See code: [src/commands/p2wdb-pin.js](https://github.com/Permissionless-Softwar
 Read an entry from the P2WDB
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet p2wdb-read [-h <value>]
 
-[1mFLAGS[22m
-  -h, --hash=[4m<value>[24m  [2mHash CID representing P2WDB entry[22m
+FLAGS
+  -h, --hash=<value>  Hash CID representing P2WDB entry
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Read an entry from the P2WDB
 ```
 
@@ -540,15 +550,15 @@ _See code: [src/commands/p2wdb-read.js](https://github.com/Permissionless-Softwa
 Write an entry to the pay-to-write database (P2WDB)
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet p2wdb-write [-n <value>] [-d <value>] [-a <value>]
 
-[1mFLAGS[22m
-  -a, --appId=[4m<value>[24m  [2mappId string to categorize data[22m
-  -d, --data=[4m<value>[24m   [2mString of data to write to the P2WDB[22m
-  -n, --name=[4m<value>[24m   [2mName of wallet[22m
+FLAGS
+  -a, --appId=<value>  appId string to categorize data
+  -d, --data=<value>   String of data to write to the P2WDB
+  -n, --name=<value>   Name of wallet
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Write an entry to the pay-to-write database (P2WDB)
 
   In order to execute this command, the wallet must contain some BCH and some PSF
@@ -562,15 +572,15 @@ _See code: [src/commands/p2wdb-write.js](https://github.com/Permissionless-Softw
 Send BCH
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet send-bch [-n <value>] [-q <value>] [-a <value>]
 
-[1mFLAGS[22m
-  -a, --sendAddr=[4m<value>[24m  [2mCash address to send to[22m
-  -n, --name=[4m<value>[24m      [2mName of wallet[22m
-  -q, --qty=[4m<value>[24m       [2mQuantity in BCH[22m
+FLAGS
+  -a, --sendAddr=<value>  Cash address to send to
+  -n, --name=<value>      Name of wallet
+  -q, --qty=<value>       Quantity in BCH
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Send BCH
 ```
 
@@ -581,16 +591,16 @@ _See code: [src/commands/send-bch.js](https://github.com/Permissionless-Software
 Send Tokens
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet send-tokens [-n <value>] [-t <value>] [-a <value>] [-q <value>]
 
-[1mFLAGS[22m
-  -a, --sendAddr=[4m<value>[24m  [2mCash or SimpleLedger address to send to[22m
-  -n, --name=[4m<value>[24m      [2mName of wallet[22m
-  -q, --qty=[4m<value>[24m
-  -t, --tokenId=[4m<value>[24m   [2mToken ID[22m
+FLAGS
+  -a, --sendAddr=<value>  Cash or SimpleLedger address to send to
+  -n, --name=<value>      Name of wallet
+  -q, --qty=<value>
+  -t, --tokenId=<value>   Token ID
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Send Tokens
 ```
 
@@ -601,15 +611,15 @@ _See code: [src/commands/send-tokens.js](https://github.com/Permissionless-Softw
 Burn a specific quantity of SLP tokens.
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet token-burn [-n <value>] [-q <value>] [-t <value>]
 
-[1mFLAGS[22m
-  -n, --name=[4m<value>[24m     [2mName of wallet[22m
-  -q, --qty=[4m<value>[24m      [2mQuantity of tokens to burn. If quantity is 0, all tokens will be burned.[22m
-  -t, --tokenId=[4m<value>[24m  [2mtokenId of token to burn[22m
+FLAGS
+  -n, --name=<value>     Name of wallet
+  -q, --qty=<value>      Quantity of tokens to burn. If quantity is 0, all tokens will be burned.
+  -t, --tokenId=<value>  tokenId of token to burn
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Burn a specific quantity of SLP tokens.
 ```
 
@@ -620,20 +630,20 @@ _See code: [src/commands/token-burn.js](https://github.com/Permissionless-Softwa
 Create a new SLP Type1 fugible token.
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet token-create-fungible [-n <value>] [-t <value>] [-m <value>] [-d <value>] [-q <value>] [-u <value>] [-h <value>] [-b]
 
-[1mFLAGS[22m
-  -b, --baton               [2m(optional Boolean) create a minting baton[22m
-  -d, --decimals=[4m<value>[24m    [2mDecimals used by the token[22m
-  -h, --hash=[4m<value>[24m        [2m(optional) Document hash of the group[22m
-  -m, --tokenName=[4m<value>[24m   [2mName of token[22m
-  -n, --walletName=[4m<value>[24m  [2mName of wallet to pay for transaction[22m
-  -q, --qty=[4m<value>[24m         [2mQuantity of tokens to create[22m
-  -t, --ticker=[4m<value>[24m      [2mTicker of the group[22m
-  -u, --url=[4m<value>[24m         [2m(optional) Document URL of the group[22m
+FLAGS
+  -b, --baton               (optional Boolean) create a minting baton
+  -d, --decimals=<value>    Decimals used by the token
+  -h, --hash=<value>        (optional) Document hash of the group
+  -m, --tokenName=<value>   Name of token
+  -n, --walletName=<value>  Name of wallet to pay for transaction
+  -q, --qty=<value>         Quantity of tokens to create
+  -t, --ticker=<value>      Ticker of the group
+  -u, --url=<value>         (optional) Document URL of the group
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Create a new SLP Type1 fugible token.
 
   Creating a minting baton is optional. If a baton address is not specified, then the
@@ -647,18 +657,18 @@ _See code: [src/commands/token-create-fungible.js](https://github.com/Permission
 Create a new SLP Group token.
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet token-create-group [-n <value>] [-m <value>] [-t <value>] [-q <value>] [-u <value>] [-h <value>]
 
-[1mFLAGS[22m
-  -h, --hash=[4m<value>[24m        [2m(optional) Document hash of the group[22m
-  -m, --tokenName=[4m<value>[24m   [2mName of token[22m
-  -n, --walletName=[4m<value>[24m  [2mName of wallet to pay for transaction[22m
-  -q, --qty=[4m<value>[24m         [2m(optional) Quantity of tokens to create. Defaults to 1[22m
-  -t, --ticker=[4m<value>[24m      [2mTicker of the group[22m
-  -u, --url=[4m<value>[24m         [2m(optional) Document URL of the group[22m
+FLAGS
+  -h, --hash=<value>        (optional) Document hash of the group
+  -m, --tokenName=<value>   Name of token
+  -n, --walletName=<value>  Name of wallet to pay for transaction
+  -q, --qty=<value>         (optional) Quantity of tokens to create. Defaults to 1
+  -t, --ticker=<value>      Ticker of the group
+  -u, --url=<value>         (optional) Document URL of the group
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Create a new SLP Group token.
 
   Group tokens are used to generate NFTs. Read more about the relationship:
@@ -672,18 +682,18 @@ _See code: [src/commands/token-create-group.js](https://github.com/Permissionles
 Create a new SLP Group token.
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet token-create-nft [-n <value>] [-m <value>] [-t <value>] [-u <value>] [-h <value>] [-i <value>]
 
-[1mFLAGS[22m
-  -h, --hash=[4m<value>[24m        [2m(optional) Document hash of the group[22m
-  -i, --tokenId=[4m<value>[24m     [2mToken ID of Group token to burn, to generate the NFT[22m
-  -m, --tokenName=[4m<value>[24m   [2mName of token[22m
-  -n, --walletName=[4m<value>[24m  [2mName of wallet to pay for transaction[22m
-  -t, --ticker=[4m<value>[24m      [2mTicker of the group[22m
-  -u, --url=[4m<value>[24m         [2m(optional) Document URL of the group[22m
+FLAGS
+  -h, --hash=<value>        (optional) Document hash of the group
+  -i, --tokenId=<value>     Token ID of Group token to burn, to generate the NFT
+  -m, --tokenName=<value>   Name of token
+  -n, --walletName=<value>  Name of wallet to pay for transaction
+  -t, --ticker=<value>      Ticker of the group
+  -u, --url=<value>         (optional) Document URL of the group
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Create a new SLP Group token.
 
   Group tokens are used to generate NFTs. Read more about the relationship:
@@ -697,13 +707,13 @@ _See code: [src/commands/token-create-nft.js](https://github.com/Permissionless-
 Get information on a token
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet token-info [-t <value>]
 
-[1mFLAGS[22m
-  -t, --tokenId=[4m<value>[24m  [2mThe ID of the token to lookup[22m
+FLAGS
+  -t, --tokenId=<value>  The ID of the token to lookup
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Get information on a token
 
   Retrieves the Genesis data for a token. If PS002 mutable and immutable data is
@@ -717,14 +727,14 @@ _See code: [src/commands/token-info.js](https://github.com/Permissionless-Softwa
 Create TXID for token mutable data
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet token-mda-tx [-n <value>] [-a <value>]
 
-[1mFLAGS[22m
-  -a, --mda=[4m<value>[24m         [2mMutable data address[22m
-  -n, --walletName=[4m<value>[24m  [2mName of wallet to pay for transaction[22m
+FLAGS
+  -a, --mda=<value>         Mutable data address
+  -n, --walletName=<value>  Name of wallet to pay for transaction
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Create TXID for token mutable data
 
   MDA is an acrynym for 'Mutable Data Address'
@@ -745,16 +755,16 @@ _See code: [src/commands/token-mda-tx.js](https://github.com/Permissionless-Soft
 Mint new Fungible (Type 1) or Group tokens
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet token-mint [-n <value>] [-q <value>] [-t <value>] [-r <value>]
 
-[1mFLAGS[22m
-  -n, --name=[4m<value>[24m      [2mName of wallet to pay for transaction[22m
-  -q, --qty=[4m<value>[24m       [2mQuantity of tokens to create[22m
-  -r, --receiver=[4m<value>[24m  [2m(optional) Receiver of new baton. Defaults to same wallet. null burns baton.[22m
-  -t, --tokenId=[4m<value>[24m   [2mToken ID[22m
+FLAGS
+  -n, --name=<value>      Name of wallet to pay for transaction
+  -q, --qty=<value>       Quantity of tokens to create
+  -r, --receiver=<value>  (optional) Receiver of new baton. Defaults to same wallet. null burns baton.
+  -t, --tokenId=<value>   Token ID
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Mint new Fungible (Type 1) or Group tokens
 
   If the wallet contains a minting baton from creating a Fungible or Group token,
@@ -773,13 +783,13 @@ _See code: [src/commands/token-mint.js](https://github.com/Permissionless-Softwa
 Get transaction history for a token
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet token-tx-history [-t <value>]
 
-[1mFLAGS[22m
-  -t, --tokenId=[4m<value>[24m  [2mThe ID of the token to lookup[22m
+FLAGS
+  -t, --tokenId=<value>  The ID of the token to lookup
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Get transaction history for a token
 
   Retrieves the transaction history for a token. This is every transaction that
@@ -794,14 +804,14 @@ _See code: [src/commands/token-tx-history.js](https://github.com/Permissionless-
 Update token mutable data.
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet token-update [-n <value>] [-c <value>]
 
-[1mFLAGS[22m
-  -c, --cid=[4m<value>[24m   [2mA CID that resolves to the new mutable data JSON[22m
-  -n, --name=[4m<value>[24m  [2mName of wallet[22m
+FLAGS
+  -c, --cid=<value>   A CID that resolves to the new mutable data JSON
+  -n, --name=<value>  Name of wallet
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Update token mutable data.
 
   This command is used to update the mutable data for a token.
@@ -831,10 +841,10 @@ _See code: [src/commands/token-update.js](https://github.com/Permissionless-Soft
 Collect Voting Addresses
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet vote-addrs
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Collect Voting Addresses
 
   This command is run to prepare for a governance vote. It looks up the addresses
@@ -849,15 +859,15 @@ _See code: [src/commands/vote-addrs.js](https://github.com/Permissionless-Softwa
 Airdrop Voting Tokens
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet vote-airdrop [-n <value>] [-a <value>] [-t <value>]
 
-[1mFLAGS[22m
-  -a, --addrs=[4m<value>[24m    [2mJSON string containing array of addresses[22m
-  -n, --name=[4m<value>[24m     [2mName of wallet holding voting tokens[22m
-  -t, --tokenId=[4m<value>[24m  [2mToken ID to air-drop to each address[22m
+FLAGS
+  -a, --addrs=<value>    JSON string containing array of addresses
+  -n, --name=<value>     Name of wallet holding voting tokens
+  -t, --tokenId=<value>  Token ID to air-drop to each address
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Airdrop Voting Tokens
 
   This command is used to air-drop voting tokens to an array of addresses. It
@@ -872,13 +882,13 @@ _See code: [src/commands/vote-airdrop.js](https://github.com/Permissionless-Soft
 List the different addresses for a wallet.
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet wallet-addrs [-n <value>]
 
-[1mFLAGS[22m
-  -n, --name=[4m<value>[24m  [2mName of wallet[22m
+FLAGS
+  -n, --name=<value>  Name of wallet
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   List the different addresses for a wallet.
 ```
 
@@ -889,14 +899,14 @@ _See code: [src/commands/wallet-addrs.js](https://github.com/Permissionless-Soft
 Display the balances of the wallet
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet wallet-balances [-n <value>] [-v]
 
-[1mFLAGS[22m
-  -n, --name=[4m<value>[24m  [2mName of wallet[22m
-  -v, --verbose       [2mShow verbose UTXO information[22m
+FLAGS
+  -n, --name=<value>  Name of wallet
+  -v, --verbose       Show verbose UTXO information
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Display the balances of the wallet
 ```
 
@@ -907,14 +917,14 @@ _See code: [src/commands/wallet-balances.js](https://github.com/Permissionless-S
 Generate a new HD Wallet.
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet wallet-create [-n <value>] [-d <value>]
 
-[1mFLAGS[22m
-  -d, --description=[4m<value>[24m  [2mDescription of the wallet[22m
-  -n, --name=[4m<value>[24m         [2mName of wallet[22m
+FLAGS
+  -d, --description=<value>  Description of the wallet
+  -n, --name=<value>         Name of wallet
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Generate a new HD Wallet.
 ```
 
@@ -925,10 +935,10 @@ _See code: [src/commands/wallet-create.js](https://github.com/Permissionless-Sof
 List existing wallets.
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet wallet-list
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   List existing wallets.
 ```
 
@@ -939,13 +949,13 @@ _See code: [src/commands/wallet-list.js](https://github.com/Permissionless-Softw
 Optimize a wallet
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet wallet-optimize [-n <value>]
 
-[1mFLAGS[22m
-  -n, --name=[4m<value>[24m  [2mName of wallet[22m
+FLAGS
+  -n, --name=<value>  Name of wallet
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Optimize a wallet
 
   This command 'optimizes' a wallet by consolidating the UTXOs with in it. This
@@ -960,13 +970,13 @@ _See code: [src/commands/wallet-optimize.js](https://github.com/Permissionless-S
 Remove an existing wallet.
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet wallet-remove [-n <value>]
 
-[1mFLAGS[22m
-  -n, --name=[4m<value>[24m  [2mName of wallet[22m
+FLAGS
+  -n, --name=<value>  Name of wallet
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Remove an existing wallet.
 ```
 
@@ -977,13 +987,13 @@ _See code: [src/commands/wallet-remove.js](https://github.com/Permissionless-Sof
 Scan different derivation paths of a 12 word mnemonic for tx history.
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet wallet-scan [-m <value>]
 
-[1mFLAGS[22m
-  -m, --mnemonic=[4m<value>[24m  [2mmnemonic phrase to generate addresses, wrapped in quotes[22m
+FLAGS
+  -m, --mnemonic=<value>  mnemonic phrase to generate addresses, wrapped in quotes
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Scan different derivation paths of a 12 word mnemonic for tx history.
 
   Scans the first 20 addresses of each derivation path for
@@ -1009,13 +1019,13 @@ _See code: [src/commands/wallet-scan.js](https://github.com/Permissionless-Softw
 List and/or select a wallet service provider.
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet wallet-service [-s <value>]
 
-[1mFLAGS[22m
-  -s, --select=[4m<value>[24m  [2mSwitch to a given IPFS ID for wallet service.[22m
+FLAGS
+  -s, --select=<value>  Switch to a given IPFS ID for wallet service.
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   List and/or select a wallet service provider.
 ```
 
@@ -1026,10 +1036,10 @@ _See code: [src/commands/wallet-service.js](https://github.com/Permissionless-So
 Run end-to-end tests on the selected wallet service.
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet wallet-service-test
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Run end-to-end tests on the selected wallet service.
 
   This command will run a series of end-to-end (e2e) tests on a current global
@@ -1045,16 +1055,16 @@ _See code: [src/commands/wallet-service-test.js](https://github.com/Permissionle
 Sweep funds from one wallet into another
 
 ```
-[1mUSAGE[22m
+USAGE
   $ psf-bch-wallet wallet-sweep [-n <value>] [-m <value>] [-w <value>] [-d <value>]
 
-[1mFLAGS[22m
-  -d, --derivation=[4m<value>[24m  [2mDerivation path. Will default to 245 if not specified. Common values are 245, 145, and 0[22m
-  -m, --mnemonic=[4m<value>[24m    [2m12-word mnemonic phrase, wrapped in quotes[22m
-  -n, --name=[4m<value>[24m        [2mname of receiving wallet[22m
-  -w, --wif=[4m<value>[24m         [2mWIF private key controlling funds of a single address[22m
+FLAGS
+  -d, --derivation=<value>  Derivation path. Will default to 245 if not specified. Common values are 245, 145, and 0
+  -m, --mnemonic=<value>    12-word mnemonic phrase, wrapped in quotes
+  -n, --name=<value>        name of receiving wallet
+  -w, --wif=<value>         WIF private key controlling funds of a single address
 
-[1mDESCRIPTION[22m
+DESCRIPTION
   Sweep funds from one wallet into another
 
   Sweep funds from a single private key (WIF) or a whole HD wallet (mnemonic)
