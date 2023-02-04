@@ -294,6 +294,40 @@ describe('#Wallet-Util', () => {
     })
   })
 
+  describe('#getPinServer', () => {
+    it('should return default values', () => {
+      // Force conf.get to return false.
+      sandbox.stub(uut.conf, 'get').returns(false)
+
+      const result = uut.getPinServer()
+
+      assert.equal(result, 'https://p2wdb-pin.fullstack.cash')
+    })
+
+    it('should return saved values', () => {
+      // Force desired code paths
+      sandbox.stub(uut.conf, 'get')
+        .onCall(0).returns('test-restURL')
+
+      const result = uut.getPinServer()
+
+      assert.equal(result, 'test-restURL')
+    })
+
+    it('should catch and throw an error', () => {
+      // Force an error
+      sandbox.stub(uut.conf, 'get').throws(new Error('test error'))
+
+      try {
+        uut.getPinServer()
+
+        assert.fail('Unexpected result')
+      } catch (err) {
+        assert.include(err.message, 'test error')
+      }
+    })
+  })
+
   describe('#instanceMsgLib', () => {
     it('should throw an error if wallet is not specified', () => {
       try {
