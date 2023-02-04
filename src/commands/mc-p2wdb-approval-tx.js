@@ -66,7 +66,7 @@ class MCUpdateP2wdbPrice extends Command {
       console.log(`wallet object: ${JSON.stringify(walletObj)}`)
 
       // Instatiate all the libraries orchestrated by this function.
-      await this.instanceLibs()
+      this.instanceLibs()
 
       // Generate a PS009 approval transaction
       const txObj = await this.createMultisigTx(walletObj, flags)
@@ -199,7 +199,7 @@ class MCUpdateP2wdbPrice extends Command {
 
   // Instatiate the various libraries used by msgSend(). These libraries are
   // encasulated in the 'this' object.
-  async instanceLibs () {
+  instanceLibs () {
     // Instantiate the bch-message-lib library.
     this.msgLib = this.walletUtil.instanceMsgLib(this.wallet)
 

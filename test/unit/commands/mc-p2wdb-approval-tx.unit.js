@@ -8,7 +8,7 @@ const sinon = require('sinon')
 const fs = require('fs').promises
 
 // Local libraries
-const MCUpdateP2wdbPrice = require('../../../src/commands/mc-update-p2wdb-price')
+const MCUpdateP2wdbPrice = require('../../../src/commands/mc-p2wdb-approval-tx')
 const WalletCreate = require('../../../src/commands/wallet-create')
 const walletCreate = new WalletCreate()
 const MockWallet = require('../../mocks/msw-mock')
@@ -16,7 +16,7 @@ const MsgSendMock = require('../../mocks/msg-send-mock')
 
 const filename = `${__dirname.toString()}/../../../.wallets/test123.json`
 
-describe('#mc-update-p2wdb-price', () => {
+describe('#mc-p2wdb-approval-tx', () => {
   let uut
   let sandbox
   let mockWallet
@@ -238,7 +238,7 @@ describe('#mc-update-p2wdb-price', () => {
       sandbox.stub(uut.walletUtil, 'instanceMsgLib').resolves()
       sandbox.stub(uut.walletUtil, 'getP2wdbServer').resolves()
 
-      const result = await uut.instanceLibs()
+      const result = uut.instanceLibs()
 
       assert.equal(result, true)
     })
