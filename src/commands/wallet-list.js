@@ -73,7 +73,7 @@ class WalletList extends Command {
   displayTable (data) {
     const table = new Table({
       head: ['Name', 'Description'],
-      colWidths: [25, 15]
+      colWidths: [25, 55]
     })
 
     for (let i = 0; i < data.length; i++) table.push(data[i])
