@@ -118,11 +118,12 @@ describe('#mc-collect-keys', () => {
       await uut.instanceWallet()
 
       const addrs = ['bitcoincash:qzwahhjldv0qsecfxlmcenzvkjv9rlv9au2hcfggl6']
+      const nfts = ['fb707a9d8a4d6ba47ef0c510714ca46d4523cd29c8f4e3fd6a63a85edb8b05d2']
 
       // Mock dependencies and force desired code path.
       sandbox.stub(uut.wallet, 'getPubKey').resolves('02055962631b236ddcd2c17cd0b711f12438b93bcf01b206cadb351cc3e6e3e269')
 
-      const result = await uut.findKeys(addrs)
+      const result = await uut.findKeys(addrs, nfts)
       // console.log('result: ', result)
 
       // Assert expected properties exist
@@ -142,11 +143,12 @@ describe('#mc-collect-keys', () => {
       await uut.instanceWallet()
 
       const addrs = ['bitcoincash:qzwahhjldv0qsecfxlmcenzvkjv9rlv9au2hcfggl6']
+      const nfts = ['fb707a9d8a4d6ba47ef0c510714ca46d4523cd29c8f4e3fd6a63a85edb8b05d2']
 
       // Mock dependencies and force desired code path.
       sandbox.stub(uut.wallet, 'getPubKey').resolves('not found')
 
-      const result = await uut.findKeys(addrs)
+      const result = await uut.findKeys(addrs, nfts)
       // console.log('result: ', result)
 
       // Assert expected properties exist

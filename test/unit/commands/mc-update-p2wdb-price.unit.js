@@ -44,8 +44,7 @@ describe('#mc-update-p2wdb-price', () => {
     it('validateFlags() should return true.', () => {
       const flags = {
         name: 'test123',
-        addrs: 'abc',
-        tokenId: 'cde'
+        txid: 'test'
       }
 
       assert.equal(uut.validateFlags(flags), true, 'return true')
@@ -59,6 +58,19 @@ describe('#mc-update-p2wdb-price', () => {
         assert.include(
           err.message,
           'You must specify a wallet with the -n flag.',
+          'Expected error message.'
+        )
+      }
+    })
+
+    it('validateFlags() should throw error if txid is not supplied.', () => {
+      try {
+        const flags = { name: 'test123' }
+        uut.validateFlags(flags)
+      } catch (err) {
+        assert.include(
+          err.message,
+          'You must specify a txid with the -t flag.',
           'Expected error message.'
         )
       }
@@ -172,7 +184,6 @@ describe('#mc-update-p2wdb-price', () => {
         ],
         requiredSigners: 2
       }
-      const cid = 'test-cid'
       const utxos = {
         bchUtxos: [{
           height: 773211,
@@ -186,7 +197,10 @@ describe('#mc-update-p2wdb-price', () => {
           satoshis: 88130
         }]
       }
-      const flags = { name: 'test123' }
+      const flags = {
+        name: 'test123',
+        txid: 'test'
+      }
 
       // Mock dependencies and force desired code path
       sandbox.stub(uut.walletUtil, 'instanceWallet').resolves(mockWallet)
@@ -194,17 +208,8 @@ describe('#mc-update-p2wdb-price', () => {
       await uut.instantiateWallet(flags)
 
       sandbox.stub(uut.wallet, 'getUtxos').resolves(utxos)
-      // class Tx {
-      //   from() {
-      //     return {}
-      //   }
-      //   to() { return {}}
-      //   feePerByte() {return {}}
-      //   change() {return{}}
-      // }
-      // uut.bitcore.Transaction = Tx
 
-      const result = await uut.createMultisigTx(walletObj, cid)
+      const result = await uut.createMultisigTx(walletObj, flags)
       // console.log('result: ', result)
 
       assert.property(result, 'inputs')
