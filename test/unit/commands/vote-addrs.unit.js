@@ -62,6 +62,8 @@ describe('#vote-addrs', () => {
         }
       })
 
+      uut.TOKENS_TO_IGNORE = ['b']
+
       const result = await uut.getNftsFromGroup('fake-group-id')
 
       assert.isArray(result)

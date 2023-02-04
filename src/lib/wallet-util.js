@@ -144,6 +144,26 @@ class WalletUtil {
     }
   }
 
+  // Get the pinning server. This is the REST API that allows us to pin
+  // content from P2WDB to its IPFS node, so that it can be seeded to the
+  // P2WDB pinning cluster.
+  getPinServer () {
+    try {
+      let pinServer = this.conf.get('pinServer', false)
+
+      if (!pinServer) {
+        pinServer = 'https://p2wdb-pin.fullstack.cash'
+
+        this.conf.set('pinServer', pinServer)
+      }
+
+      return pinServer
+    } catch (err) {
+      console.log('Error in getPinServer()')
+      throw err
+    }
+  }
+
   // Takes the wallet filename as input and returns an instance of
   // minimal-slp-wallet.
   async instanceWallet (walletName) {

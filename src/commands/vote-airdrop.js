@@ -119,7 +119,7 @@ VoteAirdrop.description = `Airdrop Voting Tokens
 
 This command is used to air-drop voting tokens to an array of addresses. It
 is expected the array of addresses is generated from the vote-addrs command.
-One token will be send to each address in the list.
+One token will be sent to each address in the list.
 `
 
 VoteAirdrop.flags = {
