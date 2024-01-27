@@ -31,12 +31,12 @@ class IpfsConnect extends Command {
       })
       // console.log("result.data: ", result.data);
 
-      if(result.data.success) {
+      if (result.data.success) {
         console.log(`Successfully connected to IPFS node at ${flags.multiaddr}`)
       } else {
         console.log(`Failed to connect to IPFS node at ${flags.multiaddr}`)
 
-        if(flags.getDetails) {
+        if (flags.getDetails) {
           console.log(`Failure reason: ${result.data.details}`)
         }
       }
