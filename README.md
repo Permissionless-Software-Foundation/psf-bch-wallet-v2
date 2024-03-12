@@ -95,7 +95,6 @@ In the commands below, replace `psf-bch-wallet` with `./bin/run`.
 * [`psf-bch-wallet conf [KEY] [VALUE]`](#psf-bch-wallet-conf-key-value)
 * [`psf-bch-wallet help [COMMAND]`](#psf-bch-wallet-help-command)
 * [`psf-bch-wallet ipfs-connect`](#psf-bch-wallet-ipfs-connect)
-* [`psf-bch-wallet ipfs-download`](#psf-bch-wallet-ipfs-download)
 * [`psf-bch-wallet ipfs-node`](#psf-bch-wallet-ipfs-node)
 * [`psf-bch-wallet ipfs-peers`](#psf-bch-wallet-ipfs-peers)
 * [`psf-bch-wallet ipfs-relays`](#psf-bch-wallet-ipfs-relays)
@@ -115,6 +114,7 @@ In the commands below, replace `psf-bch-wallet` with `./bin/run`.
 * [`psf-bch-wallet p2wdb-pin`](#psf-bch-wallet-p2wdb-pin)
 * [`psf-bch-wallet p2wdb-read`](#psf-bch-wallet-p2wdb-read)
 * [`psf-bch-wallet p2wdb-write`](#psf-bch-wallet-p2wdb-write)
+* [`psf-bch-wallet psffpp-download`](#psf-bch-wallet-psffpp-download)
 * [`psf-bch-wallet send-bch`](#psf-bch-wallet-send-bch)
 * [`psf-bch-wallet send-tokens`](#psf-bch-wallet-send-tokens)
 * [`psf-bch-wallet token-burn`](#psf-bch-wallet-token-burn)
@@ -203,23 +203,6 @@ Connect to an IPFS peer
 ```
 
 _See code: [src/commands/ipfs-connect.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/ipfs-connect.js)_
-
-## `psf-bch-wallet ipfs-download`
-
-Download a file, given its CID.
-
-```
-[1mUSAGE[22m
-  $ psf-bch-wallet ipfs-download [-c <value>]
-
-[1mFLAGS[22m
-  -c, --cid=[4m<value>[24m  [2mCID of file to download[22m
-
-[1mDESCRIPTION[22m
-  Download a file, given its CID.
-```
-
-_See code: [src/commands/ipfs-download.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/ipfs-download.js)_
 
 ## `psf-bch-wallet ipfs-node`
 
@@ -618,6 +601,24 @@ Write an entry to the pay-to-write database (P2WDB)
 ```
 
 _See code: [src/commands/p2wdb-write.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/p2wdb-write.js)_
+
+## `psf-bch-wallet psffpp-download`
+
+Download a file, given its CID.
+
+```
+[1mUSAGE[22m
+  $ psf-bch-wallet psffpp-download [-c <value>] [-f <value>]
+
+[1mFLAGS[22m
+  -c, --cid=[4m<value>[24m       [2mCID of file to download[22m
+  -f, --fileName=[4m<value>[24m  [2mfilename to apply to the downloaded file[22m
+
+[1mDESCRIPTION[22m
+  Download a file, given its CID.
+```
+
+_See code: [src/commands/psffpp-download.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/psffpp-download.js)_
 
 ## `psf-bch-wallet send-bch`
 

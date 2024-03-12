@@ -30,8 +30,8 @@ class IpfsDownload extends Command {
 
       const result = await this.axios.post(`${server.restURL}/ipfs/download`, {
         cid: flags.cid,
-        path: '/home/trout/tmp/download-temp',
-        fileName: 'grey-wizard2.jpg'
+        path: `${__dirname.toString()}/../../ipfs-files`,
+        fileName: flags.fileName
       })
       console.log(`download result: ${JSON.stringify(result.data, null, 2)}`)
 
@@ -50,6 +50,11 @@ IpfsDownload.flags = {
   cid: flags.string({
     char: 'c',
     description: 'CID of file to download'
+  }),
+
+  fileName: flags.string({
+    char: 'f',
+    description: 'filename to apply to the downloaded file'
   })
 }
 
