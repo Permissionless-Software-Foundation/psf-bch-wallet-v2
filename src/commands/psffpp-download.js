@@ -25,9 +25,6 @@ class IpfsDownload extends Command {
 
       const server = this.walletUtil.getRestServer()
 
-      // const result = await this.axios.get(`${server.restURL}/ipfs/download/${flags.cid}`)
-      // console.log(`download result: ${JSON.stringify(result.data, null, 2)}`)
-
       const result = await this.axios.post(`${server.restURL}/ipfs/download`, {
         cid: flags.cid,
         path: `${__dirname.toString()}/../../ipfs-files`,
