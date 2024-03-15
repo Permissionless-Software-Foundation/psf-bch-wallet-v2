@@ -79,15 +79,8 @@ class P2WDBPin extends Command {
   async pinCid (flags) {
     try {
       // Write data to the P2WDB.
-      const result = await this.pin.cid(flags.cid)
-      // console.log('result: ', result)
-
-      let hash = ''
-      if (result.hash.hash) {
-        hash = result.hash.hash
-      } else {
-        hash = result.hash
-      }
+      const hash = await this.pin.cid(flags.cid)
+      console.log('hash: ', hash)
 
       return hash
     } catch (err) {

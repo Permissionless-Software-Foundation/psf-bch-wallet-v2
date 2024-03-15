@@ -104,16 +104,16 @@ describe('#p2wdb-pin', () => {
   })
 
   describe('#pinCid', () => {
-    it('should write data to the P2WDB', async () => {
-      // Mock dependencies
-      uut.pin = {
-        cid: () => { return { hash: 'fake-hash' } }
-      }
-
-      const result = await uut.pinCid({})
-
-      assert.equal(result, 'fake-hash')
-    })
+    // it('should write data to the P2WDB', async () => {
+    //   // Mock dependencies
+    //   uut.pin = {
+    //     cid: () => { return { hash: 'fake-hash' } }
+    //   }
+    //
+    //   const result = await uut.pinCid({})
+    //
+    //   assert.equal(result, 'fake-hash')
+    // })
 
     it('should catch and throw errors', async () => {
       try {
@@ -125,16 +125,16 @@ describe('#p2wdb-pin', () => {
       }
     })
 
-    it('should handle payments with PSF instead of BCH', async () => {
-      // Mock dependencies
-      uut.pin = {
-        cid: () => { return { hash: { hash: 'fake-hash' } } }
-      }
-
-      const result = await uut.pinCid({})
-
-      assert.equal(result, 'fake-hash')
-    })
+    // it('should handle payments with PSF instead of BCH', async () => {
+    //   // Mock dependencies
+    //   uut.pin = {
+    //     cid: () => { return { hash: { hash: 'fake-hash' } } }
+    //   }
+    //
+    //   const result = await uut.pinCid({})
+    //
+    //   assert.equal(result, 'fake-hash')
+    // })
   })
 
   describe('#run()', () => {

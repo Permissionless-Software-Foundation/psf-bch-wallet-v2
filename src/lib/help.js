@@ -62,6 +62,16 @@ class CustomHelp extends HelpBase {
         cmdAry = cmdAry.filter(x => !x.id.includes('mc-'))
       }
 
+      // Hide or show psffpp-* commands.
+      const showPsffppCmds = this.conf.get('cmdPsffpp', false)
+      if (!showPsffppCmds || showPsffppCmds === 'false') {
+        // Ensure the config setting is explicitly defined.
+        this.conf.set('showPsffppCmds', 'false')
+
+        // Filter out the psffpp-* commands.
+        cmdAry = cmdAry.filter(x => !x.id.includes('showPsffppCmds-'))
+      }
+
       return cmdAry
     } catch (err) {
       console.error('Error in help.js/filterCommands(): ', err)

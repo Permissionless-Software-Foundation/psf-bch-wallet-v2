@@ -258,6 +258,11 @@ class MCUpdateP2wdbPrice extends Command {
       const utxoToSpend = this.wallet.bchjs.Utxo.findBiggestUtxo(utxos.bchUtxos)
       // console.log('utxoToSpend: ', utxoToSpend)
 
+      if (!utxoToSpend) {
+        const multisigWalletAddr = walletObj.address
+        throw new Error(`Multisig wallet has no UTXOs. Fund it with a few cents of BCH: ${multisigWalletAddr}`)
+      }
+
       // Repackage the UTXO for bitcore-lib-cash
       const utxo = {
         txid: utxoToSpend.tx_hash,
