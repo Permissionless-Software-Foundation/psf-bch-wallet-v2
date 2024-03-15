@@ -28,6 +28,7 @@
     "koa-router": "10.1.1",
     "minimal-slp-wallet": "5.10.0",
     "p2wdb": "2.4.1",
+    "psffpp": "1.1.0",
     "semver": "7.3.5",
     "shelljs": "0.8.4",
     "slp-mutable-data": "2.3.14",
