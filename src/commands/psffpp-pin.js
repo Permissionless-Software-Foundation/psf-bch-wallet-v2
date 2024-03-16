@@ -9,7 +9,6 @@
 // Public NPM libraries
 const axios = require('axios')
 const BchWallet = require('minimal-slp-wallet')
-const PSFFPP = require('psffpp')
 
 // Local libraries
 const WalletUtil = require('../lib/wallet-util')
@@ -23,20 +22,25 @@ class IpfsPin extends Command {
     // Encapsulate dependencies.
     this.axios = axios
     this.walletUtil = new WalletUtil()
-    this.psffpp = new PSFFPP()
+    this.BchWallet = BchWallet
+
+    // Bind 'this' object to all subfunctions.
+    this.run = this.run.bind(this)
+    // this.pinCid = this.pinCid.bind(this)
   }
 
   async run () {
     try {
       const { flags } = this.parse(IpfsPin)
 
-      const server = this.walletUtil.getRestServer()
+      // const server = this.walletUtil.getRestServer()
 
       const filename = `${__dirname.toString()}/../../.wallets/${
         flags.name
       }.json`
 
-      await this.pinCid({flags, filename})
+      // await this.pinCid({flags, filename})
+      await this.tempTest({ flags, filename })
 
       return true
     } catch (err) {
@@ -46,10 +50,11 @@ class IpfsPin extends Command {
     }
   }
 
-  // Pin a CID. Use the selected wallet for payment.
-  async pidCid(inObj = {}) {
+  async tempTest (inObj = {}) {
+    console.log('tempTest() fired')
+
     try {
-      const {flags, filename} = inObj
+      const { filename } = inObj
 
       // Load the wallet file.
       const walletJSON = require(filename)
@@ -64,7 +69,35 @@ class IpfsPin extends Command {
       await this.bchWallet.initialize()
 
       // Instantiate the PSFFPP library.
-      const psffpp = new PSFFPP({wallet: this.bchWallet})
+      const PSFFPP = await import('psffpp')
+      const psffpp = new PSFFPP({ wallet: this.bchWallet })
+      console.log('psffpp: ', psffpp)
+    } catch (err) {
+      console.error('Error in tempTest()')
+      throw err
+    }
+  }
+
+  // Pin a CID. Use the selected wallet for payment.
+  async pidCid (inObj = {}) {
+    try {
+      const { filename } = inObj
+
+      // Load the wallet file.
+      const walletJSON = require(filename)
+      const walletData = walletJSON.wallet
+
+      const advancedConfig = this.walletUtil.getRestServer()
+      this.bchWallet = new this.BchWallet(walletData.mnemonic, advancedConfig)
+
+      // Wait for the wallet to initialize and retrieve UTXO data from the
+      // blockchain.
+      await this.bchWallet.walletInfoPromise
+      await this.bchWallet.initialize()
+
+      // Instantiate the PSFFPP library.
+      const PSFFPP = await import('psffpp')
+      const psffpp = new PSFFPP({ wallet: this.bchWallet })
 
       // Get the cost to write 1MB to the PSFFPP network.
       const writePrice = await psffpp.getMcWritePrice()
@@ -79,7 +112,7 @@ class IpfsPin extends Command {
       // Generate a Pin Claim
 
       return true
-    } catch(err) {
+    } catch (err) {
       console.error('Error in pidCid()')
       throw err
     }

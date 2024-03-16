@@ -13,7 +13,7 @@
 
 // Public NPM libraries
 // const SlpWallet = require('minimal-slp-wallet')
-const bitcore = require('bitcore-lib-cash')
+const bitcore = require('@chris.troutner/bitcore-lib-cash')
 const EncryptLib = require('bch-encrypt-lib/index')
 const { Write, Pin } = require('p2wdb')
 const Conf = require('conf')

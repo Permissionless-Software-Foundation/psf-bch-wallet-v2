@@ -8,7 +8,7 @@ const { Command, flags } = require('@oclif/command')
 const EncryptLib = require('bch-encrypt-lib/index')
 const Read = require('p2wdb').Read
 const Write = require('p2wdb').Write
-const bitcore = require('bitcore-lib-cash')
+const bitcore = require('@chris.troutner/bitcore-lib-cash')
 
 // Local libraries
 // const WalletService = require('../lib/adapters/wallet-consumer')
