@@ -60,7 +60,15 @@ class IpfsUpload extends Command {
   }
 }
 
-IpfsUpload.description = 'Upload a file to the IPFS node'
+IpfsUpload.description = `Upload a file to the IPFS node
+
+If you are trying to pin a file to the PSFFPP network, you do not need to run
+this command. This command is automatically  used by the psffpp-pin command to
+upload the file.
+
+This command is useful in isolation if you want to test uploading and passing
+files between IPFS nodes, independant of the PSFFPP.
+`
 
 IpfsUpload.flags = {
   fileName: flags.string({

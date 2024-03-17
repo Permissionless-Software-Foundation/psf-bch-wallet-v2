@@ -56,9 +56,8 @@ class IpfsPin extends Command {
     }
   }
 
+  // Pin a file to the PSF network using the PSFFPP.
   async pinFile (inObj = {}) {
-    console.log('tempTest() fired')
-
     try {
       const { flags, filename } = inObj
 
@@ -137,49 +136,14 @@ class IpfsPin extends Command {
       throw err
     }
   }
-
-  // Pin a CID. Use the selected wallet for payment.
-  // async pidCid (inObj = {}) {
-  //   try {
-  //     const { filename } = inObj
-  //
-  //     // Load the wallet file.
-  //     const walletJSON = require(filename)
-  //     const walletData = walletJSON.wallet
-  //
-  //     const advancedConfig = this.walletUtil.getRestServer()
-  //     this.bchWallet = new this.BchWallet(walletData.mnemonic, advancedConfig)
-  //
-  //     // Wait for the wallet to initialize and retrieve UTXO data from the
-  //     // blockchain.
-  //     await this.bchWallet.walletInfoPromise
-  //     await this.bchWallet.initialize()
-  //
-  //     // Instantiate the PSFFPP library.
-  //     const PSFFPP = await import('psffpp')
-  //     const psffpp = new PSFFPP({ wallet: this.bchWallet })
-  //
-  //     // Get the cost to write 1MB to the PSFFPP network.
-  //     const writePrice = await psffpp.getMcWritePrice()
-  //     console.log('writePrice: ', writePrice)
-  //
-  //     // Get the size of the file.
-  //
-  //     // Upload the file to the IPFS node and get a CID.
-  //
-  //     // Generate a PoB
-  //
-  //     // Generate a Pin Claim
-  //
-  //     return true
-  //   } catch (err) {
-  //     console.error('Error in pidCid()')
-  //     throw err
-  //   }
-  // }
 }
 
-IpfsPin.description = 'Pin a file to the PSFFPP network'
+IpfsPin.description = `Pin a file to the PSFFPP network
+
+This command leverages the psffpp-upload command. It will upload the file
+using that command, then use the CID returned by that command to generate
+a Proof-of-Burn and a Pin Claim transaction.
+`
 
 IpfsPin.flags = {
   file: flags.string({

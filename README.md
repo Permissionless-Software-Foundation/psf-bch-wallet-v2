@@ -115,6 +115,7 @@ In the commands below, replace `psf-bch-wallet` with `./bin/run`.
 * [`psf-bch-wallet p2wdb-read`](#psf-bch-wallet-p2wdb-read)
 * [`psf-bch-wallet p2wdb-write`](#psf-bch-wallet-p2wdb-write)
 * [`psf-bch-wallet psffpp-download`](#psf-bch-wallet-psffpp-download)
+* [`psf-bch-wallet psffpp-pin`](#psf-bch-wallet-psffpp-pin)
 * [`psf-bch-wallet psffpp-upload`](#psf-bch-wallet-psffpp-upload)
 * [`psf-bch-wallet send-bch`](#psf-bch-wallet-send-bch)
 * [`psf-bch-wallet send-tokens`](#psf-bch-wallet-send-tokens)
@@ -621,6 +622,28 @@ Download a file, given its CID.
 
 _See code: [src/commands/psffpp-download.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/psffpp-download.js)_
 
+## `psf-bch-wallet psffpp-pin`
+
+Pin a file to the PSFFPP network
+
+```
+[1mUSAGE[22m
+  $ psf-bch-wallet psffpp-pin [-f <value>] [-n <value>]
+
+[1mFLAGS[22m
+  -f, --file=[4m<value>[24m  [2mfilename to pin[22m
+  -n, --name=[4m<value>[24m  [2mName of wallet[22m
+
+[1mDESCRIPTION[22m
+  Pin a file to the PSFFPP network
+
+  This command leverages the psffpp-upload command. It will upload the file
+  using that command, then use the CID returned by that command to generate
+  a Proof-of-Burn and a Pin Claim transaction.
+```
+
+_See code: [src/commands/psffpp-pin.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/psffpp-pin.js)_
+
 ## `psf-bch-wallet psffpp-upload`
 
 Upload a file to the IPFS node
@@ -634,6 +657,13 @@ Upload a file to the IPFS node
 
 [1mDESCRIPTION[22m
   Upload a file to the IPFS node
+
+  If you are trying to pin a file to the PSFFPP network, you do not need to run
+  this command. This command is automatically  used by the psffpp-pin command to
+  upload the file.
+
+  This command is useful in isolation if you want to test uploading and passing
+  files between IPFS nodes, independant of the PSFFPP.
 ```
 
 _See code: [src/commands/psffpp-upload.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/psffpp-upload.js)_
