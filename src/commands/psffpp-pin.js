@@ -31,7 +31,7 @@ class IpfsPin extends Command {
     // Bind 'this' object to all subfunctions.
     this.run = this.run.bind(this)
     // this.pinCid = this.pinCid.bind(this)
-    this.tempTest = this.tempTest.bind(this)
+    this.pinFile = this.pinFile.bind(this)
     this.getFileSize = this.getFileSize.bind(this)
   }
 
@@ -46,7 +46,7 @@ class IpfsPin extends Command {
       }.json`
 
       // await this.pinCid({flags, filename})
-      await this.tempTest({ flags, filename })
+      await this.pinFile({ flags, filename })
 
       return true
     } catch (err) {
@@ -56,7 +56,7 @@ class IpfsPin extends Command {
     }
   }
 
-  async tempTest (inObj = {}) {
+  async pinFile (inObj = {}) {
     console.log('tempTest() fired')
 
     try {
@@ -95,18 +95,6 @@ class IpfsPin extends Command {
       const cid = uploadResult.cid
       console.log('cid: ', cid)
 
-      // Calculate the write cost
-      // const dataCost = writePrice * sizeMb
-      // const minCost = writePrice
-      // let actualCost = minCost
-      // if (dataCost > minCost) actualCost = dataCost
-      // console.log(`Burning ${actualCost} PSF tokens for ${sizeMb} MB of data.`)
-
-      // Generate a PoB
-      // const PSF_TOKEN_ID = '38e97c5d7d3585a2cbf3f9580c82ca33985f9cb0845d4dcce220cb709f9538b0'
-      // const pobTxid = await this.bchWallet.burnTokens(actualCost, PSF_TOKEN_ID)
-      // console.log(`Proof-of-burn TX: ${pobTxid}`)
-
       // Generate a Pin Claim
       const pinObj = {
         cid,
@@ -116,6 +104,11 @@ class IpfsPin extends Command {
       const { pobTxid, claimTxid } = await psffpp.createPinClaim(pinObj)
       console.log('pobTxid: ', pobTxid)
       console.log('claimTxid: ', claimTxid)
+
+      return {
+        pobTxid,
+        claimTxid
+      }
     } catch (err) {
       console.error('Error in tempTest()')
       throw err
