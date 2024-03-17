@@ -17,25 +17,45 @@ class IpfsUpload extends Command {
     // Encapsulate dependencies.
     this.axios = axios
     this.walletUtil = new WalletUtil()
+
+    // Bind 'this' object to all subfunctions.
+    this.run = this.run.bind(this)
+    this.uploadFile = this.uploadFile.bind(this)
   }
 
   async run () {
     try {
       const { flags } = this.parse(IpfsUpload)
 
-      const server = this.walletUtil.getRestServer()
+      const path = `${__dirname.toString()}/../../ipfs-files`
+      const fileName = flags.fileName
 
-      const result = await this.axios.post(`${server.restURL}/ipfs/upload`, {
-        path: `${__dirname.toString()}/../../ipfs-files`,
-        fileName: flags.fileName
-      })
-      console.log(`upload result: ${JSON.stringify(result.data, null, 2)}`)
+      await this.uploadFile({ path, fileName })
 
       return true
     } catch (err) {
       console.log('Error in run(): ', err)
 
       return false
+    }
+  }
+
+  async uploadFile (inObj = {}) {
+    try {
+      const { path, fileName } = inObj
+
+      const server = this.walletUtil.getPsffppClient()
+
+      const result = await this.axios.post(`${server.psffppURL}/ipfs/upload`, {
+        path,
+        fileName
+      })
+      console.log(`upload result: ${JSON.stringify(result.data, null, 2)}`)
+
+      return result.data
+    } catch (err) {
+      console.error('Error in uploadFile()')
+      throw err
     }
   }
 }
