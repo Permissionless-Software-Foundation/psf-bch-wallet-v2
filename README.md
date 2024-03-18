@@ -618,6 +618,9 @@ Download a file, given its CID.
 
 [1mDESCRIPTION[22m
   Download a file, given its CID.
+
+  IPFS files do not retain the original filename. This command will download a
+  file given its CID, then rename the download to the given filename.
 ```
 
 _See code: [src/commands/psffpp-download.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/psffpp-download.js)_

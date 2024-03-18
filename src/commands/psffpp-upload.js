@@ -27,10 +27,16 @@ class IpfsUpload extends Command {
     try {
       const { flags } = this.parse(IpfsUpload)
 
+      // Validate input flags
+      this.validateFlags(flags)
+
       const path = `${__dirname.toString()}/../../ipfs-files`
       const fileName = flags.fileName
 
-      await this.uploadFile({ path, fileName })
+      let server = this.walletUtil.getPsffppClient()
+      server = server.psffppURL
+
+      await this.uploadFile({ path, fileName, server })
 
       return true
     } catch (err) {
@@ -42,21 +48,29 @@ class IpfsUpload extends Command {
 
   async uploadFile (inObj = {}) {
     try {
-      const { path, fileName } = inObj
+      const { path, fileName, server } = inObj
 
-      const server = this.walletUtil.getPsffppClient()
-
-      const result = await this.axios.post(`${server.psffppURL}/ipfs/upload`, {
+      const result = await this.axios.post(`${server}/ipfs/upload`, {
         path,
         fileName
       })
-      console.log(`upload result: ${JSON.stringify(result.data, null, 2)}`)
+      // console.log(`upload result: ${JSON.stringify(result.data, null, 2)}`)
 
       return result.data
     } catch (err) {
       console.error('Error in uploadFile()')
       throw err
     }
+  }
+
+  // Validate the proper flags are passed in.
+  validateFlags (flags) {
+    const fileName = flags.fileName
+    if (!fileName || fileName === '') {
+      throw new Error('You must specify a fileName with the -f flag, to name the downloaded file.')
+    }
+
+    return true
   }
 }
 

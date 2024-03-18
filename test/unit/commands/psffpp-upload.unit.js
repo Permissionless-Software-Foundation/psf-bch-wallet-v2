@@ -1,5 +1,5 @@
 /*
-  Unit tests for the psffpp-download command
+  Unit tests for the psffpp-upload command
 */
 
 // Global npm libraries
@@ -7,9 +7,9 @@ const assert = require('chai').assert
 const sinon = require('sinon')
 
 // Local libraries
-const IpfsDownload = require('../../../src/commands/psffpp-download.js')
+const IpfsUpload = require('../../../src/commands/psffpp-upload.js')
 
-describe('#psffpp-download', () => {
+describe('#psffpp-upload', () => {
   let uut
   let sandbox
   // let mockWallet
@@ -21,7 +21,7 @@ describe('#psffpp-download', () => {
   beforeEach(async () => {
     sandbox = sinon.createSandbox()
 
-    uut = new IpfsDownload()
+    uut = new IpfsUpload()
     // mockWallet = new MockWallet()
   })
 
@@ -36,8 +36,7 @@ describe('#psffpp-download', () => {
   describe('#validateFlags()', () => {
     it('validateFlags() should return true with valid input.', () => {
       const flags = {
-        fileName: 'test123',
-        cid: 'test'
+        fileName: 'test123'
       }
 
       assert.equal(uut.validateFlags(flags), true, 'return true')
@@ -55,50 +54,29 @@ describe('#psffpp-download', () => {
         )
       }
     })
-
-    it('validateFlags() should throw error if cid is not supplied.', () => {
-      try {
-        const flags = {
-          fileName: 'test123'
-        }
-        uut.validateFlags(flags)
-      } catch (err) {
-        assert.include(
-          err.message,
-          'You must specify an IPFS CID with the -c flag.',
-          'Expected error message.'
-        )
-      }
-    })
   })
 
-  describe('#downloadCid', () => {
-    it('should issue a REST call to download the file', async () => {
-      // Mock dependencies and force desired code path
+  describe('#uploadFile', () => {
+    it('should issue a REST API call to upload a file', async () => {
+      // Mock dependencies and force desired code path.
       sandbox.stub(uut.axios, 'post').resolves({
         data: {
           success: true,
-          cid: 'fake-cid',
-          size: '12345'
+          cid: 'fake-cid'
         }
       })
 
-      const flags = {
-        fileName: 'fake-filename'
-      }
-
       const inObj = {
-        server: 'fake-server',
         path: 'fake-path',
-        flags
+        fileName: 'fake-filename',
+        server: 'fake-server'
       }
 
-      const result = await uut.downloadCid(inObj)
+      const result = await uut.uploadFile(inObj)
 
       assert.isObject(result)
       assert.property(result, 'success')
       assert.property(result, 'cid')
-      assert.property(result, 'size')
     })
 
     it('should catch, report, and throw errors', async () => {
@@ -106,17 +84,13 @@ describe('#psffpp-download', () => {
         // Force an error
         sandbox.stub(uut.axios, 'post').rejects(new Error('test error'))
 
-        const flags = {
-          fileName: 'fake-filename'
-        }
-
         const inObj = {
-          server: 'fake-server',
           path: 'fake-path',
-          flags
+          fileName: 'fake-filename',
+          server: 'fake-server'
         }
 
-        await uut.downloadCid(inObj)
+        await uut.uploadFile(inObj)
 
         assert.fail('Unexpected code path')
       } catch (err) {
@@ -126,11 +100,11 @@ describe('#psffpp-download', () => {
   })
 
   describe('#run', async () => {
-    it('should download the file and return true', async () => {
+    it('should upload the file and return true', async () => {
       // Mock dependencies and force desired code path
       sandbox.stub(uut, 'validateFlags').returns(true)
-      sandbox.stub(uut, 'downloadCid').resolves()
-      sandbox.stub(uut, 'parse').returns({})
+      sandbox.stub(uut, 'uploadFile').resolves()
+      sandbox.stub(uut, 'parse').returns({ flags: { fileName: 'fake-filename' } })
 
       const result = await uut.run()
 
