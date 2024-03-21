@@ -33,20 +33,20 @@ class IpfsPin extends Command {
     // this.pinCid = this.pinCid.bind(this)
     this.pinFile = this.pinFile.bind(this)
     this.getFileSize = this.getFileSize.bind(this)
+    this.validateFlags = this.validateFlags.bind(this)
   }
 
   async run () {
     try {
       const { flags } = this.parse(IpfsPin)
 
-      // const server = this.walletUtil.getRestServer()
+      this.validateFlags(flags)
 
-      const filename = `${__dirname.toString()}/../../.wallets/${
+      const walletFile = `${__dirname.toString()}/../../.wallets/${
         flags.name
       }.json`
 
-      // await this.pinCid({flags, filename})
-      await this.pinFile({ flags, filename })
+      await this.pinFile({ flags, walletFile })
 
       return true
     } catch (err) {
@@ -59,45 +59,40 @@ class IpfsPin extends Command {
   // Pin a file to the PSF network using the PSFFPP.
   async pinFile (inObj = {}) {
     try {
-      const { flags, filename } = inObj
+      const { flags } = inObj
 
-      // Load the wallet file.
-      const walletJSON = require(filename)
-      const walletData = walletJSON.wallet
-
-      const advancedConfig = this.walletUtil.getRestServer()
-      this.bchWallet = new this.BchWallet(walletData.mnemonic, advancedConfig)
+      // Instantiate minimal-slp-wallet.
+      this.bchWallet = await this.walletUtil.instanceWallet(flags.name)
+      // const walletData = this.bchWallet.walletInfo
 
       const path = `${__dirname.toString()}/../../ipfs-files`
-      const filePath = `${path}/${flags.file}`
+      const filePath = `${path}/${flags.fileName}`
 
       // Get the size of the file.
       const sizeMb = await this.getFileSize({ filePath })
 
-      // Wait for the wallet to initialize and retrieve UTXO data from the
-      // blockchain.
-      await this.bchWallet.walletInfoPromise
-      await this.bchWallet.initialize()
-
       // Instantiate the PSFFPP library.
-      let PSFFPP = await import('psffpp')
-      PSFFPP = PSFFPP.default
-      const psffpp = new PSFFPP({ wallet: this.bchWallet })
-      // console.log('psffpp: ', psffpp)
+      const psffpp = await this.importPsffpp(this.bchWallet)
 
       // Get the cost to write 1MB to the PSFFPP network.
       const writePrice = await psffpp.getMcWritePrice()
       console.log('writePrice: ', writePrice)
 
       // Upload the file to the IPFS node and get a CID.
-      const uploadResult = await this.psffppUpload.uploadFile({ path, fileName: flags.file })
+      let psffppClient = this.walletUtil.getPsffppClient()
+      psffppClient = psffppClient.psffppURL
+      const uploadResult = await this.psffppUpload.uploadFile({
+        path,
+        fileName: flags.fileName,
+        server: psffppClient
+      })
       const cid = uploadResult.cid
       console.log('cid: ', cid)
 
       // Generate a Pin Claim
       const pinObj = {
         cid,
-        filename: flags.file,
+        filename: flags.fileName,
         fileSizeInMegabytes: sizeMb
       }
       const { pobTxid, claimTxid } = await psffpp.createPinClaim(pinObj)
@@ -109,9 +104,19 @@ class IpfsPin extends Command {
         claimTxid
       }
     } catch (err) {
-      console.error('Error in tempTest()')
+      console.error('Error in pinFile()')
       throw err
     }
+  }
+
+  // Dynamically import the ESM PSFFPP library.
+  async importPsffpp (wallet) {
+    // Instantiate the PSFFPP library.
+    let PSFFPP = await import('psffpp')
+    PSFFPP = PSFFPP.default
+    const psffpp = new PSFFPP({ wallet })
+
+    return psffpp
   }
 
   // Returns the size of the file in Megabytes.
@@ -128,13 +133,28 @@ class IpfsPin extends Command {
       fileSizeInMegabytes = Math.ceil(fileSizeInMegabytes)
       fileSizeInMegabytes = fileSizeInMegabytes / 100
 
-      console.log(`File ${filePath} is ${fileSizeInMegabytes} MB.`)
+      // console.log(`File ${filePath} is ${fileSizeInMegabytes} MB.`)
 
       return fileSizeInMegabytes
     } catch (err) {
       console.error('Error in getFileSize()')
       throw err
     }
+  }
+
+  // Validate the proper flags are passed in.
+  validateFlags (flags) {
+    const fileName = flags.fileName
+    if (!fileName || fileName === '') {
+      throw new Error('You must specify a fileName with the -f flag, to name the downloaded file.')
+    }
+
+    const name = flags.name
+    if (!name || name === '') {
+      throw new Error('You must specify a wallet with the -n flag.')
+    }
+
+    return true
   }
 }
 
@@ -146,9 +166,9 @@ a Proof-of-Burn and a Pin Claim transaction.
 `
 
 IpfsPin.flags = {
-  file: flags.string({
+  fileName: flags.string({
     char: 'f',
-    description: 'filename to pin'
+    description: 'fileName to pin to PSF network'
   }),
 
   name: flags.string({ char: 'n', description: 'Name of wallet' })

@@ -3,6 +3,7 @@
 // Global npm libraries
 const assert = require('chai').assert
 const sinon = require('sinon')
+// const fs = require('fs')
 
 // Local libraries
 const MCFinish = require('../../../src/commands/mc-finish')
@@ -33,6 +34,10 @@ describe('mc-finish', () => {
   afterEach(() => {
     sandbox.restore()
   })
+
+  // after(async () => {
+  //   await fs.rm(filename)
+  // })
 
   describe('#validateFlags()', () => {
     it('validateFlags() should return true .', () => {
