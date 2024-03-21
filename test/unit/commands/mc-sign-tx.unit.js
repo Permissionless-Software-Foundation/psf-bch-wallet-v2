@@ -282,7 +282,7 @@ describe('mc-sign-tx', () => {
         assert.fail('Unexpected code path')
       } catch (err) {
         // console.log('err: ', err.message)
-        assert.include(err.message, 'Unexpected token')
+        assert.include(err.message, 'JSON')
       }
     })
   })

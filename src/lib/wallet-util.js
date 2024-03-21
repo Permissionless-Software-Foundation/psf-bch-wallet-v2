@@ -125,6 +125,27 @@ class WalletUtil {
     }
   }
 
+  // Retrieve the server URL from the config.
+  // Generate the default if the values have not been set.
+  getPsffppClient () {
+    try {
+      const outObj = {
+        psffppURL: this.conf.get('psffppURL', false)
+      }
+
+      if (!outObj.psffppURL) {
+        outObj.psffppURL = 'http://localhost:5020'
+
+        this.conf.set('psffppURL', outObj.psffppURL)
+      }
+
+      return outObj
+    } catch (err) {
+      console.log('Error in getPsffppClient()')
+      throw err
+    }
+  }
+
   // Retrieve the REST API server address from the config. Generate the default
   // if it has not yet been set.
   getP2wdbServer () {
