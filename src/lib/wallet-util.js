@@ -26,6 +26,18 @@ class WalletUtil {
     }
 
     _this = this
+
+    // Bind 'this' object to all subfunctions
+    this.saveWallet = this.saveWallet.bind(this)
+    this.generateAddress = this.generateAddress.bind(this)
+    this.getEncryptionMnemonic = this.getEncryptionMnemonic.bind(this)
+    this.getRestServer = this.getRestServer.bind(this)
+    this.getPsffppClient = this.getPsffppClient.bind(this)
+    this.getP2wdbServer = this.getP2wdbServer.bind(this)
+    this.getPinServer = this.getPinServer.bind(this)
+    this.instanceWallet = this.instanceWallet.bind(this)
+    this.instanceMsgLib = this.instanceMsgLib.bind(this)
+    this.broadcastTx = this.broadcastTx.bind(this)
   }
 
   // Save the wallet data into a .json text file.
