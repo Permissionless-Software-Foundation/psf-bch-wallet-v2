@@ -34,7 +34,7 @@ class IpfsDownload2 extends Command {
 
       let server = this.walletUtil.getRestServer()
       server = server.restURL
-      console.log('server: ', server)
+      // console.log('server: ', server)
 
       const path = `${__dirname.toString()}/../../ipfs-files`
 
@@ -77,11 +77,9 @@ class IpfsDownload2 extends Command {
       writableStream.on('finish', this.writeStreamFinished)
 
       const url = `${server}/ipfs/view/${cid}`
-      console.log('url: ', url)
+      // console.log('url: ', url)
       const result2 = await this.axios.get(url, { responseType: 'stream' })
       // console.log(`download result: ${JSON.stringify(result.data, null, 2)}`)
-
-      console.log('typeof result2.data: ', typeof result2.data)
 
       const fileReadStream = result2.data
 
