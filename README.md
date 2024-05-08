@@ -119,6 +119,7 @@ In the commands below, replace `psf-bch-wallet` with `./bin/run`.
 * [`psf-bch-wallet psffpp-info`](#psf-bch-wallet-psffpp-info)
 * [`psf-bch-wallet psffpp-pin`](#psf-bch-wallet-psffpp-pin)
 * [`psf-bch-wallet psffpp-upload`](#psf-bch-wallet-psffpp-upload)
+* [`psf-bch-wallet psffpp-upload2`](#psf-bch-wallet-psffpp-upload2)
 * [`psf-bch-wallet send-bch`](#psf-bch-wallet-send-bch)
 * [`psf-bch-wallet send-tokens`](#psf-bch-wallet-send-tokens)
 * [`psf-bch-wallet token-burn`](#psf-bch-wallet-token-burn)
@@ -714,6 +715,25 @@ Upload a file to the IPFS node
 ```
 
 _See code: [src/commands/psffpp-upload.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/psffpp-upload.js)_
+
+## `psf-bch-wallet psffpp-upload2`
+
+Upload a file to the psffpp-client
+
+```
+[1mUSAGE[22m
+  $ psf-bch-wallet psffpp-upload2 [-f <value>]
+
+[1mFLAGS[22m
+  -f, --fileName=[4m<value>[24m  [2mfilename to upload[22m
+
+[1mDESCRIPTION[22m
+  Upload a file to the psffpp-client
+
+  This command will upload a file to the psffpp-client via the REST API.
+```
+
+_See code: [src/commands/psffpp-upload2.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/psffpp-upload2.js)_
 
 ## `psf-bch-wallet send-bch`
 
