@@ -13,7 +13,7 @@ const fs = require('fs')
 
 // Local libraries
 const WalletUtil = require('../lib/wallet-util')
-const PsffppUpload = require('./psffpp-upload')
+const PsffppUpload = require('./psffpp-upload2')
 
 const { Command, flags } = require('@oclif/command')
 

@@ -56,7 +56,6 @@ class IpfsUpload2 extends Command {
 
       const filePath = `${path}/${fileName}`
 
-
       // Create a web form and append the file to it.
       const form = new FormData()
       const axiosConfig = {
