@@ -115,7 +115,6 @@ In the commands below, replace `psf-bch-wallet` with `./bin/run`.
 * [`psf-bch-wallet p2wdb-read`](#psf-bch-wallet-p2wdb-read)
 * [`psf-bch-wallet p2wdb-write`](#psf-bch-wallet-p2wdb-write)
 * [`psf-bch-wallet psffpp-download`](#psf-bch-wallet-psffpp-download)
-* [`psf-bch-wallet psffpp-download2`](#psf-bch-wallet-psffpp-download2)
 * [`psf-bch-wallet psffpp-info`](#psf-bch-wallet-psffpp-info)
 * [`psf-bch-wallet psffpp-pin`](#psf-bch-wallet-psffpp-pin)
 * [`psf-bch-wallet psffpp-upload`](#psf-bch-wallet-psffpp-upload)
@@ -613,28 +612,7 @@ Download a file, given its CID.
 
 ```
 [1mUSAGE[22m
-  $ psf-bch-wallet psffpp-download [-c <value>] [-f <value>]
-
-[1mFLAGS[22m
-  -c, --cid=[4m<value>[24m       [2mCID of file to download[22m
-  -f, --fileName=[4m<value>[24m  [2mfilename to apply to the downloaded file[22m
-
-[1mDESCRIPTION[22m
-  Download a file, given its CID.
-
-  IPFS files do not retain the original filename. This command will download a
-  file given its CID, then rename the download to the given filename.
-```
-
-_See code: [src/commands/psffpp-download.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/psffpp-download.js)_
-
-## `psf-bch-wallet psffpp-download2`
-
-Download a file, given its CID.
-
-```
-[1mUSAGE[22m
-  $ psf-bch-wallet psffpp-download2 [-c <value>]
+  $ psf-bch-wallet psffpp-download [-c <value>]
 
 [1mFLAGS[22m
   -c, --cid=[4m<value>[24m  [2mCID of file to download[22m
@@ -647,7 +625,7 @@ Download a file, given its CID.
   file to the ipfs-files directory.
 ```
 
-_See code: [src/commands/psffpp-download2.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/psffpp-download2.js)_
+_See code: [src/commands/psffpp-download.js](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet/blob/vv2.14.2/src/commands/psffpp-download.js)_
 
 ## `psf-bch-wallet psffpp-info`
 
