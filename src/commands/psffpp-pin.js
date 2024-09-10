@@ -81,11 +81,16 @@ class IpfsPin extends Command {
       // Upload the file to the IPFS node and get a CID.
       let psffppClient = this.walletUtil.getPsffppClient()
       psffppClient = psffppClient.psffppURL
-      const uploadResult = await this.psffppUpload.uploadFile({
+      const readStream = await this.psffppUpload.uploadFile({
         path,
+        fileName: flags.fileName
+      })
+      const uploadResult = await this.psffppUpload.uploadStream({
+        readStream,
         fileName: flags.fileName,
         server: psffppClient
       })
+
       const cid = uploadResult.cid
       console.log('cid: ', cid)
 
