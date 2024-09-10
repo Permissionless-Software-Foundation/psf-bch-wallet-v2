@@ -170,7 +170,7 @@ class IpfsUpload2 extends Command {
 
   async uploadFile (inObj = {}) {
     try {
-      const { path, fileName, server } = inObj
+      const { path, fileName } = inObj
 
       const filePath = `${path}/${fileName}`
 
