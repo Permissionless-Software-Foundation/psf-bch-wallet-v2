@@ -146,7 +146,8 @@ class WalletUtil {
       }
 
       if (!outObj.psffppURL) {
-        outObj.psffppURL = 'http://localhost:5020'
+        // outObj.psffppURL = 'http://localhost:5020'
+        outObj.psffppURL = 'https://file-stage.fullstack.cash'
 
         this.conf.set('psffppURL', outObj.psffppURL)
       }

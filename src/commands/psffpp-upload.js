@@ -54,7 +54,7 @@ class IpfsUpload2 extends Command {
       } else if (fileOrDir === 2) {
         readStream = await this.uploadDir({ path, fileName })
       }
-      console.log('readStream: ', readStream)
+      // console.log('readStream: ', readStream)
 
       const result = await this.uploadStream({ readStream, fileName, server })
 
@@ -78,15 +78,15 @@ class IpfsUpload2 extends Command {
       const axiosConfig = {
         headers: form.getHeaders()
       }
-      console.log('fileName: ', fileName)
-      console.log('readStream: ', readStream)
-      console.log('ping01')
+      // console.log('fileName: ', fileName)
+      // console.log('readStream: ', readStream)
+      // console.log('ping01')
       form.append('file', readStream, fileName)
-      console.log('ping02')
+      // console.log('ping02')
 
       // Send the file to the ipfs-file-stage server.
       const result = await this.axios.post(`${server}/ipfs/upload`, form, axiosConfig)
-      console.log('ping03')
+      // console.log('ping03')
 
       return result.data
     } catch (err) {
@@ -154,7 +154,7 @@ class IpfsUpload2 extends Command {
   async isFileOrDirectory (path) {
     try {
       const stats = await this.fsP.stat(path)
-      console.log('stats: ', stats)
+      // console.log('stats: ', stats)
 
       if (stats.isFile()) {
         return 1
