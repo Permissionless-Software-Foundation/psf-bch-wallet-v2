@@ -31,9 +31,10 @@ class PsffppInfo extends Command {
       // Validate input flags
       this.validateFlags(flags)
 
-      let server = this.walletUtil.getRestServer()
-      server = server.restURL
-      // console.log('server: ', server)
+      // let server = this.walletUtil.getRestServer()
+      let server = this.walletUtil.getPsffppClient()
+      server = server.psffppURL
+      console.log('server: ', server)
 
       const info = await this.cidInfo({ server, flags })
       console.log(`File info: ${JSON.stringify(info, null, 2)}`)
@@ -52,7 +53,8 @@ class PsffppInfo extends Command {
 
       const { cid } = flags
 
-      const url = `${server}/ipfs/file-info/${cid}`
+      // const url = `${server}/ipfs/file-info/${cid}`
+      const url = `${server}/ipfs/pin-status/${cid}`
       // console.log('url: ', url)
       const result = await this.axios.get(url)
       // console.log(`download result: ${JSON.stringify(result.data, null, 2)}`)

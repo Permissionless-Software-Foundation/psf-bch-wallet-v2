@@ -17,10 +17,13 @@ const EncryptLib = require('bch-encrypt-lib/index')
 const { Write, Pin } = require('p2wdb')
 const Conf = require('conf')
 const axios = require('axios')
+const fs = require('fs')
+// const RetryQueue = require('@chris.troutner/retry-queue')
 
 // Local libraries
 const WalletUtil = require('../lib/wallet-util')
 const MCCollectKeys = require('./mc-collect-keys')
+const PsffppUpload = require('./psffpp-upload')
 
 // CONSTANTS
 // const WRITE_PRICE_ADDR = 'bitcoincash:qqlrzp23w08434twmvr4fxw672whkjy0py26r63g3d'
@@ -50,6 +53,19 @@ class MCP2wdbUpdateTx extends Command {
     this.bitcore = bitcore
     this.conf = new Conf()
     this.axios = axios
+    this.psffppUpload = new PsffppUpload()
+
+    // Bind 'this' object to all subfunctions
+    this.run = this.run.bind(this)
+    this.calcP2wdbWritePrice = this.calcP2wdbWritePrice.bind(this)
+    this.createUpdateFile = this.createUpdateFile.bind(this)
+    this.writeCidToBlockchain = this.writeCidToBlockchain.bind(this)
+    this.instanceLibs = this.instanceLibs.bind(this)
+    this.createMultisigWallet = this.createMultisigWallet.bind(this)
+    this.getPublicKeys = this.getPublicKeys.bind(this)
+    this.instantiateWallet = this.instantiateWallet.bind(this)
+    this.importPsffpp = this.importPsffpp.bind(this)
+    this.validateFlags = this.validateFlags.bind(this)
   }
 
   async run () {
@@ -59,11 +75,22 @@ class MCP2wdbUpdateTx extends Command {
       // Validate input flags
       this.validateFlags(flags)
 
+      // Instantiate the retry-queue library.
+      let RetryQueue = await import('@chris.troutner/retry-queue')
+      RetryQueue = RetryQueue.default
+      const options = {
+        concurrency: 1,
+        attempts: 5,
+        retryPeriod: 1000
+      }
+      this.retryQueue = new RetryQueue(options)
+      // console.log('this.retryQueue: ', this.retryQueue)
+
       // Instantiate the Write library.
       await this.instantiateWallet(flags)
 
       // Look up the public keys for MC NFT holders.
-      const keys = await this.getPublicKeys()
+      const keys = await this.retryQueue.addToQueue(this.getPublicKeys, {})
       console.log('keys: ', keys)
 
       // Generate a 50% + 1 multisig wallet.
@@ -73,13 +100,49 @@ class MCP2wdbUpdateTx extends Command {
       // Instatiate all the libraries orchestrated by this function.
       this.instanceLibs()
 
+      // Instantiate the PSFFPP library.
+      const psffpp = await this.importPsffpp(this.wallet)
+
       // Calculate the current price of $0.01 USD in PSF tokens
       const p2wdbWritePrice = await this.calcP2wdbWritePrice()
 
+      await this.createUpdateFile({ keys, walletObj, p2wdbWritePrice })
+      const path = `${__dirname.toString()}/../../ipfs-files`
+
+      // Get the cost to write 1MB to the PSFFPP network.
+      const writePrice = await this.retryQueue.addToQueue(psffpp.getMcWritePrice, {})
+      console.log('writePrice: ', writePrice)
+
+      // Upload the file to the IPFS node and get a CID.
+      let psffppClient = this.walletUtil.getPsffppClient()
+      psffppClient = psffppClient.psffppURL
+      const readStream = await this.retryQueue.addToQueue(this.psffppUpload.uploadFile,{
+        path,
+        fileName: 'data.json'
+      })
+      const uploadResult = await this.retryQueue.addToQueue(this.psffppUpload.uploadStream, {
+        readStream,
+        fileName: 'data.json',
+        server: psffppClient
+      })
+
+      const cid = uploadResult.cid
+
       // Generate update data, upload to IPFS, and get a CID
-      const cid = await this.uploadDataToIpfs({ keys, walletObj, p2wdbWritePrice })
+      // const cid = await this.uploadDataToIpfs({ keys, walletObj, writePrice })
       // const cid = 'bafybeiea2rb73y6gkiaxaljpv2hj5hfczpibl634kj6flbz575j4t4bswa'
       console.log('cid: ', cid)
+
+      // Generate a Pin Claim
+      const pinObj = {
+        cid,
+        filename: 'data.json',
+        fileSizeInMegabytes: 1
+      }
+      const { pobTxid, claimTxid } = await psffpp.createPinClaim(pinObj)
+      console.log('pobTxid: ', pobTxid)
+      console.log('claimTxid: ', claimTxid)
+
 
       // Generate an update transaction with the update CID
       const updateTxid = await this.writeCidToBlockchain(cid)
@@ -112,7 +175,8 @@ class MCP2wdbUpdateTx extends Command {
   }
 
   // Generate update data, upload to IPFS, and get a CID as per the PS009 spec.
-  async uploadDataToIpfs (inObj = {}) {
+  // async uploadDataToIpfs (inObj = {}) {
+  async createUpdateFile (inObj = {}) {
     try {
       const { keys, walletObj, p2wdbWritePrice } = inObj
 
@@ -125,20 +189,23 @@ class MCP2wdbUpdateTx extends Command {
       }
       // console.log('updateTxData: ', updateTxData)
 
+      // Write the data to a file
+      fs.writeFileSync(`${__dirname.toString()}/../../ipfs-files/data.json`, JSON.stringify(updateTxData, null, 2))
+
       // Upload the data to the P2WDB.
-      const p2wdbResult = await this.write.postEntry(updateTxData, 'p2wdb-update')
-      console.log('p2wdbResult: ', p2wdbResult)
-      const zcid = p2wdbResult.hash
-
-      // Get a CID from the P2WDB zCID
-      const cid = await this.pin.json(zcid)
-      console.log('cid: ', cid)
-
-      // Pin the CID with the pinning cluster
-      const pinResult = await this.pin.cid(cid)
-      console.log('pinResult: ', pinResult)
-
-      return cid
+      // const p2wdbResult = await this.write.postEntry(updateTxData, 'p2wdb-update')
+      // console.log('p2wdbResult: ', p2wdbResult)
+      // const zcid = p2wdbResult.hash
+      //
+      // // Get a CID from the P2WDB zCID
+      // const cid = await this.pin.json(zcid)
+      // console.log('cid: ', cid)
+      //
+      // // Pin the CID with the pinning cluster
+      // const pinResult = await this.pin.cid(cid)
+      // console.log('pinResult: ', pinResult)
+      //
+      // return cid
     } catch (err) {
       console.error('Error in uploadDataToIpfs(): ', err.message)
       throw err
@@ -284,6 +351,16 @@ class MCP2wdbUpdateTx extends Command {
       console.error('Error in instantiateWrite()')
       throw err
     }
+  }
+
+  // Dynamically import the ESM PSFFPP library.
+  async importPsffpp (wallet) {
+    // Instantiate the PSFFPP library.
+    let PSFFPP = await import('psffpp')
+    PSFFPP = PSFFPP.default
+    const psffpp = new PSFFPP({ wallet })
+
+    return psffpp
   }
 
   // Validate the proper flags are passed in.

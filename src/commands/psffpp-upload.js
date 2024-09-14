@@ -28,7 +28,11 @@ class IpfsUpload2 extends Command {
 
     // Bind 'this' object to all subfunctions.
     this.run = this.run.bind(this)
+    this.uploadStream = this.uploadStream.bind(this)
+    this.uploadDir = this.uploadDir.bind(this)
+    this.isFileOrDirectory = this.isFileOrDirectory.bind(this)
     this.uploadFile = this.uploadFile.bind(this)
+    this.validateFlags = this.validateFlags.bind(this)
   }
 
   async run () {
@@ -85,7 +89,8 @@ class IpfsUpload2 extends Command {
       // console.log('ping02')
 
       // Send the file to the ipfs-file-stage server.
-      const result = await this.axios.post(`${server}/ipfs/upload`, form, axiosConfig)
+      // const result = await this.axios.post(`${server}/ipfs/upload`, form, axiosConfig)
+      const result = await this.axios.post(`https://file-stage.fullstack.cash/ipfs/upload`, form, axiosConfig)
       // console.log('ping03')
 
       return result.data
