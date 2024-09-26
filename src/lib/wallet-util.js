@@ -230,6 +230,7 @@ class WalletUtil {
       if (this.advancedConfig.interface !== server.interface) {
         this.advancedConfig.interface = server.interface
       }
+      this.advancedConfig.hdPath = walletData.hdPath
       const bchWallet = new this.BchWallet(
         walletData.mnemonic,
         this.advancedConfig
@@ -263,6 +264,16 @@ class WalletUtil {
     const txid = await wallet.ar.sendTx(hex)
 
     return txid
+  }
+
+  // Dynamically import the ESM PSFFPP library.
+  async importPsffpp (wallet) {
+    // Instantiate the PSFFPP library.
+    let PSFFPP = await import('psffpp')
+    PSFFPP = PSFFPP.default
+    const psffpp = new PSFFPP({ wallet })
+
+    return psffpp
   }
 }
 

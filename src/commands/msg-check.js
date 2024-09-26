@@ -60,6 +60,7 @@ class MsgCheck extends Command {
       }
 
       this.bchWallet = await this.walletUtil.instanceWallet(walletName)
+      console.log('this.bchWallet.walletInfo: ', this.bchWallet.walletInfo)
 
       const cashAddress = this.bchWallet.walletInfo.cashAddress
 

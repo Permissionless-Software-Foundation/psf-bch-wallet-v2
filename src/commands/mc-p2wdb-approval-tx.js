@@ -17,10 +17,12 @@ const bitcore = require('@chris.troutner/bitcore-lib-cash')
 const EncryptLib = require('bch-encrypt-lib/index')
 const { Write, Pin } = require('p2wdb')
 const Conf = require('conf')
+const fs = require('fs')
 
 // Local libraries
 const WalletUtil = require('../lib/wallet-util')
 const MCCollectKeys = require('./mc-collect-keys')
+const PsffppUpload = require('./psffpp-upload.js')
 
 // CONSTANTS
 // const WRITE_PRICE_ADDR = 'bitcoincash:qqlrzp23w08434twmvr4fxw672whkjy0py26r63g3d'
@@ -45,6 +47,7 @@ class MCUpdateP2wdbPrice extends Command {
     this.encryptLib = null // placeholder
     this.bitcore = bitcore
     this.conf = new Conf()
+    this.psffppUpload = new PsffppUpload()
   }
 
   async run () {
@@ -54,8 +57,20 @@ class MCUpdateP2wdbPrice extends Command {
       // Validate input flags
       this.validateFlags(flags)
 
+      // Instantiate the retry-queue library.
+      let RetryQueue = await import('@chris.troutner/retry-queue')
+      RetryQueue = RetryQueue.default
+      const options = {
+        concurrency: 1,
+        attempts: 5,
+        retryPeriod: 1000
+      }
+      this.retryQueue = new RetryQueue(options)
+
       // Instantiate the Write library.
       await this.instantiateWallet(flags)
+
+      this.psffpp = await this.walletUtil.importPsffpp(this.wallet)
 
       // Look up the public keys for MC NFT holders.
       const keys = await this.getPublicKeys()
@@ -107,13 +122,39 @@ class MCUpdateP2wdbPrice extends Command {
       const appId = 'psf-bch-wallet'
       const data = {
         now: new Date(),
+        bchAddress: thisPair.addr,
+        publicKey: thisPair.pubKey,
         data: encryptedMsg
       }
 
-      const result = await this.write.postEntry(data, appId)
-      console.log(`Data about P2WDB write: ${JSON.stringify(result, null, 2)}`)
+      const path = `${__dirname.toString()}/../../ipfs-files`
+      const fileName = 'msg.json'
+      fs.writeFileSync(`${path}/${fileName}`, JSON.stringify(data, null, 2))
 
-      const hash = result.hash
+      // const result = await this.psffppUpload.uploadFile({ path, fileName })
+      // const cid = result.cid
+      // console.log('cid: ', cid)
+
+      const result = await this.retryQueue.addToQueue(this.psffppUpload.uploadFile, {
+        path,
+        fileName: 'data.json'
+      })
+      const cid = result.cid
+
+      const hash = cid
+
+      // Generate a Pin Claim
+      const pinObj = {
+        cid,
+        filename: fileName,
+        fileSizeInMegabytes: 1
+      }
+      const { pobTxid, claimTxid } = await this.psffpp.createPinClaim(pinObj)
+      console.log('pobTxid: ', pobTxid)
+      console.log('claimTxid: ', claimTxid)
+
+      // const result = await this.write.postEntry(data, appId)
+      // console.log(`Data about P2WDB write: ${JSON.stringify(result, null, 2)}`)
 
       // Wait a couple seconds to let the indexer update its UTXO state.
       await this.wallet.bchjs.Util.sleep(2000)
@@ -128,9 +169,10 @@ class MCUpdateP2wdbPrice extends Command {
 
       // Sign Message
       const txHex = await this.signalMessage(hash, bchAddress, subject)
+      console.log('txHex: ', txHex)
 
       // Broadcast Transaction
-      const txidStr = await this.wallet.broadcast(txHex)
+      const txidStr = await this.wallet.broadcast({ hex: txHex })
       console.log(`Transaction ID: ${JSON.stringify(txidStr, null, 2)}`)
       console.log(' ')
     }

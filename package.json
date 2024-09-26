@@ -22,6 +22,7 @@
     "collect.js": "4.29.0",
     "conf-cli": "0.1.9",
     "eccrypto-js": "5.4.0",
+    "form-data": "4.0.0",
     "ipfs-coord": "8.0.8",
     "jsonrpc-lite": "2.2.0",
     "koa": "2.13.4",

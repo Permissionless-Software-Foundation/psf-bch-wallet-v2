@@ -6,6 +6,7 @@
 const { Command, flags } = require('@oclif/command')
 const EncryptLib = require('bch-encrypt-lib/index')
 const Read = require('p2wdb').Read
+const axios = require('axios')
 
 // Local libraries
 // const WalletService = require('../lib/adapters/wallet-consumer')
@@ -62,10 +63,11 @@ class MsgRead extends Command {
       // console.log('sender: ', sender)
 
       // get ipfs hash from tx OP_RETURN
-      const hash = this.getHashFromTx(txData)
+      const cid = this.getHashFromTx(txData)
+      console.log(`cid: ${cid}`)
 
       // Get the encrypted message from P2WDB and decrypt it.
-      const message = await this.getAndDecrypt(hash)
+      const message = await this.getAndDecrypt(cid)
 
       return { sender, message }
     } catch (error) {
@@ -83,14 +85,14 @@ class MsgRead extends Command {
   }
 
   // Retrieve the encrypted data from the P2WDB and decrypt it.
-  async getAndDecrypt (hash) {
-    // get hash data from p2wd
-    const hashData = await this.read.getByHash(hash)
+  async getAndDecrypt (cid) {
+    // Get the JSON file from the PSFFPP
+    const result = await axios.get(`https://pin.fullstack.cash/ipfs/download/${cid}`)
+    const hashData = result.data
     // console.log(`hashData: ${JSON.stringify(hashData, null, 2)}`)
 
-    const encryptedStr = hashData.value.data
-    const encryptedObj = JSON.parse(encryptedStr)
-    const encryptedData = encryptedObj.data.data
+    const encryptedData = hashData.data
+    // console.log('encryptedData: ', encryptedData)
 
     // decrypt message
     const messageHex = await this.encryptLib.encryption.decryptFile(
@@ -104,6 +106,8 @@ class MsgRead extends Command {
     // console.log('Message :', decryptedMsg)
 
     return decryptedMsg
+
+    return ''
   }
 
   // Instatiate the various libraries used by msgSend(). These libraries are

@@ -5,7 +5,8 @@
 // Global npm libraries
 const { Command, flags } = require('@oclif/command')
 const EncryptLib = require('bch-encrypt-lib/index')
-const Read = require('p2wdb').Read
+// const Read = require('p2wdb').Read
+const axios = require('axios')
 
 // Local libraries
 // const WalletService = require('../lib/adapters/wallet-consumer')
@@ -17,7 +18,7 @@ class MCReadTx extends Command {
 
     // Encapsulate dependencies
     this.encryptLib = null // placeholder
-    this.Read = Read
+    // this.Read = Read
     this.walletUtil = new WalletUtil()
   }
 
@@ -88,19 +89,24 @@ class MCReadTx extends Command {
   // Retrieve the encrypted data from the P2WDB and decrypt it.
   async getAndDecrypt (hash) {
     // get hash data from p2wd
-    const hashData = await this.read.getByHash(hash)
+    // const hashData = await this.read.getByHash(hash)
     // console.log(`hashData: ${JSON.stringify(hashData, null, 2)}`)
 
-    const encryptedStr = hashData.value.data
-    const encryptedObj = JSON.parse(encryptedStr)
-    const encryptedData = encryptedObj.data.data
+    // Get encrypted message from PSFFPP
+    const result = await axios.get(`https://pin.fullstack.cash/ipfs/download/${hash}`)
+    const hashData = result.data
+    console.log('hashData: ', hashData)
+
+    const encryptedStr = hashData.data
+    // const encryptedObj = JSON.parse(encryptedStr)
+    // const encryptedData = encryptedObj.data.data
 
     // decrypt message
     const messageHex = await this.encryptLib.encryption.decryptFile(
       this.bchWallet.walletInfo.privateKey,
-      encryptedData
+      encryptedStr
     )
-    // console.log(`messageHex: ${messageHex}`)
+    console.log(`messageHex: ${messageHex}`)
 
     const buf = Buffer.from(messageHex, 'hex')
     const decryptedMsg = buf.toString('utf8')
@@ -117,15 +123,16 @@ class MCReadTx extends Command {
     // Instantiate minimal-slp-wallet.
     this.bchWallet = await this.walletUtil.instanceWallet(name)
     const walletData = this.bchWallet.walletInfo
+    console.log('walletData: ', walletData)
 
     // Instantiate the bch-message-lib library.
     this.msgLib = this.walletUtil.instanceMsgLib(this.bchWallet)
 
     // Instatiate the P2WDB Write library.
-    const p2wdbConfig = {
-      wif: walletData.privateKey
-    }
-    this.read = new this.Read(p2wdbConfig)
+    // const p2wdbConfig = {
+    //   wif: walletData.privateKey
+    // }
+    // this.read = new this.Read(p2wdbConfig)
 
     this.encryptLib = new EncryptLib({
       bchjs: this.bchWallet.bchjs
