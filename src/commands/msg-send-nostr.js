@@ -55,7 +55,7 @@ class MsgSend extends Command {
 
       const encryptedStr = await this.encryptMsgStr(flags)
 
-      const eventId = await this.uploadToNostr({encryptedStr})
+      const eventId = await this.uploadToNostr({ encryptedStr })
       console.log('Encrypted message uploaded to Nostr with post event ID: ', eventId)
 
       // Encrypt the message and upload it to the P2WDB.
@@ -63,9 +63,9 @@ class MsgSend extends Command {
 
       // Broadcast a PS001 signal on the blockchain, to signal the recipient
       // that they have a message waiting.
-      // const txid = await this.sendMsgSignal(flags, hash)
+      const txid = await this.sendMsgSignal(flags, eventId)
 
-      // return txid
+      return txid
     } catch (error) {
       console.log('Error in msgSend()')
       throw error
@@ -74,15 +74,15 @@ class MsgSend extends Command {
 
   // Upload the encrypted message to Nostr. Returns the event ID of the posted
   // message.
-  async uploadToNostr(inObj = {}) {
+  async uploadToNostr (inObj = {}) {
     try {
-      const {encryptedStr} = inObj
+      const { encryptedStr } = inObj
 
       // Generate a Nostr pub key from the private key of this wallet.
-      const {privKeyBuf, nostrPubKey} = this.createNostrPubKey()
+      const { privKeyBuf, nostrPubKey } = this.createNostrPubKey()
       console.log('nostrPubKey: ', nostrPubKey)
 
-      const psfRelay = "wss://nostr-relay.psfoundation.info"
+      const psfRelay = 'wss://nostr-relay.psfoundation.info'
 
       // Generate a Nostr post.
       const eventTemplate = {
@@ -108,27 +108,27 @@ class MsgSend extends Command {
       relay.close()
 
       return eventId
-    } catch(err) {
+    } catch (err) {
       console.error('Error in uploadToNostr()')
       throw err
     }
   }
 
   // Generate a Nostr pubkey from the private key for this wallet.
-  createNostrPubKey() {
+  createNostrPubKey () {
     const wif = this.bchWallet.walletInfo.privateKey
     // console.log('wif: ', wif)
 
     // Extract the privaty key from the WIF, using this guide:
     // https://learnmeabitcoin.com/technical/keys/private-key/wif/
     const wifBuf = this.base58_to_binary(wif)
-    const privKeyBuf = wifBuf.slice(1,33)
+    const privKeyBuf = wifBuf.slice(1, 33)
 
     // const privKeyHex = bytesToHex(privKeyBuf)
 
     const nostrPubKey = this.nostrToolsPure.getPublicKey(privKeyBuf)
 
-    return {privKeyBuf, nostrPubKey}
+    return { privKeyBuf, nostrPubKey }
   }
 
   // Instatiate the various libraries used by msgSend(). These libraries are
@@ -181,7 +181,7 @@ class MsgSend extends Command {
 
   // Encrypt the message string. Returns a hexidecimal string representing
   // the encrypted message.
-  async encryptMsgStr(flags) {
+  async encryptMsgStr (flags) {
     try {
       const { bchAddress, message } = flags
 
@@ -196,7 +196,7 @@ class MsgSend extends Command {
       console.log(`encryptedMsg: ${JSON.stringify(encryptedMsg, null, 2)}`)
 
       return encryptedMsg
-    } catch(err) {
+    } catch (err) {
       console.error('Error in encryptMsgStr()')
       throw err
     }
@@ -251,7 +251,7 @@ class MsgSend extends Command {
   }
 
   // Generate and broadcast a PS001 message signal.
-  async sendMsgSignal (flags, hash) {
+  async sendMsgSignal (flags, eventId) {
     const { bchAddress, subject } = flags
 
     // Wait a couple seconds to let the indexer update its UTXO state.
@@ -261,11 +261,11 @@ class MsgSend extends Command {
     await this.bchWallet.getUtxos()
 
     // Sign Message
-    const txHex = await this.signalMessage(hash, bchAddress, subject)
+    const txHex = await this.signalMessage(eventId, bchAddress, subject)
 
     // Broadcast Transaction
     const txidStr = await this.bchWallet.ar.sendTx(txHex)
-    console.log(`Transaction ID : ${JSON.stringify(txidStr, null, 2)}`)
+    console.log(`Signal Transaction ID : ${JSON.stringify(txidStr, null, 2)}`)
 
     return txidStr
   }
@@ -299,10 +299,10 @@ class MsgSend extends Command {
 
   // Generate a PS001 signal message to write to the blockchain.
   // https://github.com/Permissionless-Software-Foundation/specifications/blob/master/ps001-media-sharing.md
-  async signalMessage (hash, bchAddress, subject) {
+  async signalMessage (eventId, bchAddress, subject) {
     try {
-      if (!hash || typeof hash !== 'string') {
-        throw new Error('hash must be a string')
+      if (!eventId || typeof eventId !== 'string') {
+        throw new Error('eventId must be a string')
       }
       if (!bchAddress || typeof bchAddress !== 'string') {
         throw new Error('bchAddress must be a string')
@@ -312,8 +312,8 @@ class MsgSend extends Command {
       }
 
       // Generate the hex transaction containing the PS001 message signal.
-      const txHex = await this.msgLib.memo.writeMsgSignal(
-        hash,
+      const txHex = await this.msgLib.memo.writeMsgSignalNostr(
+        eventId,
         [bchAddress],
         subject
       )
