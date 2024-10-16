@@ -6,7 +6,7 @@
 const { Command, flags } = require('@oclif/command')
 const EncryptLib = require('bch-encrypt-lib/index')
 const Read = require('p2wdb').Read
-const axios = require('axios')
+// const axios = require('axios')
 
 // Local libraries
 // const WalletService = require('../lib/adapters/wallet-consumer')
@@ -93,15 +93,15 @@ class MsgRead extends Command {
 
     const nostrData = new Promise((resolve, reject) => {
       pool.on('open', relay => {
-      	relay.subscribe('REQ', { ids: [eventId] })
+        relay.subscribe('REQ', { ids: [eventId] })
       })
 
       pool.on('eose', relay => {
-      	relay.close()
+        relay.close()
       })
 
-      pool.on('event', (relay, sub_id, ev) => {
-      	resolve(ev)
+      pool.on('event', (relay, subId, ev) => {
+        resolve(ev)
       })
     })
 

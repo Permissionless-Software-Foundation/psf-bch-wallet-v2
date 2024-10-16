@@ -17,7 +17,7 @@
     "axios": "0.27.2",
     "base58-js": "2.0.0",
     "bch-encrypt-lib": "2.0.0",
-    "bch-message-lib": "../bch-message-lib",
+    "bch-message-lib": "2.2.1",
     "bch-token-sweep": "2.2.1",
     "cli-table": "0.3.6",
     "collect.js": "4.29.0",

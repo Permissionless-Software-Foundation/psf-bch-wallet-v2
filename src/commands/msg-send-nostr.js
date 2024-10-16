@@ -86,10 +86,10 @@ class MsgSend extends Command {
 
       // Generate a Nostr post.
       const eventTemplate = {
-      	kind: 1,
-      	created_at: Math.floor(Date.now() / 1000),
-      	tags: [],
-      	content: encryptedStr
+        kind: 1,
+        created_at: Math.floor(Date.now() / 1000),
+        tags: [],
+        content: encryptedStr
       }
 
       // Sign the post
@@ -217,7 +217,7 @@ class MsgSend extends Command {
     console.log(`encryptedMsg: ${JSON.stringify(encryptedMsg, null, 2)}`)
 
     // Upload the encrypted message to the P2WDB.
-    const appId = 'psf-bch-wallet'
+    // const appId = 'psf-bch-wallet'
     const data = {
       now: new Date(),
       data: encryptedMsg
