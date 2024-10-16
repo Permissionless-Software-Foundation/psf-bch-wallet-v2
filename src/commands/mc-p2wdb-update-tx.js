@@ -115,8 +115,8 @@ class MCP2wdbUpdateTx extends Command {
       console.log('writePrice: ', writePrice)
 
       // Upload the file to the IPFS node and get a CID.
-      let psffppClient = this.walletUtil.getPsffppClient()
-      psffppClient = psffppClient.psffppURL
+      // let psffppClient = this.walletUtil.getPsffppClient()
+      // psffppClient = psffppClient.psffppURL
       const uploadResult = await this.retryQueue.addToQueue(this.psffppUpload.uploadFile, {
         path,
         fileName: 'data.json'

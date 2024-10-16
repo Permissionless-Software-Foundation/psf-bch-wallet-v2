@@ -48,7 +48,7 @@ class IpfsUpload2 extends Command {
 
       // let server = this.walletUtil.getPsffppClient()
       // server = server.psffppURL
-      const server = 'https://file-stage.fullstack.cash/ipfs/upload'
+      // const server = 'https://file-stage.fullstack.cash/ipfs/upload'
 
       const fileOrDir = await this.isFileOrDirectory(`${path}/${fileName}`)
 
@@ -77,7 +77,7 @@ class IpfsUpload2 extends Command {
   // Take the readable stream and upload it to the file staging server.
   async uploadStream (inObj = {}) {
     try {
-      const { readStream, fileName, server } = inObj
+      const { readStream, fileName } = inObj
 
       // Create a web form and append the readable stream to it.
       const form = new FormData()
