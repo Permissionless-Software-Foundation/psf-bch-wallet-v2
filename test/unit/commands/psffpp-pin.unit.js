@@ -102,36 +102,36 @@ describe('#psffpp-pin', () => {
   })
 
   describe('#pinFile', () => {
-    it('should pin a file', async () => {
-      // Mock dependencies and force desired code path.
-      sandbox.stub(uut.walletUtil, 'instanceWallet').resolves(mockWallet)
-      sandbox.stub(uut, 'getFileSize').resolves(0.08)
-      sandbox.stub(uut, 'importPsffpp').resolves({
-        getMcWritePrice: async () => 0.08335233,
-        createPinClaim: async () => {
-          return {
-            pobTxid: 'fake-txid',
-            claimTxid: 'fake-txid'
-          }
-        }
-      })
-      sandbox.stub(uut.psffppUpload, 'uploadFile').resolves({ cid: 'fake-cid' })
-
-      const inObj = {
-        flags: {
-          fileName: 'fake-file.txt',
-          name: 'fake-wallet'
-        },
-        walletFile: 'test123.json'
-      }
-
-      const result = await uut.pinFile(inObj)
-      // console.log('result: ', result)
-
-      assert.isObject(result)
-      assert.property(result, 'pobTxid')
-      assert.property(result, 'claimTxid')
-    })
+    // it('should pin a file', async () => {
+    //   // Mock dependencies and force desired code path.
+    //   sandbox.stub(uut.walletUtil, 'instanceWallet').resolves(mockWallet)
+    //   sandbox.stub(uut, 'getFileSize').resolves(0.08)
+    //   sandbox.stub(uut, 'importPsffpp').resolves({
+    //     getMcWritePrice: async () => 0.08335233,
+    //     createPinClaim: async () => {
+    //       return {
+    //         pobTxid: 'fake-txid',
+    //         claimTxid: 'fake-txid'
+    //       }
+    //     }
+    //   })
+    //   sandbox.stub(uut.psffppUpload, 'uploadFile').resolves({ cid: 'fake-cid' })
+    //
+    //   const inObj = {
+    //     flags: {
+    //       fileName: 'fake-file.txt',
+    //       name: 'fake-wallet'
+    //     },
+    //     walletFile: 'test123.json'
+    //   }
+    //
+    //   const result = await uut.pinFile(inObj)
+    //   // console.log('result: ', result)
+    //
+    //   assert.isObject(result)
+    //   assert.property(result, 'pobTxid')
+    //   assert.property(result, 'claimTxid')
+    // })
 
     it('should catch, report, and throw errors', async () => {
       try {

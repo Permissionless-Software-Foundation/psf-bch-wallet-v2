@@ -28,7 +28,12 @@ class IpfsUpload2 extends Command {
 
     // Bind 'this' object to all subfunctions.
     this.run = this.run.bind(this)
+    this.uploadStream = this.uploadStream.bind(this)
+    this.uploadDir = this.uploadDir.bind(this)
+    this.isFileOrDirectory = this.isFileOrDirectory.bind(this)
+    this.createFileStream = this.createFileStream.bind(this)
     this.uploadFile = this.uploadFile.bind(this)
+    this.validateFlags = this.validateFlags.bind(this)
   }
 
   async run () {
@@ -41,22 +46,23 @@ class IpfsUpload2 extends Command {
       const path = `${__dirname.toString()}/../../ipfs-files`
       const fileName = flags.fileName
 
-      let server = this.walletUtil.getPsffppClient()
-      server = server.psffppURL
+      // let server = this.walletUtil.getPsffppClient()
+      // server = server.psffppURL
+      // const server = 'https://file-stage.fullstack.cash/ipfs/upload'
 
       const fileOrDir = await this.isFileOrDirectory(`${path}/${fileName}`)
 
       if (!fileOrDir) throw new Error(`${fileName} is not a file or directory.`)
 
-      let readStream
+      let result
       if (fileOrDir === 1) {
-        readStream = await this.uploadFile({ path, fileName })
+        result = await this.uploadFile({ path, fileName })
       } else if (fileOrDir === 2) {
-        readStream = await this.uploadDir({ path, fileName })
+        result = await this.uploadDir({ path, fileName })
       }
-      console.log('readStream: ', readStream)
+      // console.log('readStream: ', readStream)
 
-      const result = await this.uploadStream({ readStream, fileName, server })
+      // const result = await this.uploadStream({ readStream, fileName, server })
 
       console.log('result: ', result)
 
@@ -71,22 +77,23 @@ class IpfsUpload2 extends Command {
   // Take the readable stream and upload it to the file staging server.
   async uploadStream (inObj = {}) {
     try {
-      const { readStream, fileName, server } = inObj
+      const { readStream, fileName } = inObj
 
       // Create a web form and append the readable stream to it.
       const form = new FormData()
       const axiosConfig = {
         headers: form.getHeaders()
       }
-      console.log('fileName: ', fileName)
-      console.log('readStream: ', readStream)
-      console.log('ping01')
+      // console.log('fileName: ', fileName)
+      // console.log('readStream: ', readStream)
+      // console.log('ping01')
       form.append('file', readStream, fileName)
-      console.log('ping02')
+      // console.log('ping02')
 
       // Send the file to the ipfs-file-stage server.
-      const result = await this.axios.post(`${server}/ipfs/upload`, form, axiosConfig)
-      console.log('ping03')
+      // const result = await this.axios.post(`${server}/ipfs/upload`, form, axiosConfig)
+      const result = await this.axios.post('https://file-stage.fullstack.cash/ipfs/upload', form, axiosConfig)
+      // console.log('ping03')
 
       return result.data
     } catch (err) {
@@ -154,7 +161,7 @@ class IpfsUpload2 extends Command {
   async isFileOrDirectory (path) {
     try {
       const stats = await this.fsP.stat(path)
-      console.log('stats: ', stats)
+      // console.log('stats: ', stats)
 
       if (stats.isFile()) {
         return 1
@@ -168,7 +175,8 @@ class IpfsUpload2 extends Command {
     }
   }
 
-  async uploadFile (inObj = {}) {
+  // Create a readstream from a file on the local computer.
+  async createFileStream (inObj = {}) {
     try {
       const { path, fileName } = inObj
 
@@ -177,6 +185,28 @@ class IpfsUpload2 extends Command {
       const fileStream = this.fs.createReadStream(filePath)
 
       return fileStream
+    } catch (err) {
+      console.error('Error in createFileStream()')
+      throw err
+    }
+  }
+
+  // Combines the createFileStream() and uploadStream() functions into a macro
+  // function for easily uploading a single file.
+  async uploadFile (inObj = {}) {
+    try {
+      const { path, fileName } = inObj
+
+      const readStream = await this.createFileStream({
+        path,
+        fileName
+      })
+      const uploadResult = await this.uploadStream({
+        readStream,
+        fileName
+      })
+
+      return uploadResult
     } catch (err) {
       console.error('Error in uploadFile()')
       throw err

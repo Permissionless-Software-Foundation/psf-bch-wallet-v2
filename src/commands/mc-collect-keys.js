@@ -12,8 +12,9 @@ const SlpWallet = require('minimal-slp-wallet')
 
 // Update this constant to reflect the Group token uses to generate the Minting
 // Council NFTs.
-const GROUP_ID = '8e8d90ebdb1791d58eba7acd428ff3b1e21c47fb7aba2ba3b5b815aa0fe7d6d5'
+// const GROUP_ID = '8e8d90ebdb1791d58eba7acd428ff3b1e21c47fb7aba2ba3b5b815aa0fe7d6d5'
 // const GROUP_ID = '5c8cb997cce61426b7149a74a3997443ec7eb738c5c246d9cfe70185a6911476'
+const GROUP_ID = '4c039aa116b018f851cfe05e4e6e5a2d45076964a38d6b875ffd2f6bb5b3f843' // Test Group Token
 
 const { Command } = require('@oclif/command')
 

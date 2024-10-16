@@ -66,6 +66,7 @@ class WalletBalances extends Command {
       const walletData = walletJSON.wallet
 
       const advancedConfig = this.walletUtil.getRestServer()
+      advancedConfig.hdPath = walletData.hdPath
       this.bchWallet = new this.BchWallet(walletData.mnemonic, advancedConfig)
       // console.log('bchWallet: ', this.bchWallet)
 

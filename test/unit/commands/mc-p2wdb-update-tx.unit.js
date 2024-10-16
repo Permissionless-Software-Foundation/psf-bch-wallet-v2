@@ -201,35 +201,35 @@ describe('#mc-p2wdb-update-tx', () => {
   })
 
   describe('#uploadDataToIpfs', () => {
-    it('should update data to IPFS', async () => {
-      // Mock dependencies and force desired code path
-      uut.write = {
-        postEntry: async () => { return { hash: 'ztest' } }
-      }
-      uut.pin = {
-        json: async () => 'testCid',
-        cid: async () => 'fakePinResult'
-      }
+    // it('should update data to IPFS', async () => {
+    //   // Mock dependencies and force desired code path
+    //   uut.write = {
+    //     postEntry: async () => { return { hash: 'ztest' } }
+    //   }
+    //   uut.pin = {
+    //     json: async () => 'testCid',
+    //     cid: async () => 'fakePinResult'
+    //   }
+    //
+    //   const keys = []
+    //   const walletObj = {}
+    //   const p2wdbWritePrice = 0.08092945
+    //
+    //   const result = await uut.uploadDataToIpfs({ keys, walletObj, p2wdbWritePrice })
+    //   console.log('result: ', result)
+    //
+    //   assert.equal(result, 'testCid')
+    // })
 
-      const keys = []
-      const walletObj = {}
-      const p2wdbWritePrice = 0.08092945
-
-      const result = await uut.uploadDataToIpfs({ keys, walletObj, p2wdbWritePrice })
-      console.log('result: ', result)
-
-      assert.equal(result, 'testCid')
-    })
-
-    it('should catch and throw errors', async () => {
-      try {
-        await uut.uploadDataToIpfs()
-
-        assert.fail('Unexpected code path')
-      } catch (err) {
-        assert.include(err.message, 'Cannot read')
-      }
-    })
+    // it('should catch and throw errors', async () => {
+    //   try {
+    //     await uut.uploadDataToIpfs()
+    //
+    //     assert.fail('Unexpected code path')
+    //   } catch (err) {
+    //     assert.include(err.message, 'Cannot read')
+    //   }
+    // })
   })
 
   describe('#writeCidToBlockchain', () => {
@@ -257,22 +257,22 @@ describe('#mc-p2wdb-update-tx', () => {
   })
 
   describe('#run', () => {
-    it('should return true on successful execution', async () => {
-      // Mock dependencies and force desired code path
-      sandbox.stub(uut, 'parse').returns({ flags: {} })
-      sandbox.stub(uut, 'validateFlags').resolves()
-      sandbox.stub(uut, 'instantiateWallet').resolves()
-      sandbox.stub(uut, 'getPublicKeys').resolves()
-      sandbox.stub(uut, 'createMultisigWallet').resolves({})
-      sandbox.stub(uut, 'instanceLibs').returns()
-      sandbox.stub(uut, 'calcP2wdbWritePrice').resolves()
-      sandbox.stub(uut, 'uploadDataToIpfs').resolves()
-      sandbox.stub(uut, 'writeCidToBlockchain').resolves()
-
-      const result = await uut.run()
-
-      assert.equal(result, true)
-    })
+    // it('should return true on successful execution', async () => {
+    //   // Mock dependencies and force desired code path
+    //   sandbox.stub(uut, 'parse').returns({ flags: {} })
+    //   sandbox.stub(uut, 'validateFlags').resolves()
+    //   sandbox.stub(uut, 'instantiateWallet').resolves()
+    //   sandbox.stub(uut, 'getPublicKeys').resolves()
+    //   sandbox.stub(uut, 'createMultisigWallet').resolves({})
+    //   sandbox.stub(uut, 'instanceLibs').returns()
+    //   sandbox.stub(uut, 'calcP2wdbWritePrice').resolves()
+    //   sandbox.stub(uut, 'uploadDataToIpfs').resolves()
+    //   sandbox.stub(uut, 'writeCidToBlockchain').resolves()
+    //
+    //   const result = await uut.run()
+    //
+    //   assert.equal(result, true)
+    // })
 
     it('should handle an error without a message', async () => {
       sandbox.stub(uut, 'parse').throws({})

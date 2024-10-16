@@ -7,9 +7,11 @@ const { Command, flags } = require('@oclif/command')
 const EncryptLib = require('bch-encrypt-lib/index')
 const eccrypto = require('eccrypto-js')
 const Write = require('p2wdb').Write
+const fs = require('fs')
 
 // Local libraries
 const WalletUtil = require('../lib/wallet-util')
+const PsffppUpload = require('./psffpp-upload.js')
 
 class MsgSend extends Command {
   constructor (argv, config) {
@@ -20,6 +22,7 @@ class MsgSend extends Command {
     this.eccrypto = eccrypto
     this.Write = Write
     this.walletUtil = new WalletUtil()
+    this.psffppUpload = new PsffppUpload()
   }
 
   async run () {
@@ -75,15 +78,17 @@ class MsgSend extends Command {
     // Instantiate the bch-message-lib library.
     this.msgLib = this.walletUtil.instanceMsgLib(this.bchWallet)
 
+    this.psffpp = await this.walletUtil.importPsffpp(this.bchWallet)
+
     // Get the selected P2WDB server URL
-    const serverURL = this.walletUtil.getP2wdbServer()
+    // const serverURL = this.walletUtil.getP2wdbServer()
 
     // Instatiate the P2WDB Write library.
-    const p2wdbConfig = {
-      bchWallet: this.bchWallet,
-      serverURL
-    }
-    this.write = new this.Write(p2wdbConfig)
+    // const p2wdbConfig = {
+    //   bchWallet: this.bchWallet,
+    //   serverURL
+    // }
+    // this.write = new this.Write(p2wdbConfig)
 
     // Instantiate the encryption library.
     this.encryptLib = new EncryptLib({
@@ -108,19 +113,37 @@ class MsgSend extends Command {
     console.log(`encryptedMsg: ${JSON.stringify(encryptedMsg, null, 2)}`)
 
     // Upload the encrypted message to the P2WDB.
-    const appId = 'psf-bch-wallet'
+    // const appId = 'psf-bch-wallet'
     const data = {
       now: new Date(),
       data: encryptedMsg
     }
 
-    const result = await this.write.postEntry(data, appId)
-    console.log(`Data about P2WDB write: ${JSON.stringify(result, null, 2)}`)
+    const path = `${__dirname.toString()}/../../ipfs-files`
+    const fileName = 'msg.json'
+    fs.writeFileSync(`${path}/${fileName}`, JSON.stringify(data, null, 2))
 
-    const hash = result.hash
+    const result = await this.psffppUpload.uploadFile({ path, fileName })
+    const cid = result.cid
+    console.log('cid: ', cid)
+
+    // Generate a Pin Claim
+    const pinObj = {
+      cid,
+      filename: fileName,
+      fileSizeInMegabytes: 1
+    }
+    const { pobTxid, claimTxid } = await this.psffpp.createPinClaim(pinObj)
+    console.log('pobTxid: ', pobTxid)
+    console.log('claimTxid: ', claimTxid)
+
+    // const result = await this.write.postEntry(data, appId)
+    // console.log(`Data about P2WDB write: ${JSON.stringify(result, null, 2)}`)
+
+    // const hash = result.hash
 
     // Return the hash used to uniquly identify this entry in the P2WDB.
-    return hash
+    return cid
   }
 
   // Generate and broadcast a PS001 message signal.
