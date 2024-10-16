@@ -1,6 +1,6 @@
 # psf-bch-wallet
 
-This is a fork of the original [psf-bch-wallet](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet) code base take on 8/16/24, preserving the code and git history.
+This is a fork of the original [psf-bch-wallet](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet) code base taken on 8/16/24, preserving the code and git history.
 
 The scope of psf-bch-wallet was growing too large, and it was stuck in a CommonJS code base. The decision was made to start it from scratch and manually port the old code to the new code base. This repository is an archival copy of that old code base.
 
