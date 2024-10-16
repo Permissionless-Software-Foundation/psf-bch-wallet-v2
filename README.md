@@ -1,5 +1,11 @@
 # psf-bch-wallet
 
+This is a fork of the original [psf-bch-wallet](https://github.com/Permissionless-Software-Foundation/psf-bch-wallet) code base take on 8/16/24, preserving the code and git history.
+
+The scope of psf-bch-wallet was growing too large, and it was stuck in a CommonJS code base. The decision was made to start it from scratch and manually port the old code to the new code base. This repository is an archival copy of that old code base.
+
+---
+
 This is a command-line (CLI) app for working with the Bitcoin Cash (BCH) blockchain, and SLP tokens.
 
 This app connects to a [ipfs-bch-wallet-service](https://github.com/Permissionless-Software-Foundation/ipfs-bch-wallet-service) over [IPFS](https://ipfs.io), using the [ipfs-coord](https://github.com/Permissionless-Software-Foundation/ipfs-coord) library. This app uses the [oclif CLI framework](https://oclif.io/).
