@@ -113,7 +113,7 @@ class MsgSend extends Command {
     console.log(`encryptedMsg: ${JSON.stringify(encryptedMsg, null, 2)}`)
 
     // Upload the encrypted message to the P2WDB.
-    const appId = 'psf-bch-wallet'
+    // const appId = 'psf-bch-wallet'
     const data = {
       now: new Date(),
       data: encryptedMsg

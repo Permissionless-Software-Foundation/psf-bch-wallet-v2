@@ -107,7 +107,7 @@ class MsgRead extends Command {
 
     return decryptedMsg
 
-    return ''
+    // return ''
   }
 
   // Instatiate the various libraries used by msgSend(). These libraries are

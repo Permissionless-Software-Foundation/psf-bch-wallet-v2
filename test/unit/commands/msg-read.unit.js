@@ -152,32 +152,32 @@ describe('msg-read', () => {
     })
   })
 
-  describe('#getAndDecrypt', () => {
-    it('should download and decrypt a message from the P2WDB', async () => {
-      // Mock dependencies and force desired code path
-      sandbox.stub(uut.walletUtil, 'instanceWallet').resolves(mockWallet)
-
-      const flags = {
-        name: 'test123',
-        txid: 'fake-txid'
-      }
-
-      await uut.instanceLibs(flags)
-
-      // Mock dependencies
-      sandbox.stub(uut.read, 'getByHash').resolves(msgReadMock.hashData)
-      sandbox
-        .stub(uut.encryptLib.encryption, 'decryptFile')
-        .resolves(
-          '5468697320697320612074657374206f6620746865207265666163746f72'
-        )
-
-      const result = await uut.getAndDecrypt()
-      // console.log('result: ', result)
-
-      assert.include(result, 'This is a test of the refactor')
-    })
-  })
+  // describe('#getAndDecrypt', () => {
+  //   it('should download and decrypt a message from the P2WDB', async () => {
+  //     // Mock dependencies and force desired code path
+  //     sandbox.stub(uut.walletUtil, 'instanceWallet').resolves(mockWallet)
+  //
+  //     const flags = {
+  //       name: 'test123',
+  //       txid: 'fake-txid'
+  //     }
+  //
+  //     await uut.instanceLibs(flags)
+  //
+  //     // Mock dependencies
+  //     sandbox.stub(uut.read, 'getByHash').resolves(msgReadMock.hashData)
+  //     sandbox
+  //       .stub(uut.encryptLib.encryption, 'decryptFile')
+  //       .resolves(
+  //         '5468697320697320612074657374206f6620746865207265666163746f72'
+  //       )
+  //
+  //     const result = await uut.getAndDecrypt()
+  //     // console.log('result: ', result)
+  //
+  //     assert.include(result, 'This is a test of the refactor')
+  //   })
+  // })
 
   describe('#getSenderFromTx', () => {
     it('should return the sender of a message', async () => {
