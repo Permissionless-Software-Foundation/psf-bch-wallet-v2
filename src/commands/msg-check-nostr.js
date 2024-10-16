@@ -1,11 +1,11 @@
 /*
-  Check for received messages in a wallet.
+  Check for received messages in a wallet
 */
 
 // Global npm libraries
 const { Command, flags } = require('@oclif/command')
 const EncryptLib = require('bch-encrypt-lib/index')
-const MsgLib = require('bch-message-lib/index')
+const MsgLib = require('bch-message-lib')
 const Write = require('p2wdb').Write
 const Table = require('cli-table')
 const BchWallet = require('minimal-slp-wallet')
@@ -69,8 +69,8 @@ class MsgCheck extends Command {
 
       // Get message signals from the blockchain.
       console.log(`cashAddress ${cashAddress}`)
-      const messages = await this.msgLib.memo.readMsgSignal(cashAddress)
-      // console.log('message: ', messages)
+      const messages = await this.msgLib.memo.readMsgSignal(cashAddress, 'MSG NOSTR')
+      console.log('message: ', messages)
 
       // Filter out sent messages, so user only sees recieved messages.
       const receiveMessages = this.filterMessages(cashAddress, messages)
